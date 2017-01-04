@@ -1,0 +1,20 @@
+{
+  "name": "komodo-sdk",
+  "version": "1.0.0",
+  "description": "SDK for Komodo",
+  "main": "index.js",
+  "scripts": {
+    "test": "mocha"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git@gitlab.kodesumber.com:adhisimon/komodo-sdk.git"
+  },
+  "keywords": [
+    "ppob",
+    "payment",
+    "komodo"
+  ],
+  "author": "Adhidarma Hadiwinoto <gua@adhisimon.org>",
+  "license": "ISC"
+}
