@@ -4,7 +4,8 @@
   "description": "SDK for Komodo",
   "main": "index.js",
   "scripts": {
-    "test": "mocha"
+    "test": "mocha",
+    "postversion": "git push && git push --tags"
   },
   "repository": {
     "type": "git",
