@@ -2,7 +2,7 @@
 
 const fs = require('fs');
 
-let configFile = "../../config.json";
+let configFile = process.cwd() + "/config.json";
 
 if (!fs.existsSync(configFile)) {
     console.trace('Config file not found. Terminating');
