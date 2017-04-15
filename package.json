@@ -9,7 +9,7 @@
   },
   "repository": {
     "type": "git",
-    "url": "git@gitlab.kodesumber.com:adhisimon/komodo-sdk.git"
+    "url": "git@gitlab.kodesumber.com:komodo/komodo-sdk.git"
   },
   "keywords": [
     "ppob",
