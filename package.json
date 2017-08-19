@@ -17,5 +17,9 @@
     "komodo"
   ],
   "author": "Adhidarma Hadiwinoto <gua@adhisimon.org>",
-  "license": "ISC"
+  "license": "ISC",
+  "dependencies": {
+    "winston": "^2.3.1",
+    "winston-daily-rotate-file": "^1.4.6"
+  }
 }
