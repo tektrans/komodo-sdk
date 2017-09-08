@@ -32,7 +32,7 @@ function onRequest(request, response) {
     transport.send(qs.terminal_name, qs.message, {
         reverse_url: qs.reverse_url
     });
-
+}
 
 function setTransport(newTransport) {
     transport = newTransport;
