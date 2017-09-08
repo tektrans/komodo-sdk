@@ -117,21 +117,32 @@ function requestToCore(requestOptions, cb) {
     request(requestOptions, function(err, res, body) {
         if (err || res.statusCode != 200) {
             logger.warn('Error requesting to CORE', {module_name: module_name, method_name: 'requestToCore', requestOptions: requestOptions, err: err});
-            transport.send(requestOptions.qs.terminal_name, 'INTERNAL ERROR');
-            if (cb) { cb(null, {msg: 'INTERNAL ERROR'}); }
+            if (cb) {
+                cb(null, {msg: 'INTERNAL ERROR'});
+            }
+            else if (transport.send) {
+                transport.send(requestOptions.qs.terminal_name, 'INTERNAL ERROR');
+            }
             return;
         }
 
         let result = parseCoreMessage(body);
         if (!result || !result.message) {
-            transport.send(requestOptions.qs.terminal_name, 'INTERNAL ERROR');
-            if (cb) { cb(null, {msg: 'INTERNAL ERROR'}); }
+            if (cb) {
+                cb(null, {msg: 'INTERNAL ERROR'});
+            }
+            else if (transport.send) {
+                transport.send(requestOptions.qs.terminal_name, 'INTERNAL ERROR');
+            }
             return;
         }
 
-        transport.send(requestOptions.qs.terminal_name, result.message);
         if (cb) {
             cb(null, result);
+        }
+        else if (transport.send) {
+            transport.send(requestOptions.qs.terminal_name, result.message);
+
         }
     })
 }
