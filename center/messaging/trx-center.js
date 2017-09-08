@@ -20,19 +20,19 @@ function onOnline(params) {
 
 }
 
-function onIncomingMessage(paramsFromTransport) {
+function onIncomingMessage(paramsFromTransport, cb) {
     logger.verbose('Reporting message to CORE')
 
     const command = paramsFromTransport.msg.split(/[\., ]+/)[0].toUpperCase();
 
     if (config.commands && config.commands.balance.indexOf(command) >= 0) {
-        executeBalanceCheck(paramsFromTransport);
+        executeBalanceCheck(paramsFromTransport, cb);
     }
     else if (config.commands && config.commands.price.indexOf(command) >= 0) {
-        executePriceCheck(paramsFromTransport);
+        executePriceCheck(paramsFromTransport, cb);
     }
     else {
-        executePrepaidBuy(paramsFromTransport);
+        executePrepaidBuy(paramsFromTransport, cb);
     }
 }
 
@@ -81,7 +81,7 @@ function generateRequestId(req) {
     return 'AUTO_' + req.product_name + '_' + req.destination + '_' + strftime('%Y%m%d');
 }
 
-function executePrepaidBuy(paramsFromTransport) {
+function executePrepaidBuy(paramsFromTransport, cb) {
     let tokens = paramsFromTransport.msg.trim().split(/[\., ]+/);
 
     let qs = {
@@ -107,7 +107,7 @@ function executePrepaidBuy(paramsFromTransport) {
         qs: qs
     }
 
-    requestToCore(requestOptions);
+    requestToCore(requestOptions, cb);
 }
 
 function requestToCore(requestOptions, partner) {
@@ -117,16 +117,21 @@ function requestToCore(requestOptions, partner) {
         if (err || res.statusCode != 200) {
             logger.warn('Error requesting to CORE', {module_name: module_name, method_name: 'requestToCore', requestOptions: requestOptions, err: err});
             transport.send(requestOptions.qs.terminal_name, 'INTERNAL ERROR');
+            if (cb) { cb(null, {msg: 'INTERNAL ERROR'}); }
             return;
         }
 
         let result = parseCoreMessage(body);
         if (!result || !result.message) {
             transport.send(requestOptions.qs.terminal_name, 'INTERNAL ERROR');
+            if (cb) { cb(null, {msg: 'INTERNAL ERROR'}); }
             return;
         }
 
         transport.send(requestOptions.qs.terminal_name, result.message);
+        if (cb) {
+            cb(null, result);
+        }
     })
 }
 
@@ -137,7 +142,8 @@ function setTransport(_transport) {
 
 const callback = {
     onOnline: onOnline,
-    onIncomingMessage: onIncomingMessage
+    onIncomingMessage: onIncomingMessage,
+    onH2HIncomingMessage: onH2HIncomingMessage
 }
 
 exports.callback = callback;
