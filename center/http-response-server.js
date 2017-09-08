@@ -16,7 +16,6 @@ const logger = require('../logger');
 let transport;
 
 function onRequest(request, response) {
-    console.log('CEKIDOT');
     response.end('OK');
 
     const qs = url.parse(request.url, true).query;
