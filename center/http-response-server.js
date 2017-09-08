@@ -17,7 +17,7 @@ let transport;
 
 function onRequest(request, response) {
     response.end('OK');
-    var qs = url.parse(request.url, true).query;
+    const qs = url.parse(request.url, true).query;
     logger.verbose('Got reverse report from CORE', {qs: qs});
 
     if (!transport || !transport.send) {
