@@ -20,10 +20,19 @@ function onRequest(request, response) {
     var qs = url.parse(request.url, true).query;
     logger.verbose('Got reverse report from CORE', {qs: qs});
 
-    if (transport && transport.send && qs && qs.terminal_name && qs.message) {
-        transport.send(qs.terminal_name, qs.message);
+    if (!transport || !transport.send) {
+        logger.warn('UNDEFINED TRANSPORT, not forwarding message from CORE');
+        return;
     }
-}
+
+    if (!qs.terminal_name || !qs.message) {
+        return;
+    }
+
+    transport.send(qs.terminal_name, qs.message, {
+        reverse_url: qs.reverse_url
+    });
+
 
 function setTransport(newTransport) {
     transport = newTransport;
