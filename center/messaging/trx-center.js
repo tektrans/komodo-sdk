@@ -9,6 +9,7 @@ const request = require('request');
 const strftime = require('strftime');
 const config = require('../../config');
 const logger = require('../../logger');
+const httpResponseServer = require('../http-response-server');
 
 const module_name = path.basename(__filename);
 
@@ -128,6 +129,7 @@ function requestToCore(requestOptions, partner) {
 
 function parseCoreMessage(body) {
     let coreRes;
+
     try {
         coreRes = JSON.parse(body)
     }
@@ -135,16 +137,18 @@ function parseCoreMessage(body) {
         logger.warn('Exception on parsing CORE response as JSON', {body: body, err: err});
         coreRes = null;
     }
+
     return coreRes;
+}
+
+function setTransport(_transport) {
+    transport = _transport;
+    httpResponseServer.setTransport(transport);
 }
 
 const callback = {
     onOnline: onOnline,
     onIncomingMessage: onIncomingMessage
-}
-
-function setTransport(_transport) {
-    transport = _transport;
 }
 
 exports.callback = callback;
