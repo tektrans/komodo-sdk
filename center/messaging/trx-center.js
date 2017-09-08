@@ -142,8 +142,7 @@ function setTransport(_transport) {
 
 const callback = {
     onOnline: onOnline,
-    onIncomingMessage: onIncomingMessage,
-    onH2HIncomingMessage: onH2HIncomingMessage
+    onIncomingMessage: onIncomingMessage
 }
 
 exports.callback = callback;
