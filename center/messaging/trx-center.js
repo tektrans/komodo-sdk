@@ -84,7 +84,7 @@ function executePrepaidBuy(paramsFromTransport) {
     let tokens = paramsFromTransport.msg.trim().split(/[\., ]+/);
 
     let qs = {
-        request_id: null,
+        request_id: tokens[3],
         terminal_name: paramsFromTransport.partner.toLowerCase(),
         product_name: tokens[0].toUpperCase(),
         destination: tokens[1].toUpperCase(),
@@ -94,9 +94,11 @@ function executePrepaidBuy(paramsFromTransport) {
         msg: paramsFromTransport.msg
     }
 
-    qs.request_id = generateRequestId(qs);
-    if (tokens[3]) {
-        qs.request_id += '_' + tokens[3];
+    if (!qs.do_not_prefix_request_id) {
+        qs.request_id = generateRequestId(qs);
+        if (tokens[3]) {
+            qs.request_id += '_' + tokens[3];
+        }
     }
 
     let requestOptions = {
