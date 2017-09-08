@@ -41,7 +41,7 @@ function create() {
     let listenPort = config.listen_port;
 
     http.createServer(onRequest).listen(listenPort, function() {
-        logger.info('HTTP Reverse/Report server listen on port ' + listenPort);
+        logger.info('HTTP Reverse/Report server listen on port ' + listenPort + ' to process CORE message');
     });;
 }
 
