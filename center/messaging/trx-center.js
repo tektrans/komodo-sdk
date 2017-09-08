@@ -110,7 +110,7 @@ function executePrepaidBuy(paramsFromTransport, cb) {
     requestToCore(requestOptions, cb);
 }
 
-function requestToCore(requestOptions, partner) {
+function requestToCore(requestOptions, cb) {
     logger.verbose('Requesting service to CORE', requestOptions);
 
     request(requestOptions, function(err, res, body) {
