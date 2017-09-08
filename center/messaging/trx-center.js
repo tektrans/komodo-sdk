@@ -1,5 +1,9 @@
 "use strict";
 
+/**
+ * Trx Handler untuk center messaging
+ */
+
 const path = require('path');
 const request = require('request');
 const strftime = require('strftime');
