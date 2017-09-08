@@ -25,10 +25,10 @@ function onIncomingMessage(paramsFromTransport) {
 
     const command = paramsFromTransport.msg.split(/[\., ]+/)[0].toUpperCase();
 
-    if (config.commands.balance.indexOf(command) >= 0) {
+    if (config.commands && config.commands.balance.indexOf(command) >= 0) {
         executeBalanceCheck(paramsFromTransport);
     }
-    else if (config.commands.price.indexOf(command) >= 0) {
+    else if (config.commands && config.commands.price.indexOf(command) >= 0) {
         executePriceCheck(paramsFromTransport);
     }
     else {
@@ -94,7 +94,7 @@ function executePrepaidBuy(paramsFromTransport) {
         msg: paramsFromTransport.msg
     }
 
-    if (!qs.do_not_prefix_request_id) {
+    if (!config.do_not_prefix_request_id) {
         qs.request_id = generateRequestId(qs);
         if (tokens[3]) {
             qs.request_id += '_' + tokens[3];
