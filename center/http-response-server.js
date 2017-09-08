@@ -29,9 +29,7 @@ function onRequest(request, response) {
         return;
     }
 
-    transport.send(qs.terminal_name, qs.message, {
-        reverse_url: qs.reverse_url
-    });
+    transport.send(qs.terminal_name, qs.message, qs);
 }
 
 function setTransport(newTransport) {
