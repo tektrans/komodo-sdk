@@ -16,7 +16,7 @@ const logger = require('../logger');
 let transport;
 
 function onRequest(request, response) {
-    logger.vebose('CEKIDOT');
+    logger.info('CEKIDOT');
     response.end('OK');
     const qs = url.parse(request.url, true).query;
     logger.verbose('Got reverse report from CORE', {qs: qs});
