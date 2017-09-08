@@ -63,17 +63,18 @@ function executePriceCheck(paramsFromTransport) {
     requestToCore(requestOptions);
 }
 
-function parseBalanceResponse(body) {
-    let result;
+function parseCoreMessage(body) {
+    let coreRes;
 
     try {
-        result = JSON.parse(body);
+        coreRes = JSON.parse(body)
     }
-    catch(e) {
-        logger.warn('Error JSON parsing', {module_name: module_name, method_name: 'parseBalanceResponse', body: body})
-        result = null;
+    catch(err) {
+        logger.warn('Exception on parsing CORE response as JSON', {body: body, err: err});
+        coreRes = null;
     }
-    return result;
+
+    return coreRes;
 }
 
 function generateRequestId(req) {
@@ -119,7 +120,7 @@ function requestToCore(requestOptions, partner) {
             return;
         }
 
-        let result = parseBalanceResponse(body);
+        let result = parseCoreMessage(body);
         if (!result || !result.message) {
             transport.send(requestOptions.qs.terminal_name, 'INTERNAL ERROR');
             return;
@@ -127,20 +128,6 @@ function requestToCore(requestOptions, partner) {
 
         transport.send(requestOptions.qs.terminal_name, result.message);
     })
-}
-
-function parseCoreMessage(body) {
-    let coreRes;
-
-    try {
-        coreRes = JSON.parse(body)
-    }
-    catch(err) {
-        logger.warn('Exception on parsing CORE response as JSON', {body: body, err: err});
-        coreRes = null;
-    }
-
-    return coreRes;
 }
 
 function setTransport(_transport) {
