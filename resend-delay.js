@@ -2,8 +2,8 @@
 
 var LRU = require('lru-cache');
 
-const config = require('../config');
-const logger = require('../logger');
+const config = require('./config');
+const logger = require('./logger');
 
 var topupRequest;
 var resendHandlers = LRU({max: 2000, maxAge: 1000 * 3600 * 36});
@@ -55,11 +55,11 @@ function register(task) {
         return;
     }
 
-    if (!config || !config.globals || !Number(config.globals.auto_resend_delay_secs) || !Number(config.globals.auto_resend_delay_max)) {
+    if (!config || !config.auto_resend_delay || !Number(config.auto_resend_delay.delay_ms) || !Number(config.auto_resend_delay.resend_max)) {
         return;
     }
 
-    var retry = config.globals.auto_resend_delay_max;
+    var retry = config.auto_resend_delay.resend_max;
     var oldHandler = resendHandlers.get(task.requestId);
     if (oldHandler) {
         retry = oldHandler.retry - 1;
@@ -72,16 +72,15 @@ function register(task) {
         return;
     }
 
-    logger.verbose('Registering resend delay task request', {task: task, delay: config.globals.auto_resend_delay_secs, retry: retry});
+    logger.verbose('Registering resend delay task request', {task: task, delay_ms: config.auto_resend_delay.delay_ms, retry: retry});
     var handlerData = {
-        handler: setTimeout(request, config.globals.auto_resend_delay_secs * 1000, task),
+        handler: setTimeout(request, config.auto_resend_delay.delay_ms, task),
         task: task,
         retry: retry
     }
 
     resendHandlers.set(task.requestId, handlerData);
 }
-
 
 exports.init = init;
 exports.cancel = cancel;
