@@ -9,12 +9,7 @@ var topupRequest;
 var resendHandlers = LRU({max: 2000, maxAge: 1000 * 3600 * 36});
 
 function init(options) {
-    if (!options) {
-        console.log('Undefined options, terminating....');
-        process.exit(1);
-    }
-
-    if (options.request) {
+    if (options && options.request) {
         request = options.request;
     } else {
         logger.warn('Undefined options.request, terminating....');
