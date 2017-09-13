@@ -55,11 +55,11 @@ function register(task) {
         return;
     }
 
-    if (!config || !config.auto_resend || !Number(config.auto_resend.delay_ms) || !Number(config.auto_resend.retry_max)) {
+    if (!config || !config.auto_resend || !Number(config.auto_resend.delay_ms) || !Number(config.auto_resend.max_retry)) {
         return;
     }
 
-    var retry = config.auto_resend.retry_max;
+    var retry = config.auto_resend.max_retry;
     var oldHandler = resendHandlers.get(task.requestId);
     if (oldHandler) {
         retry = oldHandler.retry - 1;
