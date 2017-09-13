@@ -8,15 +8,15 @@ const matrix = require('../matrix');
 
 var partner;
 
-function init(_partner) {
+function setPartner(_partner) {
     partner = _partner;
-
-    initMatrix();
-
-    setInterval(pullTask, config.pull_interval_ms || 1000);
 }
 
 function pullTask() {
+    if (!partner) {
+        return;
+    }
+
     let options = {
         url: config.pull_url.task.replace('<CORE_APIKEY>', config.core_apikey),
         qs: {
@@ -80,7 +80,7 @@ function report(data) {
             message: data.message,
             handler: config.handler_name,
             sn: data.sn,
-            supplier_price: data.supplier_price
+            amount: data.amount
         }
     }
 
@@ -141,7 +141,10 @@ function getRemoteProduct(product) {
     return remoteProduct || product;
 }
 
-exports.init = init;
+initMatrix();
+setInterval(pullTask, config.pull_interval_ms || 1000);
+
+exports.setPartner = setPartner;
 exports.isPaused = isPaused;
 exports.pause = pause;
 exports.resume = resume;
