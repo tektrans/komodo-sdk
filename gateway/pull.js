@@ -70,8 +70,37 @@ function forwardCoreTaskToPartner(coreMessage) {
     partner.buy(task);
 }
 
-//function report(trx_id, rc, message, sn) {
 function report(data) {
+    reportUsingHttpPost(data);
+}
+
+function reportUsingHttpPost(data) {
+    let options = {
+        url: config.pull_url.report.replace('<CORE_APIKEY>', config.core_apikey),
+        form: {
+            trx_id: data.trx_id,
+            rc: data.rc,
+            message: data.message,
+            handler: config.handler_name,
+            sn: data.sn,
+            amount: data.amount
+        }
+    }
+
+    request.post(options, function(error, response, body) {
+        if (error) {
+            logger.warn('Error reporting to CORE', {error: error});
+        }
+        else if (response.statusCode != 200) {
+            logger.warn('CORE http response status is not 200', {requestOptions: options, http_response_status: response.statusCode});
+        }
+        else {
+            logger.verbose('Report has been sent to CORE', {requestOptions: options});
+        }
+    });
+}
+
+function reportUsingHttpGet(data) {
     let options = {
         url: config.pull_url.report.replace('<CORE_APIKEY>', config.core_apikey),
         qs: {
