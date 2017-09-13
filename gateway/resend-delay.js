@@ -55,11 +55,11 @@ function register(task) {
         return;
     }
 
-    if (!config || !config.auto_resend_delay || !Number(config.auto_resend_delay.delay_ms) || !Number(config.auto_resend_delay.resend_max)) {
+    if (!config || !config.auto_resend || !Number(config.auto_resend.delay_ms) || !Number(config.auto_resend.retry_max)) {
         return;
     }
 
-    var retry = config.auto_resend_delay.resend_max;
+    var retry = config.auto_resend.retry_max;
     var oldHandler = resendHandlers.get(task.requestId);
     if (oldHandler) {
         retry = oldHandler.retry - 1;
@@ -72,9 +72,9 @@ function register(task) {
         return;
     }
 
-    logger.verbose('Registering resend delay task request', {task: task, delay_ms: config.auto_resend_delay.delay_ms, retry: retry});
+    logger.verbose('Registering resend delay task request', {task: task, delay_ms: config.auto_resend.delay_ms, retry: retry});
     var handlerData = {
-        handler: setTimeout(request, config.auto_resend_delay.delay_ms, task),
+        handler: setTimeout(request, config.auto_resend.delay_ms, task),
         task: task,
         retry: retry
     }
