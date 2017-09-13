@@ -88,6 +88,7 @@ function reportUsingHttpPost(data) {
         }
     }
 
+    logger.verbose('Report to CORE using HTTP POST');
     request.post(options, function(error, response, body) {
         if (error) {
             logger.warn('Error reporting to CORE', {error: error});
@@ -114,7 +115,7 @@ function reportUsingHttpGet(data) {
         }
     }
 
-
+    logger.verbose('Report to CORE using HTTP GET');
     request(options, function(error, response, body) {
         if (error) {
             logger.warn('Error reporting to CORE', {error: error});
