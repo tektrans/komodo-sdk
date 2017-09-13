@@ -70,20 +70,20 @@ function forwardCoreTaskToPartner(coreMessage) {
     partner.buy(task);
 }
 
-function report(trx_id, rc, message, sn) {
+//function report(trx_id, rc, message, sn) {
+function report(data) {
     let options = {
         url: config.pull_url.report.replace('<CORE_APIKEY>', config.core_apikey),
         qs: {
-            trx_id: trx_id,
-            rc: rc,
-            message: message,
-            handler: config.handler_name
+            trx_id: data.trx_id,
+            rc: data.rc,
+            message: data.message,
+            handler: config.handler_name,
+            sn: data.sn,
+            supplier_price: data.supplier_price
         }
     }
 
-    if (sn) {
-        options.qs.sn = sn;
-    }
 
     request(options, function(error, response, body) {
         if (error) {
@@ -98,13 +98,13 @@ function report(trx_id, rc, message, sn) {
     });
 }
 
-function resendReport(trx_id, rc, message, sn) {
+function resendReport(data) {
     let sleepBeforeResend = 1000;
     logger.verbose('Resend report to CORE in ' + sleepBeforeResend + 'ms')
 
     setTimeout(
         function() {
-            report(trx_id, rc, message, sn);
+            report(data);
         },
         sleepBeforeResend
     )
