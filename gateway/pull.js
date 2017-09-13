@@ -8,8 +8,8 @@ const matrix = require('../matrix');
 
 var partner;
 
-function init(options) {
-    partner = options.partner;
+function init(_partner) {
+    partner = _partner;
 
     initMatrix();
 
