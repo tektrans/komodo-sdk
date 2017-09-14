@@ -31,3 +31,6 @@ if (config && config.logger && && config.logger.circular_buffer_http && config.l
 
     logger.verbose('Logger circular buffer http server listen on port ' + config.logger.circular_buffer_http.listen_port);
 }
+else {
+    logger.verbose('Circular buffer logger http reader server is not configured, please set config.logger.circular_buffer.listen_port, config.logger.circular_buffer.username, and config.logger.circular_buffer.password')
+}
