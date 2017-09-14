@@ -53,4 +53,6 @@ logger = new winston.Logger({
 
 logger.verbose(__filename + ': initialized');
 
+require('./logger-circular-buffer-web');
+
 module.exports = logger;
