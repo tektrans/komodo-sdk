@@ -22,10 +22,12 @@ if (config && config.logger && && config.logger.circular_buffer_http && config.l
                     res.end('INVALID LOGGER');
                 }
                 else {
+                    res.writeHead(200, { 'Content-Type': 'application/json' });
                     res.end(JSON.stringify(results));
                 }
             });
         }
     }).listen(config.logger.circular_buffer_http.listen_port);
+
     logger.verbose('Logger circular buffer http server listen on port ' + config.logger.circular_buffer_http.listen_port);
 }
