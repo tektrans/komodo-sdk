@@ -3,7 +3,11 @@
 const fs = require('fs');
 const strftime = require('strftime');
 const winston = require('winston');
+
 require('winston-daily-rotate-file');
+require('winston-circular-buffer');
+
+const config = require('./config');
 
 var loggerTimestamp = function() {
     return strftime('%F %T', new Date());
@@ -37,6 +41,13 @@ logger = new winston.Logger({
             },
             level: 'debug',
         }),
+
+        new (winston.transports.CircularBuffer) ({
+            name: 'logs',
+            level: "verbose",
+            json: true,
+            size: 500
+        })
     ]
 });
 
