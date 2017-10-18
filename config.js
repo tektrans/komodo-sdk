@@ -1,6 +1,7 @@
 "use strict";
 
 const fs = require('fs');
+const moment = require('moment');
 
 let configFile = process.cwd() + "/config.json";
 
