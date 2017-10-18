@@ -13,4 +13,6 @@ if (!fs.existsSync(configFile)) {
 
 const config = require(configFile);
 
+moment.locale(config.moment_locale || 'id');
+
 module.exports = config;
