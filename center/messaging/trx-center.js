@@ -56,7 +56,8 @@ function executePriceCheck(paramsFromTransport) {
         url: config.core_url + '/services/pricelist',
         qs: {
             terminal_name: paramsFromTransport.partner.toLowerCase(),
-            keyword: paramsFromTransport.msg.trim().split(/[\., ]+/)[1]
+            keyword: paramsFromTransport.msg.trim().split(/[\., ]+/)[1],
+            password: paramsFromTransport.msg.trim().split(/[\., ]+/)[2]
         }
     }
 
