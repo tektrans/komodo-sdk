@@ -22,7 +22,7 @@ function _removeIfNotExists(new_config) {
     for (let key in config) {
         if (!new_config[key]) {
             logger.verbose('Removing old config key: ' + key);
-            del config[key];
+            delete config[key];
         }
     }
 }
