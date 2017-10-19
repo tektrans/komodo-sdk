@@ -10,7 +10,7 @@ function replace(new_config) {
     }
 
     _removeIfNotExists(new_config);
-    configFiller.do();
+    configFiller.go();
 }
 
 function reload() {

@@ -13,6 +13,6 @@ if (!fs.existsSync(configFile)) {
 }
 
 const config = require(configFile);
-configFiller.do();
+configFiller.go();
 
 module.exports = config;
