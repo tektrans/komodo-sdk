@@ -2,6 +2,7 @@
 
 const config = require('./config');
 const logger = require('./logger');
+const configFiller = require('./config-filler');
 
 function replace(new_config) {
     for (let key in new_config) {
@@ -9,6 +10,7 @@ function replace(new_config) {
     }
 
     _removeIfNotExists(new_config);
+    configFiller.do();
 }
 
 function reload() {

@@ -1,7 +1,7 @@
 "use strict";
 
 const fs = require('fs');
-const moment = require('moment');
+const configFiller = require('./config-filler');
 
 let configFile = process.cwd() + "/config.json";
 
@@ -13,7 +13,6 @@ if (!fs.existsSync(configFile)) {
 }
 
 const config = require(configFile);
-
-moment.locale(config.moment_locale || 'id');
+configFiller.do();
 
 module.exports = config;
