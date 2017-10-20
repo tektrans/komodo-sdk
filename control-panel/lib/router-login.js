@@ -42,7 +42,8 @@ function pageLoginSubmitted(req, res, next) {
 
     const qs = {
         terminal_name: req.body.terminal_name,
-        web_password: req.body.password
+        web_password: req.body.password,
+        request_by: config.handler_name || config.username || config.origin
     }
 
     requestToCore.doRequestAndParse('/services/terminalAuthentication', qs, function(err, coreResponse) {
