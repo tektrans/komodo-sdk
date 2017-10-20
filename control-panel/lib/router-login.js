@@ -21,7 +21,7 @@ function pageLogin(req, res, next) {
     res.render(
         req.app.locals.cp_views_dir + '/login.html',
         {
-            ref: req.query.referer,
+            ref: req.query.ref,
             msg: req.query.msg
         }
     )
