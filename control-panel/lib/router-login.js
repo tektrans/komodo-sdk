@@ -2,6 +2,7 @@
 
 const module_name = 'CONTROL_PANEL_' + require('path').basename(__filename);
 
+const querystring = require('querystring');
 const express = require('express');
 const bodyParser = require('body-parser');
 const router = express.Router();
