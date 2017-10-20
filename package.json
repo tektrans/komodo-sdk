@@ -20,11 +20,18 @@
   "license": "ISC",
   "dependencies": {
     "basic-auth": "^2.0.0",
+    "body-parser": "^1.18.2",
+    "express": "^4.16.2",
+    "express-session": "^1.15.6",
     "lru-cache": "^4.1.1",
     "moment": "^2.19.1",
+    "numeral": "^2.0.6",
+    "nunjucks": "^3.0.1",
     "request": "^2.81.0",
     "simple-git": "^1.80.1",
     "strftime": "^0.10.0",
+    "uniqid": "^4.1.1",
+    "uuid": "^3.1.0",
     "winston": "^2.3.1",
     "winston-circular-buffer": "^1.0.0",
     "winston-daily-rotate-file": "^1.4.6"
