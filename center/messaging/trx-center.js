@@ -10,6 +10,7 @@ const strftime = require('strftime');
 const config = require('../../config');
 const logger = require('../../logger');
 const httpResponseServer = require('../http-response-server');
+const controlPanel = require('../../control-panel');
 
 const module_name = path.basename(__filename);
 
