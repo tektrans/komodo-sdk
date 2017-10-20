@@ -1,0 +1,80 @@
+{% extends cp_views_dir + "/template.html" %}
+
+{% block head %}
+<link href="/control-panel/jsoneditor/jsoneditor.css" rel="stylesheet" type="text/css">
+<script src="/control-panel/jsoneditor/jsoneditor.js"></script>
+{% endblock %}
+
+{% block content %}
+
+<h2>{{ page_title }}</h2>
+
+<div id="jsoneditor"></div>
+
+<script>
+    function saveData() {
+        window.alert(JSON.stringify(editor.get()));
+        jQuery.ajax({
+            type: "POST",
+            url: '/config/data',
+            contentType: 'application/json',
+            data: JSON.stringify(editor.get()),
+            success: function(responseBody, textStatus, jqXHR) {
+                window.alert(responseBody);
+                location.reload();
+            }
+        });
+    }
+
+    function loadData() {
+        jQuery.ajax('/config/data').done(function(data) {
+            editor.setName('CONFIG');
+            editor.set(data);
+            editor.expandAll();
+        });
+    }
+
+    var container = document.getElementById("jsoneditor");
+    var options = {
+        mode: '{{ jsoneditor_mode }}',
+        modes: ["form", "tree", "code"],
+        onChange: function() {
+            $("#buttonSubmit").removeAttr('disabled');
+        }
+    };
+
+    var editor = new JSONEditor(container, options);
+    loadData();
+
+</script>
+
+<br><br>
+
+<div class="panel panel-default">
+    <div class="panel-body">
+
+        <button id="buttonSubmit" type="submit" class="btn btn-primary"
+            onclick="saveData()"
+            disabled
+        >
+            Eksekusi dan Simpan
+        </button>
+
+        <button id="buttonSubmit" type="submit" class="btn btn-primary"
+            onclick="location.reload()"
+        >
+            Reload Konfigurasi
+        </button>
+
+        <button type="button" class="btn btn-danger" data-toggle="modal" data-target="#restartConfirmationModal">
+            Restart Aplikasi
+        </button>
+
+    </div>
+</div>
+
+{% include cp_views_dir + "/restart.confirmation.modal.html" %}
+
+{% include "views/config.help.html" ignore missing %}
+
+{% endblock %}
