@@ -5,6 +5,7 @@ const request = require('request');
 const config = require('../config');
 const logger = require('../logger');
 const matrix = require('../matrix');
+const controlPanel = require('../control-panel');
 
 var partner;
 
