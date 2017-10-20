@@ -39,6 +39,7 @@ function pageRuntime(req, res, next) {
         req.app.locals.cp_views_dir + '/runtime.html',
         {
             uptime: numeral(process.uptime()).format(),
+            matrix: JSON.stringify(matrix, null, 4),
             memory_usage: JSON.stringify(process.memoryUsage(), null, 4),
             os_info: JSON.stringify({
                 uptime: os.uptime(),
