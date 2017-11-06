@@ -6,7 +6,7 @@ const config = require('../config');
 const logger = require('../logger');
 const matrix = require('../matrix');
 const controlPanel = require('../control-panel');
-const heartbeat = require('../heartbeat');
+const heartbeat = require('./heartbeat');
 
 var partner;
 
