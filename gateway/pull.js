@@ -112,7 +112,10 @@ function reportUsingHttpPost(data) {
             handler: config.handler_name,
             sn: data.sn,
             amount: data.amount,
-            raw: data.raw
+            raw: data.raw,
+            combined: {
+                raw: data.raw
+            }
         }
     }
 
