@@ -9,6 +9,9 @@ simpleGit(process.cwd()).raw(
     ['describe'],
     function(err, result) {
         if (!err) {
+            if (result) {
+                result = result.trim();
+            }
             matrix.version_active = result;
         }
     }
