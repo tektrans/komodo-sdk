@@ -8,6 +8,8 @@ const matrix = require('../matrix');
 const controlPanel = require('../control-panel');
 const heartbeat = require('../heartbeat');
 
+heartbeat.setModuleType('gateway');
+
 var partner;
 
 function setPartner(_partner) {
