@@ -25,7 +25,6 @@ function sendHeartbeat() {
     request.post(requestOptions);
 }
 
-sendHeartbeat();
 setInterval(
     sendHeartbeat,
     60 * 1000
@@ -33,6 +32,7 @@ setInterval(
 
 function setModuleType(value) {
     module_type = value;
+    sendHeartbeat();
 }
 
 exports.setModuleType = setModuleType;
