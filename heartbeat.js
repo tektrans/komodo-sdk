@@ -34,3 +34,5 @@ setInterval(
 function setModuleType(value) {
     module_type = value;
 }
+
+exports.setModuleType = setModuleType;
