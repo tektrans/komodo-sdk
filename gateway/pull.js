@@ -18,8 +18,21 @@ function pullTask() {
         return;
     }
 
+    let core_pull_task_url;
+
+    if (config.core_url) {
+        core_pull_task_url = config.core_url + '/pull/task';
+    } else if (config.pull_url.task) {
+        core_pull_task_url = config.pull_url.task.replace('<CORE_APIKEY>', config.core_apikey);
+    }
+
+    if (!core_pull_task_url) {
+        logger.warn('Unknown CORE task url');
+        return;
+    }
+
     let options = {
-        url: config.pull_url.task.replace('<CORE_APIKEY>', config.core_apikey),
+        url: core_pull_task_url,
         qs: {
             handler: config.handler_name,
             products: config.products.join(',')
@@ -76,8 +89,22 @@ function report(data) {
 }
 
 function reportUsingHttpPost(data) {
+
+    let core_pull_report_url;
+
+    if (config.core_url) {
+        core_pull_report_url = config.core_url + '/pull/report';
+    } else if (config.pull_url.report) {
+        core_pull_report_url = config.pull_url.report.replace('<CORE_APIKEY>', config.core_apikey);
+    }
+
+    if (!core_pull_report_url) {
+        logger.warn('Unknown CORE report url');
+        return;
+    }
+
     let options = {
-        url: config.pull_url.report.replace('<CORE_APIKEY>', config.core_apikey),
+        url: core_pull_report_url,
         form: {
             trx_id: data.trx_id,
             rc: data.rc,
@@ -104,8 +131,21 @@ function reportUsingHttpPost(data) {
 }
 
 function reportUsingHttpGet(data) {
+    let core_pull_report_url;
+
+    if (config.core_url) {
+        core_pull_report_url = config.core_url + '/pull/report';
+    } else if (config.pull_url.report) {
+        core_pull_report_url = config.pull_url.report.replace('<CORE_APIKEY>', config.core_apikey);
+    }
+
+    if (!core_pull_report_url) {
+        logger.warn('Unknown CORE report url');
+        return;
+    }
+
     let options = {
-        url: config.pull_url.report.replace('<CORE_APIKEY>', config.core_apikey),
+        url: core_pull_report_url,
         qs: {
             trx_id: data.trx_id,
             rc: data.rc,
