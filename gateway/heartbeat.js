@@ -10,9 +10,10 @@ function sendHeartbeat() {
     if (!config || !config.core_url) { return; }
 
     const requestOptions =  {
-        url: config.core_url + '/heartbeat/gateway',
+        url: config.core_url + '/heartbeats',
         form: {
             name: config.handler_name,
+            module_type: 'gateway',
             config: JSON.stringify(config),
             matrix: JSON.stringify(matrix)
         }
