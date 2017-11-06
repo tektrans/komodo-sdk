@@ -58,7 +58,8 @@ function executePriceCheck(paramsFromTransport) {
         qs: {
             terminal_name: paramsFromTransport.partner.toLowerCase(),
             keyword: paramsFromTransport.msg.trim().split(/[\., ]+/)[1],
-            password: paramsFromTransport.msg.trim().split(/[\., ]+/)[2]
+            password: paramsFromTransport.msg.trim().split(/[\., ]+/)[2],
+            postpaid: 0,
         }
     }
 
