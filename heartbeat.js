@@ -2,9 +2,9 @@
 
 const request = require('request');
 
-const config = require('../config');
-const logger = require('../logger');
-const matrix = require('../matrix');
+const config = require('./config');
+const logger = require('./logger');
+const matrix = require('./matrix');
 
 function sendHeartbeat() {
     if (!config || !config.core_url) { return; }
