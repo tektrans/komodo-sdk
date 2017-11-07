@@ -31,6 +31,7 @@ setInterval(
 )
 
 function setModuleType(value) {
+    logger.verbose('Set heartbeat module type as ' + value + ' and starting to send heartbeat per interval');
     module_type = value;
     sendHeartbeat();
 }
