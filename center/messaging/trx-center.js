@@ -191,10 +191,10 @@ function requestToCore(requestOptions, cb) {
         if (err || res.statusCode != 200) {
             logger.warn('Error requesting to CORE', {module_name: module_name, method_name: 'requestToCore', requestOptions: requestOptions, err: err});
             if (cb) {
-                cb(null, {msg: 'INTERNAL ERROR'});
+                cb(null, {msg: requestOptions.qs.msg + ': INTERNAL ERROR'});
             }
             else if (transport.send) {
-                transport.send(requestOptions.qs.terminal_name, 'INTERNAL ERROR');
+                transport.send(requestOptions.qs.terminal_name, requestOptions.qs.msg + ': INTERNAL ERROR'});
             }
             return;
         }
