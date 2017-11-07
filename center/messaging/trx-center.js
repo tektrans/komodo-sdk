@@ -34,10 +34,11 @@ function onIncomingMessage(paramsFromTransport, cb) {
         executePriceCheck(paramsFromTransport, cb);
     }
     else if (config.commands && config.commands.postpaid_inquiry && config.commands.postpaid_inquiry.indexOf(command) >= 0) {
+        executePostpaidInquiry(paramsFromTransport, cb);
 
     }
     else if (config.commands && config.commands.postpaid_pay && config.commands.postpaid_pay.indexOf(command) >= 0) {
-
+        executePostpaidInquiry(paramsFromTransport, cb);
     }
     else {
         executePrepaidBuy(paramsFromTransport, cb);
