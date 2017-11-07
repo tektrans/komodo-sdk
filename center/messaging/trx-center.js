@@ -26,11 +26,17 @@ function onIncomingMessage(paramsFromTransport, cb) {
 
     const command = paramsFromTransport.msg.split(/[\., ]+/)[0].toUpperCase();
 
-    if (config.commands && config.commands.balance.indexOf(command) >= 0) {
+    if (config.commands && config.commands.balance && config.commands.balance.indexOf(command) >= 0) {
         executeBalanceCheck(paramsFromTransport, cb);
     }
-    else if (config.commands && config.commands.price.indexOf(command) >= 0) {
+    else if (config.commands && config.commands.price && config.commands.price.indexOf(command) >= 0) {
         executePriceCheck(paramsFromTransport, cb);
+    }
+    else if (config.commands && config.commands.postpaid_inquiry && config.commands.postpaid_inquiry.indexOf(command) >= 0) {
+
+    }
+    else if (config.commands && config.commands.postpaid_pay && config.commands.postpaid_pay.indexOf(command) >= 0) {
+
     }
     else {
         executePrepaidBuy(paramsFromTransport, cb);
@@ -108,6 +114,70 @@ function executePrepaidBuy(paramsFromTransport, cb) {
 
     let requestOptions = {
         url: config.core_url + '/prepaid/buy',
+        qs: qs
+    }
+
+    requestToCore(requestOptions, cb);
+}
+
+function executePostpaidInquiry(paramsFromTransport, cb) {
+    // PAY.PLN.1234567890.PIN
+
+    let tokens = paramsFromTransport.msg.trim().split(/[\., ]+/);
+
+    let qs = {
+        request_id: tokens[4],
+        terminal_name: paramsFromTransport.partner.toLowerCase(),
+        product_name: tokens[1].toUpperCase(),
+        destination: tokens[2].toUpperCase(),
+        password: tokens[3],
+        origin: config.origin || config.username,
+        report_port: config.listen_port || '80',
+        msg: paramsFromTransport.msg,
+        reverse_url: paramsFromTransport.reverse_url
+    }
+
+    if (!config.do_not_prefix_request_id) {
+        qs.request_id = generateRequestId(qs);
+        if (tokens[3]) {
+            qs.request_id += '_' + tokens[3];
+        }
+    }
+
+    let requestOptions = {
+        url: config.core_url + '/postpaid/pay',
+        qs: qs
+    }
+
+    requestToCore(requestOptions, cb);
+}
+
+function executePostpaidPay(paramsFromTransport, cb) {
+    // INQUIRY.PLN.1234567890.PIN
+
+    let tokens = paramsFromTransport.msg.trim().split(/[\., ]+/);
+
+    let qs = {
+        request_id: tokens[4],
+        terminal_name: paramsFromTransport.partner.toLowerCase(),
+        product_name: tokens[1].toUpperCase(),
+        destination: tokens[2].toUpperCase(),
+        password: tokens[3],
+        origin: config.origin || config.username,
+        report_port: config.listen_port || '80',
+        msg: paramsFromTransport.msg,
+        reverse_url: paramsFromTransport.reverse_url
+    }
+
+    if (!config.do_not_prefix_request_id) {
+        qs.request_id = generateRequestId(qs);
+        if (tokens[3]) {
+            qs.request_id += '_' + tokens[3];
+        }
+    }
+
+    let requestOptions = {
+        url: config.core_url + '/postpaid/inquiry',
         qs: qs
     }
 
