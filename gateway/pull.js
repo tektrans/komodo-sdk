@@ -88,10 +88,6 @@ function forwardCoreTaskToPartner(coreMessage) {
 }
 
 function report(data) {
-    reportUsingHttpPost(data);
-}
-
-function reportUsingHttpPost(data) {
 
     let core_pull_report_url;
 
@@ -124,46 +120,6 @@ function reportUsingHttpPost(data) {
 
     logger.verbose('Report to CORE using HTTP POST');
     request.post(options, function(error, response, body) {
-        if (error) {
-            logger.warn('Error reporting to CORE', {error: error});
-        }
-        else if (response.statusCode != 200) {
-            logger.warn('CORE http response status is not 200', {requestOptions: options, http_response_status: response.statusCode});
-        }
-        else {
-            logger.verbose('Report has been sent to CORE', {requestOptions: options});
-        }
-    });
-}
-
-function reportUsingHttpGet(data) {
-    let core_pull_report_url;
-
-    if (config.core_url) {
-        core_pull_report_url = config.core_url + '/pull/report';
-    } else if (config.pull_url.report) {
-        core_pull_report_url = config.pull_url.report.replace('<CORE_APIKEY>', config.core_apikey);
-    }
-
-    if (!core_pull_report_url) {
-        logger.warn('Unknown CORE report url');
-        return;
-    }
-
-    let options = {
-        url: core_pull_report_url,
-        qs: {
-            trx_id: data.trx_id,
-            rc: data.rc,
-            message: data.message,
-            handler: config.handler_name,
-            sn: data.sn,
-            amount: data.amount
-        }
-    }
-
-    logger.verbose('Report to CORE using HTTP GET');
-    request(options, function(error, response, body) {
         if (error) {
             logger.warn('Error reporting to CORE', {error: error});
         }
