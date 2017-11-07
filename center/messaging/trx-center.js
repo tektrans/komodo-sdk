@@ -4,21 +4,22 @@
  * Trx Handler untuk center messaging
  */
 
-const path = require('path');
+const module_name = require('path').basename(__filename);
+
 const request = require('request');
 const strftime = require('strftime');
 const config = require('../../config');
 const logger = require('../../logger');
 const httpResponseServer = require('../http-response-server');
 const controlPanel = require('../../control-panel');
-
-const module_name = path.basename(__filename);
+const heartbeat = require('../../heartbeat');
 
 let transport;
 
+heartbeat.setModuleType('center')
+
 function onOnline(params) {
     logger.info('CENTER is ONLINE, ready to communicate');
-
 }
 
 function onIncomingMessage(paramsFromTransport, cb) {
