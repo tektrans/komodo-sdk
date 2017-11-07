@@ -11,11 +11,21 @@ let module_type;
 function sendHeartbeat() {
     if (!config || !config.core_url || !module_type) { return; }
 
+    let heartbeat_name = config.handler_name || config.origin;
+    if (config.username) {
+        heartbeat_name += '/' + config.username;
+    }
+
+    if (!heartbeat_name) {
+        logger.warn('Unknown heartbeat name, skip sending heartbeat');
+        return;
+    }
+
     const requestOptions =  {
         uri: config.core_url + '/heartbeats',
         method: 'POST',
         json: {
-            name: config.handler_name,
+            name: heartbeat_name,
             module_type: module_type,
             config: config,
             matrix: matrix
