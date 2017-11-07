@@ -38,7 +38,7 @@ function onIncomingMessage(paramsFromTransport, cb) {
 
     }
     else if (config.commands && config.commands.postpaid_pay && config.commands.postpaid_pay.indexOf(command) >= 0) {
-        executePostpaidInquiry(paramsFromTransport, cb);
+        executePostpaidPay(paramsFromTransport, cb);
     }
     else {
         executePrepaidBuy(paramsFromTransport, cb);
@@ -147,7 +147,7 @@ function executePostpaidInquiry(paramsFromTransport, cb) {
     }
 
     let requestOptions = {
-        url: config.core_url + '/postpaid/pay',
+        url: config.core_url + '/postpaid/inquiry',
         qs: qs
     }
 
@@ -155,8 +155,6 @@ function executePostpaidInquiry(paramsFromTransport, cb) {
 }
 
 function executePostpaidPay(paramsFromTransport, cb) {
-    // INQUIRY.PLN.1234567890.PIN
-
     let tokens = paramsFromTransport.msg.trim().split(/[\., ]+/);
 
     let qs = {
@@ -179,7 +177,7 @@ function executePostpaidPay(paramsFromTransport, cb) {
     }
 
     let requestOptions = {
-        url: config.core_url + '/postpaid/inquiry',
+        url: config.core_url + '/postpaid/pay',
         qs: qs
     }
 
