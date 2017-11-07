@@ -112,9 +112,7 @@ function report(data) {
             sn: data.sn,
             amount: data.amount,
             raw: data.raw,
-            combined: {
-                raw: data.raw
-            }
+            misc: data.misc
         }
     }
 
