@@ -194,7 +194,7 @@ function requestToCore(requestOptions, cb) {
                 cb(null, {msg: requestOptions.qs.msg + ': INTERNAL ERROR'});
             }
             else if (transport.send) {
-                transport.send(requestOptions.qs.terminal_name, requestOptions.qs.msg + ': INTERNAL ERROR'});
+                transport.send(requestOptions.qs.terminal_name, requestOptions.qs.msg + ': INTERNAL ERROR');
             }
             return;
         }
