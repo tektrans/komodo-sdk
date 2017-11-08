@@ -32,7 +32,9 @@ function sendHeartbeat() {
         }
     }
 
-    request.post(requestOptions);
+    request.post(requestOptions, function(err, res, body) {
+        
+    });
 }
 
 setInterval(
