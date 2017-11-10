@@ -53,7 +53,8 @@ function executeBalanceCheck(paramsFromTransport) {
         url: config.core_url + '/services/balance',
         qs: {
             terminal_name: terminal_name,
-            password: password
+            password: password,
+            msg: paramsFromTransport.msg
         }
     }
 
@@ -68,6 +69,7 @@ function executePriceCheck(paramsFromTransport) {
             keyword: paramsFromTransport.msg.trim().split(/[\., ]+/)[1],
             password: paramsFromTransport.msg.trim().split(/[\., ]+/)[2],
             postpaid: 0,
+            msg: paramsFromTransport.msg
         }
     }
 
