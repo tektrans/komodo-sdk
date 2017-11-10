@@ -192,22 +192,32 @@ function requestToCore(requestOptions, cb) {
     request(requestOptions, function(err, res, body) {
         if (err || res.statusCode != 200) {
             logger.warn('Error requesting to CORE', {module_name: module_name, method_name: 'requestToCore', requestOptions: requestOptions, err: err});
+            let msg = "INTERNAL ERROR";
+            if (requestOptions.qs.msg) {
+                msg = requestOptions.qs.msg + ": " + msg;
+            }
+
             if (cb) {
-                cb(null, {msg: requestOptions.qs.msg + ': INTERNAL ERROR'});
+                cb(null, {msg: msg});
             }
             else if (transport.send) {
-                transport.send(requestOptions.qs.terminal_name, requestOptions.qs.msg + ': INTERNAL ERROR');
+                transport.send(requestOptions.qs.terminal_name, msg);
             }
             return;
         }
 
         let result = parseCoreMessage(body);
         if (!result || !result.message) {
+            let msg = "INTERNAL ERROR";
+            if (requestOptions.qs.msg) {
+                msg = requestOptions.qs.msg + ": " + msg;
+            }
+
             if (cb) {
-                cb(null, {msg: 'INTERNAL ERROR'});
+                cb(null, {msg: msg});
             }
             else if (transport.send) {
-                transport.send(requestOptions.qs.terminal_name, 'INTERNAL ERROR');
+                transport.send(requestOptions.qs.terminal_name, msg);
             }
             return;
         }
