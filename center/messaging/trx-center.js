@@ -91,8 +91,7 @@ function parseCoreMessage(body) {
 }
 
 function generateRequestId(req) {
-    //return 'AUTO_' + req.product_name + '_' + req.destination + '_' + strftime('%Y%m%d');
-    return '';
+    return 'AUTO_' + req.product_name + '_' + req.destination + '_' + strftime('%Y%m%d');
 }
 
 function executePrepaidBuy(paramsFromTransport, cb) {
