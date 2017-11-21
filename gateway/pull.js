@@ -8,6 +8,10 @@ const matrix = require('../matrix');
 const controlPanel = require('../control-panel');
 const heartbeat = require('../heartbeat');
 
+if (config.handler_name) {
+    process.title = "KOMODO-GW@" + config.handler_name;
+}
+
 heartbeat.setModuleType('gateway');
 
 var partner;
