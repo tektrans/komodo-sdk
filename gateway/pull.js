@@ -121,7 +121,7 @@ function report(data) {
         }
     }
 
-    if (!config.do_not_log_report) {
+    if (!config.do_not_verbose_log_report) {
         logger.verbose('Report to CORE using HTTP POST');
     }
 
@@ -132,7 +132,7 @@ function report(data) {
         else if (response.statusCode != 200) {
             logger.warn('CORE http response status is not 200', {requestOptions: options, http_response_status: response.statusCode});
         }
-        else {
+        else if (!config.do_not_verbose_log_report) {
             logger.verbose('Report has been sent to CORE', {requestOptions: options});
         }
     });
