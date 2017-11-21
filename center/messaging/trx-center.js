@@ -143,8 +143,8 @@ function executePostpaidInquiry(paramsFromTransport, cb) {
 
     if (!config.do_not_prefix_request_id) {
         qs.request_id = generateRequestId(qs) + '_INQ';
-        if (tokens[3]) {
-            qs.request_id += '_' + tokens[3];
+        if (tokens[4]) {
+            qs.request_id += '_' + tokens[4];
         }
     }
 
@@ -173,8 +173,8 @@ function executePostpaidPay(paramsFromTransport, cb) {
 
     if (!config.do_not_prefix_request_id) {
         qs.request_id = generateRequestId(qs);
-        if (tokens[3]) {
-            qs.request_id += '_' + tokens[3];
+        if (tokens[4]) {
+            qs.request_id += '_' + tokens[4];
         }
     }
 
