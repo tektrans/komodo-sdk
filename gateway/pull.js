@@ -121,7 +121,10 @@ function report(data) {
         }
     }
 
-    logger.verbose('Report to CORE using HTTP POST');
+    if (!config.do_not_log_report) {
+        logger.verbose('Report to CORE using HTTP POST');
+    }
+
     request.post(options, function(error, response, body) {
         if (error) {
             logger.warn('Error reporting to CORE', {error: error});
