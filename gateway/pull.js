@@ -115,7 +115,6 @@ function report(data) {
             handler: config.handler_name,
             sn: data.sn,
             amount: data.amount,
-            handler: config.handler_name,
             raw: data.raw,
             misc: data.misc
         }
