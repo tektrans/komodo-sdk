@@ -91,6 +91,14 @@ function forwardCoreTaskToPartner(coreMessage) {
     partner.buy(task);
 }
 
+function replaceRc(original_rc) {
+    if (!config || !config.replace_rc || !config.replace_rc.length) {
+        return original_rc;
+    }
+
+    return config.replace_rc[original_rc] || original_rc;
+}
+
 function report(data) {
 
     let core_pull_report_url;
@@ -110,7 +118,7 @@ function report(data) {
         url: core_pull_report_url,
         form: {
             trx_id: data.trx_id,
-            rc: data.rc,
+            rc: replaceRc(original_rc),
             message: data.message,
             handler: config.handler_name,
             sn: data.sn,
