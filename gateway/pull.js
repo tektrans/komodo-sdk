@@ -118,7 +118,7 @@ function report(data) {
         url: core_pull_report_url,
         form: {
             trx_id: data.trx_id,
-            rc: replaceRc(original_rc),
+            rc: replaceRc(data.rc),
             message: data.message,
             handler: config.handler_name,
             sn: data.sn,
