@@ -8,6 +8,8 @@ const matrix = require('../matrix');
 const controlPanel = require('../control-panel');
 const heartbeat = require('../heartbeat');
 
+const taskArchive = require('./task-archive');
+
 if (config.handler_name) {
     process.title = "KOMODO-GW@" + config.handler_name;
 }
@@ -88,7 +90,16 @@ function forwardCoreTaskToPartner(coreMessage) {
 
     task.remote_product = getRemoteProduct(task.product);
 
-    partner.buy(task);
+    taskArchive.get(task, function(res) {
+        if (res && partner.advice) {
+            partner.advice(task);
+        }
+        else {
+            partner.buy(task);
+        }
+    });
+
+
 }
 
 function replaceRc(original_rc) {

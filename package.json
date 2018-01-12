@@ -27,6 +27,7 @@
     "moment": "^2.19.1",
     "numeral": "^2.0.6",
     "nunjucks": "^3.0.1",
+    "redis": "^2.8.0",
     "request": "^2.81.0",
     "simple-git": "^1.80.1",
     "strftime": "^0.10.0",
