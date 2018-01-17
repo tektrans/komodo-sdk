@@ -88,6 +88,8 @@ function forwardCoreTaskToPartner(coreMessage) {
         logger.warn('Exception on parsing CORE pull task response', {coreMessage: coreMessage, error: e});
     }
 
+    incrementCounterTrx();
+
     task.remote_product = getRemoteProduct(task.product);
 
     taskArchive.get(task, function(res) {
