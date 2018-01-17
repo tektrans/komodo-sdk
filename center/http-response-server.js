@@ -7,6 +7,8 @@
  */
 
 
+const module_name = require('path').basename(__filename);
+
 const http = require('http');
 const url = require('url');
 
@@ -16,10 +18,13 @@ const logger = require('../logger');
 let transport;
 
 function onRequest(request, response) {
+    const method_name = 'onRequest';
+
     response.end('OK');
 
     const qs = url.parse(request.url, true).query;
-    logger.verbose('Got reverse report from CORE', {qs: qs});
+
+    logger.verbose('Got reverse report from CORE', {module_name: module_name, method_name: method_name, url: request.url, qs: qs});
 
     if (!transport || !transport.send) {
         logger.warn('UNDEFINED TRANSPORT, not forwarding message from CORE');
