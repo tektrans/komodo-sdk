@@ -10,6 +10,8 @@ const heartbeat = require('../heartbeat');
 
 const taskArchive = require('./task-archive');
 
+const MAX_SLEEP_BEFORE_RESEND_MS = 500;
+
 if (config.handler_name) {
     process.title = "KOMODO-GW@" + config.handler_name;
 }
@@ -148,9 +150,11 @@ function report(data) {
     request.post(options, function(error, response, body) {
         if (error) {
             logger.warn('Error reporting to CORE', {error: error});
+            resendReport(data);
         }
         else if (response.statusCode != 200) {
-            logger.warn('CORE http response status is not 200', {requestOptions: options, http_response_status: response.statusCode});
+            logger.warn('Error reporting to CORE, http response status is not 200', {requestOptions: options, http_response_status: response.statusCode});
+            resendReport(data);
         }
         else if (!config.do_not_verbose_log_report) {
             logger.verbose('Report has been sent to CORE', {requestOptions: options});
@@ -159,7 +163,7 @@ function report(data) {
 }
 
 function resendReport(data) {
-    let sleepBeforeResend = 1000;
+    const sleepBeforeResend = Math.round(Math.random() * MAX_SLEEP_BEFORE_RESEND_MS)
     logger.verbose('Resend report to CORE in ' + sleepBeforeResend + 'ms')
 
     setTimeout(
