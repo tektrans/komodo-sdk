@@ -16,7 +16,7 @@ var loggerTimestamp = function() {
 let logger;
 
 const logDirectory = process.cwd() +  '/logs';
-const filenamePrefix = logDirectory + "/log";
+const filenamePrefix = logDirectory + "/" + (process.env.KOMODO_LOG_FILENAME || "/log");
 
 fs.existsSync(logDirectory) || fs.mkdirSync(logDirectory);
 
