@@ -9,23 +9,19 @@ require('winston-circular-buffer');
 
 const config = require('./config');
 
-var loggerTimestamp = function() {
+const loggerTimestamp = function() {
     return strftime('%F %T', new Date());
 }
-
-let logger;
 
 const logDirectory = process.cwd() +  '/logs';
 const filenamePrefix = logDirectory + "/" + (process.env.KOMODO_LOG_FILENAME || "/log");
 
 fs.existsSync(logDirectory) || fs.mkdirSync(logDirectory);
 
-logger = new winston.Logger({
+const logger = new winston.Logger({
     transports: [
         new (winston.transports.Console)({
-            timestamp: function() {
-                    return strftime('%F %T', new Date());
-            },
+            timestamp: process.stdout.isTTY ? loggerTimestamp : null,
             level: 'verbose',
         }),
 
