@@ -55,9 +55,12 @@ function adviceHandler(req, res, next) {
     }
 
     if (!task) {
+        logger.warn('PUSH-ADVICE: Invalid task');
         res.end('INVALID_TASK');
         return;
     }
+
+    logger.verbose('PUSH-ADVICE: Got advice push', {task: task});
 
     task.remote_product = pull.getRemoteProduct(task.product);
     partner.advice(task);
