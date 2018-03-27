@@ -8,14 +8,14 @@ const config = require('../config');
 const logger = require('../logger');
 const matrix = require('../matrix');
 
-if (!config || !config.push_server || !!config.push_server.apikey || !config.push_server.advice || !config.push_server.advice.url || !config.push_server.advice.port) return;
-
 const app = express();
 
 let partner = null;
 
 function setPartner(_partner) {
     partner = _partner;
+
+    if (!config || !config.push_server || !!config.push_server.apikey || !config.push_server.advice || !config.push_server.advice.url || !config.push_server.advice.port) return;
 
     app.listen(config.push_server.advice.port, function () {
         logger.info('Advice server listening', {port: config.push_server.advice.port});
