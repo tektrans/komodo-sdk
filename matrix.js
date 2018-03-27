@@ -6,7 +6,7 @@ const machineid = require('node-machine-id');
 const sha1 = require('sha1');
 
 const matrix = {
-    host_id: null
+    host_id: {}
 };
 
 // get active git version
