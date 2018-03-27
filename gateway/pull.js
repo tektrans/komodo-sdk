@@ -134,6 +134,8 @@ function report(data) {
             data.misc = {};
         }
 
+        logger.verbose('Including advice url on report');
+
         data.misc.advice_url = config.push_server.advice.url;
     }
 
