@@ -10,6 +10,8 @@ const matrix = {
     machineid_hashed: sha1('KOMODO' + machineid.machineIdSync())
 };
 
+matrix.machineid_hashed_readable = matrix.machineid_hashed.match(/.{1,4}/g).join('-');
+
 // get active git version
 simpleGit(process.cwd()).raw(
     ['describe'],
