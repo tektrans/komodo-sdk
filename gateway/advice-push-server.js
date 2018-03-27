@@ -53,7 +53,7 @@ function adviceHandler(req, res, next) {
         task = JSON.parse(req.body);
     }
     catch(e) {
-        logger.warn('PUSH-ADVICE: Exception on parsing task to advice', {err: e});
+        logger.warn('PUSH-ADVICE: Exception on parsing task to advice', {err: e, body: req.body});
     }
 
     if (!task) {
