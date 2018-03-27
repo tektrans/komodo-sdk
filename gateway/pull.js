@@ -213,3 +213,4 @@ exports.isPaused = isPaused;
 exports.pause = pause;
 exports.resume = resume;
 exports.report = report;
+exports.getRemoteProduct = getRemoteProduct;

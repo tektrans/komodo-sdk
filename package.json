@@ -21,7 +21,7 @@
   "dependencies": {
     "basic-auth": "^2.0.0",
     "body-parser": "^1.18.2",
-    "express": "^4.16.2",
+    "express": "^4.16.3",
     "express-session": "^1.15.6",
     "lru-cache": "^4.1.1",
     "macaddress": "^0.2.8",
