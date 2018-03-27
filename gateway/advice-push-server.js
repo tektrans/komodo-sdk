@@ -47,16 +47,9 @@ function adviceHandler(req, res, next) {
         return;
     }
 
-    let task = null;
+    let task = req.body;
 
-    try {
-        task = JSON.parse(req.body);
-    }
-    catch(e) {
-        logger.warn('PUSH-ADVICE: Exception on parsing task to advice', {err: e, body: req.body});
-    }
-
-    if (!task) {
+    if (!task || !task.trx_id || !task.destination || !task.product) {
         logger.warn('PUSH-ADVICE: Invalid task');
         res.end('INVALID_TASK');
         return;
