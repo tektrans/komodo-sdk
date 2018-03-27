@@ -7,10 +7,10 @@ const sha1 = require('sha1');
 
 const matrix = {
     //host_id: {}
-    machineid_hashed: sha1('KOMODO' + machineid.machineIdSync())
+    machineid: machineid.machineIdSync()
 };
 
-matrix.machineid_hashed_readable = matrix.machineid_hashed.match(/.{1,4}/g).join('-');
+matrix.machineid_readable = matrix.machineid.match(/.{1,4}/g).join('-');
 
 // get active git version
 simpleGit(process.cwd()).raw(
