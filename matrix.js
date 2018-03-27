@@ -3,7 +3,7 @@
 const simpleGit = require('simple-git');
 //const macaddress = require('macaddress');
 const machineid = require('node-machine-id');
-const sha1 = require('sha1');
+//const sha1 = require('sha1');
 
 const matrix = {
     //host_id: {}
