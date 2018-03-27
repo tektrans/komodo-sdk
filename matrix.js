@@ -1,7 +1,7 @@
 "use strict";
 
 const simpleGit = require('simple-git');
-const macaddress = require('macaddress');
+//const macaddress = require('macaddress');
 const machineid = require('node-machine-id');
 const sha1 = require('sha1');
 
@@ -22,6 +22,7 @@ simpleGit(process.cwd()).raw(
     }
 )
 
+/*
 macaddress.one(function(err, mac) {
     if (err) return;
 
@@ -29,7 +30,9 @@ macaddress.one(function(err, mac) {
 })
 
 matrix.host_id.machineid = machineid.machineIdSync();
-
 matrix.host_id_hash = sha1('KOMODO' + matrix.host_id.machineid + matrix.host_id.mac);
+*/
+
+matrix.machineid_hashed = sha1('KOMODO' + machineid.machineIdSync());
 
 module.exports = matrix;
