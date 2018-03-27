@@ -25,7 +25,7 @@ function setPartner(_partner) {
 }
 
 function isValidApikey(req, res, next) {
-    if (req.params.apikey === config.push_server.apikey) {
+    if (config.push_server && config.push_server.apikey && (req.params.apikey === config.push_server.apikey)) {
         next();
     }
     else {
