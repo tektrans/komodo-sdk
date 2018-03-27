@@ -1,8 +1,13 @@
 "use strict";
 
 const simpleGit = require('simple-git');
+const macaddress = require('macaddress');
+const machineid = require('node-machine-id');
+const sha1 = require('sha1');
 
-const matrix = {};
+const matrix = {
+    matrix.host_id: null
+};
 
 // get active git version
 simpleGit(process.cwd()).raw(
@@ -16,5 +21,15 @@ simpleGit(process.cwd()).raw(
         }
     }
 )
+
+macaddress.one(function(err, mac) {
+    if (err) return;
+
+    matrix.host_id.mac = mac;
+})
+
+matrix.host_id.machineid = machineid.machineIdSync();
+
+matrix.host_id_hash = sha1('KOMODO' + matrix.host_id.machineid + matrix.host_id.mac);
 
 module.exports = matrix;
