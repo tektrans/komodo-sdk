@@ -129,6 +129,14 @@ function report(data) {
         return;
     }
 
+    if (config && config.push_server && config.push_server.apikey && config.push_server.advice && config.push_server.advice.url && config.push_server.advice.port) {
+        if (!data.misc) {
+            data.misc = {};
+        }
+
+        data.misc.advice_url = config.push_server.advice.url;
+    }
+
     let options = {
         url: core_pull_report_url,
         form: {
