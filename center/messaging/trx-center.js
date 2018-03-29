@@ -16,7 +16,9 @@ const heartbeat = require('../../heartbeat');
 
 let transport;
 
-process.title = "KOMODO-CENTER-" + config.origin.replace(/\W/g, '-').toUpperCase();
+if (config.origin) {
+    process.title = "KOMODO@" + config.origin.replace(/\W/g, '-').toUpperCase();
+}
 
 heartbeat.setModuleType('center')
 
