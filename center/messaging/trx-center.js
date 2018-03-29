@@ -16,6 +16,8 @@ const heartbeat = require('../../heartbeat');
 
 let transport;
 
+process.title = "KOMODO-CENTER " + config.origin;
+
 heartbeat.setModuleType('center')
 
 function onOnline(params) {
