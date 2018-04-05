@@ -16,6 +16,14 @@ if (config.handler_name) {
     process.title = "KOMODO-GW@" + config.handler_name;
 }
 
+if (!matrix.pending_tasks) {
+    matrix.sdk_pending_tasks = [];
+}
+
+if (!matrix.active_tasks) {
+    matrix.sdk_unresponsed_tasks = [];
+}
+
 heartbeat.setModuleType('gateway');
 
 var partner;
@@ -80,6 +88,32 @@ function pullTask() {
     });
 }
 
+function putTaskToMatrix(task) {
+    if (matrix.sdk_unresponsed_tasks.indexOf(task.trx_id) < 0) {
+        matrix.sdk_unresponsed_tasks.push(task.trix_id);
+    }
+
+    if (matrix.sdk_pending_tasks.indexOf(task.trx_id) < 0) {
+        matrix.sdk_pending_tasks.push(task.trx_id);
+    }
+}
+
+function updateTaskOnMatrix(trx_id, rc) {
+    const unresponsed_task_idx = matrix.sdk_unresponsed_tasks.indexOf(trx_id);
+    if (unresponsed_task_idx >= 0) {
+        matrix.sdk_unresponsed_tasks.splice(unresponsed_task_idx, 1);
+    }
+
+    if (rc !== '68') {
+        return;
+    }
+
+    const pending_task_idx = matrix.sdk_pending_tasks.indexOf(trx_id);
+    if (pending_task_idx >= 0) {
+        matrix.sdk_pending_tasks.splice(pending_task_idx, 1);
+    }
+}
+
 function forwardCoreTaskToPartner(coreMessage) {
     let task;
 
@@ -94,6 +128,8 @@ function forwardCoreTaskToPartner(coreMessage) {
 
     task.remote_product = getRemoteProduct(task.product);
 
+    putTaskToMatrix(task);
+
     taskArchive.get(task, function(res) {
         if (res && partner.advice) {
             partner.advice(task);
@@ -102,8 +138,6 @@ function forwardCoreTaskToPartner(coreMessage) {
             partner.buy(task);
         }
     });
-
-
 }
 
 function replaceRc(original_rc) {
@@ -117,6 +151,10 @@ function replaceRc(original_rc) {
 function report(data) {
 
     let core_pull_report_url;
+
+    if (data && data.trx_id && data.rc) {
+        updateTaskOnMatrix(data.trx_id, data.rc);
+    }
 
     if (config.core_url) {
         core_pull_report_url = config.core_url + '/pull/report';
