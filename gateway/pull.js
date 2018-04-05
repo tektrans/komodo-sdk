@@ -104,7 +104,7 @@ function updateTaskOnMatrix(trx_id, rc) {
         matrix.sdk_unresponsed_tasks.splice(unresponsed_task_idx, 1);
     }
 
-    if (rc !== '68') {
+    if (rc === '68') {
         return;
     }
 
