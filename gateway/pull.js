@@ -90,7 +90,7 @@ function pullTask() {
 
 function putTaskToMatrix(task) {
     if (matrix.sdk_unresponsed_tasks.indexOf(task.trx_id) < 0) {
-        matrix.sdk_unresponsed_tasks.push(task.trix_id);
+        matrix.sdk_unresponsed_tasks.push(task.trx_id);
     }
 
     if (matrix.sdk_pending_tasks.indexOf(task.trx_id) < 0) {
