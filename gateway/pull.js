@@ -24,6 +24,10 @@ if (!matrix.active_tasks) {
     matrix.sdk_unresponsed_tasks = [];
 }
 
+if (!matrix.pending_with_response_tasks) {
+    matrix.sdk_pending_with_response_tasks = [];
+}
+
 heartbeat.setModuleType('gateway');
 
 var partner;
@@ -96,6 +100,10 @@ function putTaskToMatrix(task) {
     if (matrix.sdk_pending_tasks.indexOf(task.trx_id) < 0) {
         matrix.sdk_pending_tasks.push(task.trx_id);
     }
+
+    if (matrix.sdk_pending_with_response_tasks.indexOf(task.trx_id) < 0) {
+        matrix.sdk_pending_with_response_tasks.push(task.trx_id);
+    }
 }
 
 function updateTaskOnMatrix(trx_id, rc) {
@@ -105,6 +113,12 @@ function updateTaskOnMatrix(trx_id, rc) {
     }
 
     if (rc === '68') {
+
+        const pending_with_response_tasks_idx = matrix.sdk_pending_with_response_tasks.indexOf(trx_id);
+        if (pending_with_response_tasks_idx >= 0) {
+            matrix.sdk_pending_with_response_tasks.splice(pending_with_response_tasks_idx, 1)
+        }
+
         return;
     }
 
