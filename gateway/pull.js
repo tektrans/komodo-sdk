@@ -116,7 +116,7 @@ function updateTaskOnMatrix(trx_id, rc) {
 
         const pending_with_response_tasks_idx = matrix.sdk_pending_with_response_tasks.indexOf(trx_id);
         if (pending_with_response_tasks_idx >= 0) {
-            matrix.sdk_pending_with_response_tasks.splice(pending_with_response_tasks_idx, 1)
+            matrix.sdk_pending_with_response_tasks.splice(pending_with_response_tasks_idx, 1);
         }
 
         return;
