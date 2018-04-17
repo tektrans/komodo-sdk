@@ -156,7 +156,7 @@ function forwardCoreTaskToPartner(coreMessage) {
 }
 
 function replaceRc(original_rc) {
-    if (!config || !config.replace_rc || !config.replace_rc.length) {
+    if (!config || !config.replace_rc) {
         return original_rc;
     }
 
