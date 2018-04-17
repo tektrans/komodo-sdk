@@ -58,7 +58,8 @@ function pullTask() {
         url: core_pull_task_url,
         qs: {
             handler: config.handler_name,
-            products: config.products.join(',')
+            products: config.products.join(','),
+            advice_url: (config && config.push_server && config.push_server.apikey && config.push_server.advice && config.push_server.advice.url && config.push_server.advice.port) ? config.push_server.advice.url : null
         }
     }
 
