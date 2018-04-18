@@ -1,11 +1,26 @@
 "use strict";
 
-var LRU = require('lru-cache');
+const LRU = require('lru-cache');
+const moment = require('moment');
 
 const config = require('./config');
 const logger = require('./logger');
 
-const resendHandlers = LRU({max: 5000, maxAge: 1000 * 3600 * 36});
+const resendHandlers = LRU({
+    max: Number(config.auto_resend_delay_max_handler) || 5000,
+    maxAge: 1000 * 3600 * 36
+});
+
+function _resend(task, request) {
+    const trx_date = moment(task.created).format('YYYYMMDD');
+    if (trx_date !== moment().format('YYYYMMDD')) {
+        logger.info('RESEND-DELAY: skip resend because of different trx date', {trx_id: task.trx_id, destination: task.destination, product: task.product, remote_product: task.remote_product, created: task.created});
+        return;
+    }
+
+    logger.verbose('RESEND-DELAY: Resending trx', {trx_id: task.trx_id, destination: task.destination, product: task.product, remote_product: task.remote_product, created: task.created});
+    request(task);
+}
 
 function cancel(task) {
     const trx_id = ( typeof task === 'string' ) ? task : task.trx_id;
@@ -15,7 +30,7 @@ function cancel(task) {
     if (!oldHandler) { return; }
 
     const task = oldHandler.task;
-    logger.verbose('Canceling resend delay', {trx_id: task.trx_id, destination: task.destination, product: task.product, remote_product: task.remote_product});
+    logger.verbose('RESEND-DELAY: Canceling task', {trx_id: task.trx_id, destination: task.destination, product: task.product, remote_product: task.remote_product});
 
     if (oldHandler.handler) { clearTimeout(oldHandler.handler); }
     resendHandlers.del(trx_id);
@@ -23,7 +38,7 @@ function cancel(task) {
 
 function register(task, request) {
     if (!task.trx_id) {
-        logger.warn('Invalid task on resendDelay')
+        logger.warn('RESEND-DELAY: Invalid task on register')
         return;
     }
 
@@ -39,18 +54,15 @@ function register(task, request) {
     }
 
     if (retry <= 0) {
-        logger.verbose('Resend delay retry exceeded', {trx_id: task.trx_id, destination: task.destination, product: task.product, remote_product: task.remote_product});
+        logger.verbose('RESEND-DELAY: Retry exceeded', {trx_id: task.trx_id, destination: task.destination, product: task.product, remote_product: task.remote_product});
         cancel(task);
         return;
     }
 
-    logger.verbose('Registering resend delay task request', {trx_id: task.trx_id, destination: task.destination, product: task.product, remote_product: task.remote_product, delay_ms: config.auto_resend.delay_ms, retry: retry});
+    logger.verbose('RESEND-DELAY: Registering task request', {trx_id: task.trx_id, destination: task.destination, product: task.product, remote_product: task.remote_product, delay_ms: config.auto_resend.delay_ms, retry: retry});
     const handlerData = {
         handler: setTimeout(
-            function() {
-                logger.verbose('RESEND-DELAY: Resending trx', {trx_id: task.trx_id, destination: task.destination, product: task.product, remote_product: task.remote_product, created: task.created});
-                request(task);
-            }
+            function() { resend(task, request); }
             config.auto_resend.delay_ms
         ),
         task: task,
@@ -59,6 +71,14 @@ function register(task, request) {
 
     resendHandlers.set(task.trx_id, handlerData);
 }
+
+setInterval(
+    function() {
+        resendHandlers.prune();
+        logger.verbose('RESEND-DELAY: pruned');
+    },
+    24 * 3600 * 1000
+)
 
 exports.cancel = cancel;
 exports.register = register;
