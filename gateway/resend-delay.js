@@ -7,8 +7,8 @@ const config = require('./config');
 const logger = require('./logger');
 
 const resendHandlers = LRU({
-    max: Number(config.auto_resend_delay_max_handler) || 5000,
-    maxAge: 1000 * 3600 * 36
+    max: (( config && config.auto_resend && config.auto_resend.max_handler ) ? Number(config.auto_resend.max_handler) : 0) || 5000,
+    maxAge: 1000 * 3600 * 24
 });
 
 function _resend(task, request) {
@@ -22,8 +22,8 @@ function _resend(task, request) {
     request(task);
 }
 
-function cancel(task) {
-    const trx_id = ( typeof task === 'string' ) ? task : task.trx_id;
+function cancel(_task) {
+    const trx_id = ( typeof _task === 'string' ) ? _task : _task.trx_id;
     if (!trx_id) { return; }
 
     const oldHandler = resendHandlers.get(trx_id);
@@ -62,7 +62,7 @@ function register(task, request) {
     logger.verbose('RESEND-DELAY: Registering task request', {trx_id: task.trx_id, destination: task.destination, product: task.product, remote_product: task.remote_product, delay_ms: config.auto_resend.delay_ms, retry: retry});
     const handlerData = {
         handler: setTimeout(
-            function() { resend(task, request); }
+            function() { _resend(task, request); },
             config.auto_resend.delay_ms
         ),
         task: task,
