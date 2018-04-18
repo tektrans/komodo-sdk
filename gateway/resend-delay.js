@@ -36,13 +36,8 @@ function cancel(task) {
 
     logger.verbose('Canceling resend delay', {task: oldHandler.task});
 
-    try {
-        if (oldHandler.handler) {
-            clearTimeout(oldHandler.handler);
-        }
-    }
-    catch(e) {};
-
+    if (oldHandler.handler) { clearTimeout(oldHandler.handler); }
+    
     resendHandlers.del(requestId);
 }
 
