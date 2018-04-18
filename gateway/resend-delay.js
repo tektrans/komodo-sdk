@@ -18,26 +18,14 @@ function init(options) {
 }
 
 function cancel(task) {
-    var requestId;
-    if (typeof task === 'string') {
-        requestId = task;
-    } else {
-        requestId = task.requestId;
-    }
+    const requestId = ( typeof task === 'string' ) ? task : task.requestId;
+    if (!requestId) { return; }
 
-    if (!requestId) {
-        return;
-    }
-
-    var oldHandler = resendHandlers.get(requestId);
-    if (!oldHandler) {
-        return;
-    }
+    const oldHandler = resendHandlers.get(requestId);
+    if (!oldHandler) { return; }
 
     logger.verbose('Canceling resend delay', {task: oldHandler.task});
-
     if (oldHandler.handler) { clearTimeout(oldHandler.handler); }
-    
     resendHandlers.del(requestId);
 }
 
