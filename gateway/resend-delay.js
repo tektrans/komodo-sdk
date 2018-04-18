@@ -46,7 +46,13 @@ function register(task, request) {
 
     logger.verbose('Registering resend delay task request', {trx_id: task.trx_id, destination: task.destination, product: task.product, remote_product: task.remote_product, delay_ms: config.auto_resend.delay_ms, retry: retry});
     const handlerData = {
-        handler: setTimeout(request, config.auto_resend.delay_ms, task),
+        handler: setTimeout(
+            function() {
+                logger.verbose('RESEND-DELAY: Resending trx', {trx_id: task.trx_id, destination: task.destination, product: task.product, remote_product: task.remote_product, created: task.created});
+                request(task);
+            }
+            config.auto_resend.delay_ms
+        ),
         task: task,
         retry: retry
     }
