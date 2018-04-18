@@ -5,7 +5,7 @@ var LRU = require('lru-cache');
 const config = require('./config');
 const logger = require('./logger');
 
-const resendHandlers = LRU({max: 2000, maxAge: 1000 * 3600 * 36});
+const resendHandlers = LRU({max: 5000, maxAge: 1000 * 3600 * 36});
 
 function cancel(task) {
     const trx_id = ( typeof task === 'string' ) ? task : task.trx_id;
