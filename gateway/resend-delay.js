@@ -6,7 +6,7 @@ const config = require('./config');
 const logger = require('./logger');
 
 var topupRequest;
-var resendHandlers = LRU({max: 2000, maxAge: 1000 * 3600 * 36});
+const resendHandlers = LRU({max: 2000, maxAge: 1000 * 3600 * 36});
 
 function init(options) {
     if (options && options.request) {
@@ -43,10 +43,7 @@ function cancel(task) {
     }
     catch(e) {};
 
-    try {
-        resendHandlers.del(requestId);
-    }
-    catch(e) {};
+    resendHandlers.del(requestId);
 }
 
 function register(task) {
