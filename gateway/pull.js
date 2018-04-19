@@ -117,19 +117,27 @@ function updateTaskOnMatrix(trx_id, rc) {
         matrix.sdk_unresponsed_tasks.splice(unresponsed_task_idx, 1);
     }
 
-    if (rc === '68') {
+    if (rc == '68') {
+        const pending_task_idx = matrix.sdk_pending_tasks.indexOf(trx_id);
+        if (pending_task_idx < 0) {
+            matrix.sdk_pending_tasks.push(trx_id);
+        }
+
+        const pending_with_response_tasks_idx = matrix.sdk_pending_with_response_tasks.indexOf(trx_id);
+        if (pending_with_response_tasks_idx >= 0) {
+            matrix.sdk_pending_with_response_tasks.push(trx_id);
+        }
+    }
+    else {
+        const pending_task_idx = matrix.sdk_pending_tasks.indexOf(trx_id);
+        if (pending_task_idx >= 0) {
+            matrix.sdk_pending_tasks.splice(pending_task_idx, 1);
+        }
 
         const pending_with_response_tasks_idx = matrix.sdk_pending_with_response_tasks.indexOf(trx_id);
         if (pending_with_response_tasks_idx >= 0) {
             matrix.sdk_pending_with_response_tasks.splice(pending_with_response_tasks_idx, 1);
         }
-
-        return;
-    }
-
-    const pending_task_idx = matrix.sdk_pending_tasks.indexOf(trx_id);
-    if (pending_task_idx >= 0) {
-        matrix.sdk_pending_tasks.splice(pending_task_idx, 1);
     }
 }
 
