@@ -11,6 +11,10 @@ const resendHandlers = LRU({
     maxAge: 1000 * 3600 * 24
 });
 
+function isEnabled() {
+    return config && config.auto_resend && Number(config.auto_resend.delay_ms) && Number(config.auto_resend.max_retry);
+}
+
 function _resend(task, request) {
     const trx_date = moment(task.created).format('YYYYMMDD');
     if (trx_date !== moment().format('YYYYMMDD')) {
@@ -82,3 +86,4 @@ setInterval(
 
 exports.cancel = cancel;
 exports.register = register;
+exports.isEnabled = isEnabled;
