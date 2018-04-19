@@ -63,6 +63,10 @@ function pullTask() {
         }
     }
 
+    if (config && config.debug_request_task_to_core) {
+        logger.verbose('Requesting task to CORE');
+    }
+
     request(options, function(error, response, body) {
         if (error) {
             if (matrix.core_is_healthy) {
