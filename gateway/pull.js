@@ -64,7 +64,7 @@ function pullTask() {
     }
 
     if (config && config.debug_request_task_to_core) {
-        logger.verbose('Requesting task to CORE');
+        logger.verbose('Requesting task to CORE', {url: options.url, qs: options.qs});
     }
 
     request(options, function(error, response, body) {
