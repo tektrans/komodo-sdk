@@ -21,7 +21,7 @@ if (!matrix.sdk_pending_tasks) {
     matrix.sdk_pending_tasks_count = 0;
 }
 
-if (!matrix.sdk_active_tasks) {
+if (!matrix.sdk_unresponsed_tasks) {
     matrix.sdk_unresponsed_tasks = [];
     matrix.sdk_unresponsed_tasks_count = 0;
 }
@@ -117,27 +117,26 @@ function updateTaskOnMatrix(trx_id, rc) {
     if (unresponsed_task_idx >= 0) {
         matrix.sdk_unresponsed_tasks.splice(unresponsed_task_idx, 1);
     }
+    matrix.sdk_unresponsed_tasks_count = matrix.sdk_unresponsed_tasks.length;
 
     if (rc == '68') {
-        const pending_task_idx = matrix.sdk_pending_tasks.indexOf(trx_id);
-        if (pending_task_idx < 0) {
-            matrix.sdk_pending_tasks.push(trx_id);
-        }
-
         const pending_with_response_tasks_idx = matrix.sdk_pending_with_response_tasks.indexOf(trx_id);
         if (pending_with_response_tasks_idx < 0) {
             matrix.sdk_pending_with_response_tasks.push(trx_id);
+            matrix.sdk_pending_with_response_tasks_count = matrix.sdk_pending_with_response_tasks.length;
         }
     }
     else {
         const pending_task_idx = matrix.sdk_pending_tasks.indexOf(trx_id);
         if (pending_task_idx >= 0) {
             matrix.sdk_pending_tasks.splice(pending_task_idx, 1);
+            matrix.sdk_pending_tasks_count = matrix.sdk_pending_tasks.length;
         }
 
         const pending_with_response_tasks_idx = matrix.sdk_pending_with_response_tasks.indexOf(trx_id);
         if (pending_with_response_tasks_idx >= 0) {
             matrix.sdk_pending_with_response_tasks.splice(pending_with_response_tasks_idx, 1);
+            matrix.sdk_pending_with_response_tasks_count = matrix.sdk_pending_with_response_tasks.length;
         }
     }
 }
