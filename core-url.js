@@ -11,7 +11,7 @@ if (config.core_url) {
     logger.verbose('Using CORE url from local config.json', {url: core_url});
 }
 else if (configFromMain && configFromMain.core && configFromMain.core.url && configFromMain.core.apikey) {
-    core_url = configFromMain.core.url.replace(/\/$/, '') + '/apikey/' + configFromMain.core.apikey + '/pull/task';
+    core_url = configFromMain.core.url.replace(/\/$/, '') + '/apikey/' + configFromMain.core.apikey;
     logger.verbose('Using CORE url from main config', {url: core_url, filename: configFromMain.this_config_filename});
 }
 
