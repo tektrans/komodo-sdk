@@ -14,6 +14,7 @@ let config;
 
 for (let candindate in candindates) {
     if (fs.existsSync(candindate)) {
+        console.log(candindate + ' FOUND');
         try {
             config = require(candindate);
             config.this_config_filename = candindate;
@@ -22,6 +23,7 @@ for (let candindate in candindates) {
 
         break;
     }
+    console.log(candindate + ' NOT FOUND');
 }
 
 module.exports = config;
