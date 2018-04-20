@@ -12,7 +12,7 @@ const candindates = [
 
 let config;
 
-for (let i of candindates) {
+for (let candindate of candindates) {
     if (fs.existsSync(candindate)) {
         //console.log(candindate + ' FOUND');
         try {
