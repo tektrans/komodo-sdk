@@ -103,14 +103,12 @@ function pullTask() {
 function putTaskToMatrix(task) {
     if (matrix.sdk_unresponsed_tasks.indexOf(task.trx_id) < 0) {
         matrix.sdk_unresponsed_tasks.push(task.trx_id);
+        matrix.sdk_unresponsed_tasks_count = matrix.sdk_unresponsed_tasks.length;
     }
 
     if (matrix.sdk_pending_tasks.indexOf(task.trx_id) < 0) {
         matrix.sdk_pending_tasks.push(task.trx_id);
-    }
-
-    if (matrix.sdk_pending_with_response_tasks.indexOf(task.trx_id) < 0) {
-        matrix.sdk_pending_with_response_tasks.push(task.trx_id);
+        matrix.sdk_pending_tasks_count = matrix.sdk_pending_tasks.length;
     }
 }
 
