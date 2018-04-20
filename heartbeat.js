@@ -5,7 +5,7 @@ const request = require('request');
 const config = require('./config');
 const logger = require('./logger');
 const matrix = require('./matrix');
-const core_url = require('../core-url');
+const core_url = require('./core-url');
 
 let module_type;
 
