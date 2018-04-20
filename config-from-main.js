@@ -7,7 +7,7 @@ const candindates = [
     '/etc/komodo/config.js',
     os.homedir() + '/main/config.json',
     process.cwd() + '/../../main/config.json',
-    os.homedir() + '/Projects/tektrans/dev/komodo/config.json'
+    os.homedir() + '/Projects/tektrans/devs/komodo/config.json'
 ];
 
 let config;
