@@ -7,6 +7,7 @@ const logger = require('../logger');
 const matrix = require('../matrix');
 const controlPanel = require('../control-panel');
 const heartbeat = require('../heartbeat');
+const core_url = require('../core-url');
 
 const taskArchive = require('./task-archive');
 
@@ -47,9 +48,10 @@ function pullTask() {
 
     let core_pull_task_url;
 
-    if (config.core_url) {
-        core_pull_task_url = config.core_url + '/pull/task';
-    } else if (config.pull_url.task) {
+    if (core_url) {
+        core_pull_task_url = core_url + '/pull/task';
+    }
+    else if (config.pull_url.task) {
         core_pull_task_url = config.pull_url.task.replace('<CORE_APIKEY>', config.core_apikey);
     }
 
@@ -184,8 +186,8 @@ function report(data) {
         updateTaskOnMatrix(data.trx_id, data.rc);
     }
 
-    if (config.core_url) {
-        core_pull_report_url = config.core_url + '/pull/report';
+    if (core_url) {
+        core_pull_report_url = core_url + '/pull/report';
     } else if (config.pull_url.report) {
         core_pull_report_url = config.pull_url.report.replace('<CORE_APIKEY>', config.core_apikey);
     }
