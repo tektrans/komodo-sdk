@@ -16,19 +16,20 @@ if (config.handler_name) {
     process.title = "KOMODO-GW@" + config.handler_name;
 }
 
+matrix.sdk_pending_tasks_count = 0;
+matrix.sdk_unresponsed_tasks_count = 0;
+matrix.sdk_pending_with_response_tasks_count = 0;
+
 if (!matrix.sdk_pending_tasks) {
     matrix.sdk_pending_tasks = [];
-    matrix.sdk_pending_tasks_count = 0;
 }
 
 if (!matrix.sdk_unresponsed_tasks) {
     matrix.sdk_unresponsed_tasks = [];
-    matrix.sdk_unresponsed_tasks_count = 0;
 }
 
 if (!matrix.sdk_pending_with_response_tasks) {
     matrix.sdk_pending_with_response_tasks = [];
-    matrix.sdk_pending_with_response_tasks_count = 0;
 }
 
 heartbeat.setModuleType('gateway');
