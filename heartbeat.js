@@ -5,11 +5,12 @@ const request = require('request');
 const config = require('./config');
 const logger = require('./logger');
 const matrix = require('./matrix');
+const core_url = require('../core-url');
 
 let module_type;
 
 function sendHeartbeat() {
-    if (!config || !config.core_url || !module_type) { return; }
+    if (!config || !core_url || !module_type) { return; }
 
     let heartbeat_name = config.handler_name || config.origin;
     if (config.username) {
@@ -22,7 +23,7 @@ function sendHeartbeat() {
     }
 
     const requestOptions =  {
-        uri: config.core_url + '/heartbeats',
+        uri: core_url + '/heartbeats',
         method: 'POST',
         json: {
             name: heartbeat_name,
@@ -32,9 +33,7 @@ function sendHeartbeat() {
         }
     }
 
-    request.post(requestOptions, function(err, res, body) {
-        
-    });
+    request.post(requestOptions, function(err, res, body) { });
 }
 
 setInterval(
