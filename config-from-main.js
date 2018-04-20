@@ -12,9 +12,9 @@ const candindates = [
 
 let config;
 
-for (let candindate in candindates) {
+for (let i of candindates) {
     if (fs.existsSync(candindate)) {
-        console.log(candindate + ' FOUND');
+        //console.log(candindate + ' FOUND');
         try {
             config = require(candindate);
             config.this_config_filename = candindate;
@@ -23,7 +23,7 @@ for (let candindate in candindates) {
 
         break;
     }
-    console.log(candindate + ' NOT FOUND');
+    //console.log(candindate + ' NOT FOUND');
 }
 
 module.exports = config;
