@@ -15,12 +15,9 @@ function getJsonConfig(req, res, next) {
 }
 
 function getConfigElement(req, res, next) {
-    if (!req || !req.params || !req.params.key) {
-        res.json(config);
-        return;
-    }
+    const key = req && req.params && req.params.key ? req.params.key : 'config';
 
-    res.json(jsonQuery(req.params.key, {config: config}));
+    res.json(jsonQuery(key, {config: config}));
 }
 
 router.get('/', getJsonConfig);
