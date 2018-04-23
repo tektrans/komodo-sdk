@@ -17,6 +17,8 @@ function getJsonConfig(req, res, next) {
 function getConfigElement(req, res, next) {
     const key = req && req.params && req.params.key ? req.params.key : 'config';
 
+    console.log('KEY: ' + key);
+
     res.json(jsonQuery(key, {config: config}));
 }
 
