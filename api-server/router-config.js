@@ -27,18 +27,19 @@ function setConfigElement(req, res, next) {
         return;
     }
 
-    if (!req.body) {
+    if (!req.body || !req.body.key || !req.body.value) {
         res.end('INVALID BODY');
         return;
     }
 
-    res.end('TYPE: ' + typeof req.body);
-    return;
+    //const key = ((req && req.params && req.params.key) ? req.params.key : '').replace(/^config\.*/, '');
+    dot.str(req.body.key, req.body.value, config);
 
-    const key = ((req && req.params && req.params.key) ? req.params.key : '').replace(/^config\.*/, '');
-    dot.str(key, req.body, config);
-
-    res.json(config);
+    res.json({
+        new_key: req.body.key,
+        new_value: req.body.value,
+        new_config: config
+    });
 }
 
 router.get('/', getJsonConfig);
