@@ -32,6 +32,9 @@ function setConfigElement(req, res, next) {
         return;
     }
 
+    res.end('TYPE: ' + typeof req.body);
+    return;
+
     const key = ((req && req.params && req.params.key) ? req.params.key : '').replace(/^config\.*/, '');
     dot.str(key, req.body, config);
 
