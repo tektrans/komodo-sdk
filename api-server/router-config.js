@@ -16,10 +16,7 @@ function getJsonConfig(req, res, next) {
 
 function getConfigElement(req, res, next) {
     const key = (req && req.params && req.params.key) ? req.params.key : '';
-
-    console.log('KEY: ' + key);
-
-    res.json(jsonQuery(key, {data: config}));
+    res.json(jsonQuery(key.replace(/^config\./, ''), {data: config})).value;
 }
 
 router.get('/', getJsonConfig);
