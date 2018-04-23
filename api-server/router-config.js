@@ -27,8 +27,13 @@ function setConfigElement(req, res, next) {
         return;
     }
 
+    if (!req.body) {
+        res.end('INVALID BODY');
+        return;
+    }
+
     const key = ((req && req.params && req.params.key) ? req.params.key : '').replace(/^config\.*/, '');
-    dot.str(key, body, config);
+    dot.str(key, req.body, config);
 
     res.json(config);
 }
