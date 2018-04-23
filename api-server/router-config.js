@@ -1,6 +1,7 @@
 "use strict";
 
 const express = require('express');
+const jsonQuery = require('json-query');
 
 const config = require('../config');
 const logger = require('../logger');
@@ -14,10 +15,14 @@ function getJsonConfig(req, res, next) {
 }
 
 function getConfigElement(req, res, next) {
-    const paths = req.path.split('.');
-    res.json(paths);
+    if (!req || !req.params || !req.params.key) {
+        res.json(config);
+        return;
+    }
+
+    res.json(jsonQuery(rq.params.key, {config: config}));
 }
 
 router.get('/', getJsonConfig);
 router.post('/', getJsonConfig);
-router.use('/get', getConfigElement);
+router.use('/get/:key', getConfigElement);

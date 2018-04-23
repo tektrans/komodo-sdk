@@ -23,6 +23,7 @@
     "body-parser": "^1.18.2",
     "express": "^4.16.3",
     "express-session": "^1.15.6",
+    "json-query": "^2.2.2",
     "lru-cache": "^4.1.1",
     "macaddress": "^0.2.8",
     "moment": "^2.19.1",
