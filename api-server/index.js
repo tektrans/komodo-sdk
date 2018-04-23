@@ -19,7 +19,7 @@ function isConfigured() {
     return Boolean(config && config.apiserver && config.apiserver.apikey && config.apiserver.port);
 }
 
-function isValidApiKey(apikey) {
+function isValidApikey(apikey) {
     return isConfigured() && (config.apiserver.apikey === apikey);
 }
 
