@@ -17,29 +17,42 @@ function getJsonConfig(req, res, next) {
 }
 
 function getConfigElement(req, res, next) {
-    const key = ((req && req.params && req.params.key) ? req.params.key : '').replace(/^config\.*/, '');
+    const key = ((req && req.params && req.params.key) ? req.params.key : '').replace(/^config\.*/, '').trim();
     res.json(jsonQuery(key, {data: config}).value);
 }
 
 function setConfigElement(req, res, next) {
-    if (!req.params || !req.params.key) {
-        res.end('INVALID OBJECT KEY');
-        return;
-    }
-
     if (!req.body || !req.body.key || !req.body.value) {
         res.end('INVALID BODY');
         return;
     }
 
-    //const key = ((req && req.params && req.params.key) ? req.params.key : '').replace(/^config\.*/, '');
     dot.str(req.body.key, req.body.value, config);
-
     res.json({
-        new_key: req.body.key,
-        new_value: req.body.value,
+        method: '/config/set',
+        key: req.body.key,
+        value: req.body.value,
         new_config: config
     });
+}
+
+function delConfigElement(req, res, next) {
+    const key = ((req && req.params && req.params.key) ? req.params.key : '').replace(/^config\.*/, '').trim();
+
+    if (!key) {
+        res.end('INVALID OBJECT KEY')
+    }
+
+    dot.str(key, config);
+    res.json({
+        method: '/config/del',
+        key: req.body.key,
+        new_config: config
+    });
+}
+
+function saveConfig(req, res, next) {
+    res.end('NOT YET IMPLEMENTED');
 }
 
 router.get('/', getJsonConfig);
@@ -49,3 +62,6 @@ router.get('/get', getConfigElement);
 router.get('/get/:key', getConfigElement);
 
 router.post('/set/:key', bodyParser.json(), setConfigElement);
+
+router.get('/del/:key', delConfigElement);
+router.get('/save', saveConfig);
