@@ -28,6 +28,8 @@ function setConfigElement(req, res, next) {
     }
 
     dot.str(req.body.key, req.body.value, config);
+    matrix.config_is_dirty = true;
+
     res.json({
         method: '/config/set',
         key: req.body.key,
@@ -44,6 +46,8 @@ function delConfigElement(req, res, next) {
     }
 
     dot.str(key, config);
+    matrix.config_is_dirty = true;
+    
     res.json({
         method: '/config/del',
         key: req.body.key,
