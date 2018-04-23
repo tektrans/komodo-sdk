@@ -20,9 +20,11 @@ function getConfigElement(req, res, next) {
         return;
     }
 
-    res.json(jsonQuery(rq.params.key, {config: config}));
+    res.json(jsonQuery(req.params.key, {config: config}));
 }
 
 router.get('/', getJsonConfig);
 router.post('/', getJsonConfig);
+
+router.use('/get', getConfigElement);
 router.use('/get/:key', getConfigElement);
