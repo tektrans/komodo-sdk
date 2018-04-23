@@ -25,4 +25,5 @@ function getConfigElement(req, res, next) {
 router.get('/', getJsonConfig);
 router.post('/', getJsonConfig);
 
-router.use('/get/:key', getConfigElement);
+router.get('/get', getConfigElement);
+router.get('/get/:key', getConfigElement);
