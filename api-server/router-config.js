@@ -28,9 +28,9 @@ function setConfigElement(req, res, next) {
     }
 
     const key = ((req && req.params && req.params.key) ? req.params.key : '').replace(/^config\.*/, '');
-    dot.str(key, body, config);
+    //dot.str(key, body, config);
 
-    res.json(req.body);
+    res.json('CEKIDOT');
 }
 
 router.get('/', getJsonConfig);
@@ -39,4 +39,5 @@ router.post('/', getJsonConfig);
 router.get('/get', getConfigElement);
 router.get('/get/:key', getConfigElement);
 
-router.post('/set/:key', bodyParser.json(), setConfigElement);
+//router.post('/set/:key', bodyParser.json(), setConfigElement);
+router.post('/set/:key', setConfigElement);
