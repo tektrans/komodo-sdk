@@ -32,8 +32,8 @@ function needValidApikey(req, res, next) {
     }
 }
 
-isConfigured() && app.listen(config.push_server.advice.port, function () {
-    logger.info('API-SERVER listening', {port: config.push_server.advice.port});
+isConfigured() && app.listen(config.apiserver.port, function () {
+    logger.info('API-SERVER listening', {port: config.apiserver.port});
 });
 
 
