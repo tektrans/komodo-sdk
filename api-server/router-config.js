@@ -1,7 +1,9 @@
 "use strict";
 
 const express = require('express');
+const bodyParser = require('body-parser');
 const jsonQuery = require('json-query');
+const dot = require('dot-object');
 
 const config = require('../config');
 const logger = require('../logger');
@@ -16,8 +18,19 @@ function getJsonConfig(req, res, next) {
 
 function getConfigElement(req, res, next) {
     const key = ((req && req.params && req.params.key) ? req.params.key : '').replace(/^config\.*/, '');
-    console.log('KEY: ' + key);
     res.json(jsonQuery(key, {data: config}).value);
+}
+
+function setConfigElement(req, res, next) {
+    if (!req.params || !req.params.key) {
+        res.end('INVALID OBJECT KEY');
+        return;
+    }
+
+    const key = ((req && req.params && req.params.key) ? req.params.key : '').replace(/^config\.*/, '');
+    dot.str(key, body, config);
+
+    res.json(req.body);
 }
 
 router.get('/', getJsonConfig);
@@ -25,3 +38,5 @@ router.post('/', getJsonConfig);
 
 router.get('/get', getConfigElement);
 router.get('/get/:key', getConfigElement);
+
+router.post('/set/:key', bodyParser.json(), setConfigElement);
