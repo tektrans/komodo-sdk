@@ -12,6 +12,9 @@ const core_url = require('../core-url');
 const taskArchive = require('./task-archive');
 
 const MAX_SLEEP_BEFORE_RESEND_MS = 500;
+const DELAY_AFTER_NO_TASK_MS = 500;
+
+let is_on_delay_after_no_task = false;
 
 if (config.handler_name) {
     process.title = "KOMODO-GW@" + config.handler_name;
@@ -37,11 +40,22 @@ heartbeat.setModuleType('gateway');
 
 var partner;
 
+function onNoTask() {
+    is_on_delay_after_no_task = true;
+    setTimeout(function() {
+        is_on_delay_after_no_task = false;
+    }, DELAY_AFTER_NO_TASK_MS)
+}
+
 function setPartner(_partner) {
     partner = _partner;
 }
 
 function pullTask() {
+    if (is_on_delay_after_no_task) {
+        return;
+    }
+
     if (!partner) {
         return;
     }
@@ -79,6 +93,7 @@ function pullTask() {
                 logger.warn('Error pulling task from CORE', {error: error});
             }
             matrix.core_is_healthy = false;
+            onNoTask();
             return;
         }
 
@@ -87,6 +102,7 @@ function pullTask() {
                 logger.warn('CORE http response status code for pull task is not 200', {http_response_status: response.statusCode});
             }
             matrix.core_is_healthy = false;
+            onNoTask();
             return;
         }
 
@@ -96,6 +112,7 @@ function pullTask() {
         matrix.core_is_healthy = true;
 
         if (body == 'NONE') {
+            onNoTask();
             return;
         }
 
