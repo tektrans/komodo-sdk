@@ -18,29 +18,29 @@ function isEnabled() {
 function _resend(task, request) {
     const trx_date = moment(task.created).format('YYYYMMDD');
     if (trx_date !== moment().format('YYYYMMDD')) {
-        logger.info('RESEND-DELAY: skip resend because of different trx date', {trx_id: task.trx_id, destination: task.destination, product: task.product, remote_product: task.remote_product, created: task.created});
+        logger.info('SDK-RESEND-DELAY: skip resend because of different trx date', {trx_id: task.trx_id, destination: task.destination, product: task.product, remote_product: task.remote_product, created: task.created});
         return;
     }
 
-    logger.verbose('RESEND-DELAY: Resending trx', {trx_id: task.trx_id, destination: task.destination, product: task.product, remote_product: task.remote_product, created: task.created});
+    logger.verbose('SDK-RESEND-DELAY: Resending trx', {trx_id: task.trx_id, destination: task.destination, product: task.product, remote_product: task.remote_product, created: task.created});
     request(task);
 }
 
 function cancel(_task) {
     const trx_id = ( typeof _task === 'string' ) ? _task : _task.trx_id;
     if (!trx_id) {
-        logger.warn('RESEND-DELAY: Skipping cancel because of undefined trx_id');
+        logger.warn('SDK-RESEND-DELAY: Skipping cancel because of undefined trx_id');
         return;
     }
 
     const oldHandler = resendHandlers.get(trx_id);
     if (!oldHandler) {
-        config.debug_sdk_resend_delay && logger.verbose('RESEND-DELAY: Skipping cancel because of undefined oldHandler', {trx_id: trx_id});
+        config.debug_sdk_resend_delay && logger.verbose('SDK-RESEND-DELAY: Skipping cancel because of undefined oldHandler', {trx_id: trx_id});
         return;
     }
 
     const task = oldHandler.task;
-    logger.verbose('RESEND-DELAY: Canceling task', {trx_id: task.trx_id, destination: task.destination, product: task.product, remote_product: task.remote_product});
+    logger.verbose('SDK-RESEND-DELAY: Canceling task', {trx_id: task.trx_id, destination: task.destination, product: task.product, remote_product: task.remote_product});
 
     if (oldHandler.handler) { clearTimeout(oldHandler.handler); }
     resendHandlers.del(trx_id);
@@ -48,7 +48,7 @@ function cancel(_task) {
 
 function register(task, request) {
     if (!task.trx_id) {
-        logger.warn('RESEND-DELAY: Invalid task on register')
+        logger.warn('SDK-RESEND-DELAY: Invalid task on register')
         return;
     }
 
@@ -64,12 +64,12 @@ function register(task, request) {
     }
 
     if (retry <= 0) {
-        logger.verbose('RESEND-DELAY: Retry exceeded', {trx_id: task.trx_id, destination: task.destination, product: task.product, remote_product: task.remote_product});
+        logger.verbose('SDK-RESEND-DELAY: Retry exceeded', {trx_id: task.trx_id, destination: task.destination, product: task.product, remote_product: task.remote_product});
         cancel(task);
         return;
     }
 
-    logger.verbose('RESEND-DELAY: Registering task request', {trx_id: task.trx_id, destination: task.destination, product: task.product, remote_product: task.remote_product, delay_ms: config.auto_resend.delay_ms, retry: retry});
+    logger.verbose('SDK-RESEND-DELAY: Registering task request', {trx_id: task.trx_id, destination: task.destination, product: task.product, remote_product: task.remote_product, delay_ms: config.auto_resend.delay_ms, retry: retry});
     const handlerData = {
         handler: setTimeout(
             function() { _resend(task, request); },
@@ -85,7 +85,7 @@ function register(task, request) {
 setInterval(
     function() {
         resendHandlers.prune();
-        logger.verbose('RESEND-DELAY: pruned');
+        logger.verbose('SDK-RESEND-DELAY: pruned');
     },
     24 * 3600 * 1000
 )
