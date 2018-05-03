@@ -219,8 +219,7 @@ function report(data) {
             data.misc = {};
         }
 
-        logger.verbose('Including advice url on report');
-
+        //logger.verbose('Including advice url on report');
         data.misc.advice_url = config.push_server.advice.url;
     }
 
@@ -229,6 +228,7 @@ function report(data) {
         form: {
             trx_id: data.trx_id,
             rc: replaceRc(data.rc),
+            rc_from_handler: data.rc_from_handler,
             message: data.message,
             handler: config.handler_name,
             sn: data.sn,
