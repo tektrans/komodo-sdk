@@ -8,7 +8,7 @@ function logOnDebug(msg) {
 
 function run(msg, rules) {
     if (typeof msg !== 'string') {
-        logOnDebug('RC-FROM-MSG: invalid msg');
+        logOnDebug('RC-FROM-MSG: invalid msg type === ' + typeof msg);
         return;
     }
     if (!rules) {
