@@ -28,7 +28,10 @@ function _resend(task, request) {
 
 function cancel(_task) {
     const trx_id = ( typeof _task === 'string' ) ? _task : _task.trx_id;
-    if (!trx_id) { return; }
+    if (!trx_id) {
+        logger.warn('RESEND-DELAY: Skipping cancel because of undefined trx_id');
+        return;
+    }
 
     const oldHandler = resendHandlers.get(trx_id);
     if (!oldHandler) { return; }
