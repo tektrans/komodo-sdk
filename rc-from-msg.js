@@ -7,9 +7,18 @@ function logOnDebug(msg) {
 }
 
 function run(msg, rules) {
-    if (typeof msg !== 'string') return;
-    if (!rules) return;
-    if (!rules.length) return;
+    if (typeof msg !== 'string') {
+        logOnDebug('RC-FROM-MSG: invalid msg');
+        return;
+    }
+    if (!rules) {
+        logOnDebug('RC-FROM-MSG: invalid rules');
+        return;
+    }
+    if (!rules.length) {
+        logOnDebug('RC-FROM-MSG: rules is empty');
+        return;
+    }
 
     const rules_count = rules.length;
     for(let i = 0; i < rules_count; i++) {
