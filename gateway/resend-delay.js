@@ -29,13 +29,13 @@ function _resend(task, request) {
 function cancel(_task) {
     config && config.auto_resend && config.auto_resend.debug && logger.verbose('SDK-RESEND-DELAY: Preparing', {task: _task, typeof_task: typeof _task});
 
-    const trx_id = ( typeof _task === 'string' ) ? _task : _task.trx_id;
+    const trx_id = ( typeof _task === 'object' ) ? _task.trx_id : _task;
     if (!trx_id) {
         logger.warn('SDK-RESEND-DELAY: Skipping cancel because of undefined trx_id');
         return;
     }
 
-    const oldHandler = resendHandlers.get(trx_id);
+    const oldHandler = resendHandlers.get('TASK_' + trx_id);
     if (!oldHandler) {
         config && config.auto_resend && config.auto_resend.debug && logger.verbose('SDK-RESEND-DELAY: Skipping cancel because of undefined oldHandler', {trx_id: trx_id});
         return;
@@ -45,7 +45,7 @@ function cancel(_task) {
     logger.verbose('SDK-RESEND-DELAY: Canceling task', {trx_id: task.trx_id, destination: task.destination, product: task.product, remote_product: task.remote_product});
 
     if (oldHandler.handler) { clearTimeout(oldHandler.handler); }
-    resendHandlers.del(trx_id);
+    resendHandlers.del('TASK_' + trx_id);
 }
 
 function register(task, request) {
@@ -59,7 +59,7 @@ function register(task, request) {
     }
 
     let retry = config.auto_resend.max_retry;
-    const oldHandler = resendHandlers.get(task.trx_id);
+    const oldHandler = resendHandlers.get('TASK_' + task.trx_id);
     if (oldHandler) {
         retry = oldHandler.retry - 1;
         cancel(task);
@@ -81,7 +81,7 @@ function register(task, request) {
         retry: retry
     }
 
-    resendHandlers.set(task.trx_id, handlerData);
+    resendHandlers.set('TASK_' + task.trx_id, handlerData);
 }
 
 setInterval(
