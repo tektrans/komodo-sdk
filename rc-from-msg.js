@@ -13,7 +13,6 @@ function run(msg, rules) {
         if (msg.search(re) > 0) {
             return rule.rc || rule.result;
         }
-
     }
 }
 
