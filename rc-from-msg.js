@@ -9,7 +9,7 @@ function run(msg, rules) {
     for(let i = 0; i < rules_count; i++) {
         const rule = rules[i];
 
-        const re = new RegExp(rule.pattern);
+        const re = (typeof rule.flags === 'string') ? new RegExp(rule.pattern, rule.flags) : new RegExp(rule.pattern);
         if (msg.search(re) > 0) {
             return rule.rc || rule.result;
         }
