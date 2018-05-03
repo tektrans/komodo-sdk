@@ -27,7 +27,7 @@ function _resend(task, request) {
 }
 
 function cancel(_task) {
-    config && config.auto_resend && config.auto_resend.debug && logger.verbose('SDK-RESEND-DELAY: Preparing', {task: _task});
+    config && config.auto_resend && config.auto_resend.debug && logger.verbose('SDK-RESEND-DELAY: Preparing', {task: _task, typeof_task: typeof _task});
 
     const trx_id = ( typeof _task === 'string' ) ? _task : _task.trx_id;
     if (!trx_id) {
