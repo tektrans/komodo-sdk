@@ -34,7 +34,10 @@ function cancel(_task) {
     }
 
     const oldHandler = resendHandlers.get(trx_id);
-    if (!oldHandler) { return; }
+    if (!oldHandler) {
+        config.debug_sdk_resend_delay && logger.verbose('RESEND-DELAY: Skipping cancel because of undefined oldHandler', {trx_id: trx_id});
+        return;
+    }
 
     const task = oldHandler.task;
     logger.verbose('RESEND-DELAY: Canceling task', {trx_id: task.trx_id, destination: task.destination, product: task.product, remote_product: task.remote_product});
