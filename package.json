@@ -1,6 +1,6 @@
 {
   "name": "komodo-sdk",
-  "version": "1.26.4",
+  "version": "1.26.5",
   "description": "SDK for Komodo",
   "main": "index.js",
   "scripts": {
