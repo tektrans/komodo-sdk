@@ -24,6 +24,14 @@ function run(msg, rules) {
     for(let i = 0; i < rules_count; i++) {
         const rule = rules[i];
 
+        if (typeof rule.pattern !== 'string') {
+            continue;
+        }
+
+        if (typeof rule.rc !== 'string' && typeof rule.result !== 'string') {
+            continue;
+        }
+
         logOnDebug('RC-FROM-MSG: checking with rule: ' + JSON.stringify(rule));
         const re = (typeof rule.flags === 'string') ? new RegExp(rule.pattern, rule.flags) : new RegExp(rule.pattern);
         if (msg.search(re) > 0) {
