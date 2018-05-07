@@ -4,7 +4,7 @@ const request = require('request');
 
 const config = require('komodo-sdk/config');
 const logger = require('komodo-sdk/logger');
-const core_url = require('../core-url');
+const core_url = require('../../core-url');
 
 
 function coreUrl() {
