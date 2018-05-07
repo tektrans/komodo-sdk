@@ -121,18 +121,22 @@ function pullTask() {
 }
 
 function putTaskToMatrix(task) {
-    if (matrix.sdk_unresponsed_tasks.indexOf(task.trx_id) < 0) {
-        matrix.sdk_unresponsed_tasks.push(task.trx_id);
+    const trx_id = Number(task.trx_id);
+
+    if (matrix.sdk_unresponsed_tasks.indexOf(trx_id) < 0) {
+        matrix.sdk_unresponsed_tasks.push(trx_id);
         matrix.sdk_unresponsed_tasks_count = matrix.sdk_unresponsed_tasks.length;
     }
 
-    if (matrix.sdk_pending_tasks.indexOf(task.trx_id) < 0) {
-        matrix.sdk_pending_tasks.push(task.trx_id);
+    if (matrix.sdk_pending_tasks.indexOf(trx_id) < 0) {
+        matrix.sdk_pending_tasks.push(trx_id);
         matrix.sdk_pending_tasks_count = matrix.sdk_pending_tasks.length;
     }
 }
 
 function updateTaskOnMatrix(trx_id, rc) {
+    trx_id = Number(trx_id);
+
     const unresponsed_task_idx = matrix.sdk_unresponsed_tasks.indexOf(trx_id);
     if (unresponsed_task_idx >= 0) {
         matrix.sdk_unresponsed_tasks.splice(unresponsed_task_idx, 1);
