@@ -233,6 +233,7 @@ function report(data) {
             handler: config.handler_name,
             sn: data.sn,
             amount: data.amount,
+            balance: data.balance,
             raw: data.raw,
             misc: data.misc
         }
