@@ -4,21 +4,11 @@ const request = require('request');
 
 const config = require('komodo-sdk/config');
 const logger = require('komodo-sdk/logger');
+const core_url = require('../core-url');
+
 
 function coreUrl() {
-    if (!config) {
-        return;
-    }
-
-    if (config.core_url) {
-        return config.core_url;
-    }
-
-    if (config.core && config.core.url && config.core.apikey) {
-        return config.core.url + '/apikey/' + config.core.apikey;
-    }
-
-    return;
+    return core_url;
 }
 
 function doRequest(core_path, qs, cb) {
