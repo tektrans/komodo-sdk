@@ -34,7 +34,7 @@ function run(msg, rules) {
 
         logOnDebug('RC-FROM-MSG: checking with rule: ' + JSON.stringify(rule));
         const re = (typeof rule.flags === 'string') ? new RegExp(rule.pattern, rule.flags) : new RegExp(rule.pattern);
-        if (msg.search(re) => 0) {
+        if (msg.search(re) >= 0) {
             logOnDebug('RC-FROM-MSG: match with rule: ' + JSON.stringify(rule));
             return rule.rc || rule.result;
         }
