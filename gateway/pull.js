@@ -181,6 +181,10 @@ function forwardCoreTaskToPartner(coreMessage) {
 
     putTaskToMatrix(task);
 
+    const created_ts = new Date(task.created);
+    const queue_time = ((new Date()) - created_ts) / 1000;
+    logger.info('Got task from CORE', {trx_id: task.trx_id, destination: task.destination, product: task.product, queue_time: queue_time});
+
     taskArchive.get(task, function(res) {
         if (res && partner.advice) {
             partner.advice(task);
