@@ -52,7 +52,7 @@ function setPartner(_partner) {
 }
 
 function pullTask() {
-    if (is_on_delay_after_no_task) {
+    if (is_on_delay_after_no_task && !config.disable_delay_after_no_task) {
         //return;
     }
 
