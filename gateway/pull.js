@@ -87,7 +87,13 @@ function pullTask() {
         logger.verbose('Requesting task to CORE', {url: options.url, qs: options.qs});
     }
 
+    const start_time = new Date();
     request(options, function(error, response, body) {
+        const lame_limit = 10 * 1000;
+        if ((new Date() - start_time) > lame_limit) {
+            logger.warn('LAME-PULL: PULL response from CORE exceeds ' + lame_limit + ' secs');
+        }
+
         if (error) {
             if (matrix.core_is_healthy) {
                 logger.warn('Error pulling task from CORE', {error: error});
