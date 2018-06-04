@@ -53,7 +53,7 @@ function setPartner(_partner) {
 
 function pullTask() {
     if (is_on_delay_after_no_task) {
-        return;
+        //return;
     }
 
     if (!partner) {
@@ -317,6 +317,7 @@ function getRemoteProduct(product) {
 
 initMatrix();
 setInterval(pullTask, config.pull_interval_ms || 1000);
+logger.verbose('Pull task every ' + (config.pull_interval_ms || 1000) + ' ms')
 
 exports.setPartner = setPartner;
 exports.isPaused = isPaused;
