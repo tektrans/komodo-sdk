@@ -21,7 +21,7 @@ function pageIndex(req, res, next) {
 
 function pageAdd(req, res, next) {
     //if (!req.params.product || req.params.product !== 'string' || !req.params.product.trim()) {
-    if (!req.params.product) {
+    if (!req.params.product || req.params.product !== 'string') {
         res.json({
             method: '/products/add',
             error: true,
@@ -31,7 +31,7 @@ function pageAdd(req, res, next) {
         return;
     }
 
-    config.products.push(newProduct.trim().toUpperCase());
+    config.products.push(req.params.product.trim().toUpperCase());
     config.products.map(function(x) { return x.toUpperCase(); });
     unique(config.products);
     config.products.sort(naturalSort());
