@@ -55,9 +55,9 @@ function pullTask() {
     if (isPaused()) {
         return;
     }
-    
+
     if (is_on_delay_after_no_task && !config.disable_delay_after_no_task) {
-        //return;
+        return;
     }
 
     if (!partner) {
