@@ -19,6 +19,7 @@
   "author": "Adhidarma Hadiwinoto <gua@adhisimon.org>",
   "license": "ISC",
   "dependencies": {
+    "array-unique": "^0.3.2",
     "basic-auth": "^2.0.0",
     "body-parser": "^1.18.2",
     "dot-object": "^1.7.0",
