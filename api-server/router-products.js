@@ -19,7 +19,7 @@ function pageIndex(req, res, next) {
     });
 }
 
-function add(req, res, next) {
+function pageAdd(req, res, next) {
     if (!req.params.product || req.params.product !== 'string' || !req.params.product.trim()) {
         res.json({
             method: '/products/add',
@@ -44,7 +44,7 @@ function add(req, res, next) {
     })
 }
 
-function del(req, res, next) {
+function pageDel(req, res, next) {
     if (!req.params.product || req.params.product !== 'string' || !req.params.product.trim()) {
         res.json({
             method: '/products/del',

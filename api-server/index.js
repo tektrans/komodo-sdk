@@ -14,6 +14,7 @@ const matrix = require('../matrix');
 
 const routerConfig = require('./router-config');
 const routerMatrix = require('./router-matrix');
+const routerProducts = require('./router-products');
 
 const app = express();
 
@@ -42,3 +43,4 @@ isConfigured() && app.listen(config.apiserver.port, function () {
 app.use('/apikey/:apikey', needValidApikey);
 app.use('/apikey/:apikey/config', routerConfig);
 app.use('/apikey/:apikey/matrix', routerMatrix);
+app.use('/apikey/:apikey/products', routerProducts);
