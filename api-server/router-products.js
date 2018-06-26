@@ -31,7 +31,8 @@ function pageAdd(req, res, next) {
         return;
     }
 
-    config.products.push(req.params.product.trim().toUpperCase());
+    const product = req.params.product.trim().toUpperCase();
+    config.products.push(product);
     config.products.map(function(x) { return x.toUpperCase(); });
     unique(config.products);
     config.products.sort(naturalSort());
@@ -40,7 +41,7 @@ function pageAdd(req, res, next) {
     res.json({
         method: '/products/add',
         error: null,
-        new_product: newProduct,
+        new_product: product,
         products: config.products
     })
 }
