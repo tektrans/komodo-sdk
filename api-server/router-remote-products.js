@@ -34,7 +34,7 @@ function pageSet(req, res, next) {
     const remoteProduct = req.params.remoteProduct.trim();
 
     config.remote_products[localProduct] = remoteProduct;
-    sortObj(config.remote_products, {
+    config.remote_products = sortObj(config.remote_products, {
         sort: naturalCompare.caseInsensitive
     });
     matrix.config_is_dirty = true;
