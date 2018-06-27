@@ -1,9 +1,12 @@
 "use strict";
 
+const fs = require('fs');
 const express = require('express');
 const bodyParser = require('body-parser');
 const jsonQuery = require('json-query');
 const dot = require('dot-object');
+const copyFile = require('fs-copy-file');
+const moment = require('moment');
 
 const config = require('../config');
 const logger = require('../logger');
@@ -11,6 +14,8 @@ const matrix = require('../matrix');
 
 const router = express.Router();
 module.exports = router;
+
+fs.existsSync('config-backup') || fs.mkdirSync('config-backup');
 
 function getJsonConfig(req, res, next) {
     res.json(config);
@@ -47,7 +52,7 @@ function delConfigElement(req, res, next) {
 
     dot.str(key, config);
     matrix.config_is_dirty = true;
-    
+
     res.json({
         method: '/config/del',
         key: req.body.key,
@@ -56,7 +61,30 @@ function delConfigElement(req, res, next) {
 }
 
 function saveConfig(req, res, next) {
-    res.end('NOT YET IMPLEMENTED');
+    copyFile('config.json', 'backup/config_' + moment().format('YYYYMMDD_HHmmss.SS' + '.json'), function(err) {
+        if (err) {
+            res.json({
+                method: '/config/save',
+                error: err.toString()
+            })
+            return;
+        }
+
+        fs.writeFile('config.json', JSON.stringify(config, null, 2), function(err) {
+            if (err) {
+                res.json({
+                    method: '/config/save',
+                    error: err.toString()
+                })
+                return;
+            }
+        })
+
+        res.json({
+            method: '/config/save',
+            error: null
+        })
+    })
 }
 
 router.get('/', getJsonConfig);
