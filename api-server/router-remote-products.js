@@ -49,4 +49,4 @@ function pageSet(req, res, next) {
 }
 
 router.get('/', pageIndex);
-router.get('/set/:localProduct/:remoteProduct');
+router.get('/set/:localProduct/:remoteProduct', pageSet);
