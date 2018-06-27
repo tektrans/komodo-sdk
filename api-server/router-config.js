@@ -80,6 +80,8 @@ function saveConfig(req, res, next) {
             }
         })
 
+        matrix.config_is_dirty = false;
+
         res.json({
             method: '/config/save',
             error: null
