@@ -89,6 +89,14 @@ function saveConfig(req, res, next) {
     })
 }
 
+function isDirty(req, res, next) {
+    res.json({
+        method: '/config/is-dirty',
+        error: null,
+        dirty: matrix.config_is_dirty || false
+    })
+}
+
 router.get('/', getJsonConfig);
 router.post('/', getJsonConfig);
 
@@ -99,3 +107,5 @@ router.post('/set/:key', bodyParser.json(), setConfigElement);
 
 router.get('/del/:key', delConfigElement);
 router.get('/save', saveConfig);
+
+router.get('/is-dirty', isDirty);
