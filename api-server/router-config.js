@@ -61,7 +61,7 @@ function delConfigElement(req, res, next) {
 }
 
 function saveConfig(req, res, next) {
-    copyFile(process.cwd() + '/config.json', process.cwd() +  '/backup/config_' + moment().format('YYYYMMDD_HHmmss.SS' + '.json'), function(err) {
+    copyFile('config.json', 'config-backup/config_' + moment().format('YYYYMMDD_HHmmss.SS') + '.json', function(err) {
         if (err) {
             res.json({
                 method: '/config/save',
