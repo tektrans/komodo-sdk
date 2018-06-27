@@ -48,5 +48,29 @@ function pageSet(req, res, next) {
     })
 }
 
+function pageDel(req, res, next) {
+    if (!req.params.localProduct || !req.params.localProduct.trim()) {
+        res.json({
+            method: '/remote-products/del',
+            error: true,
+            error_msg: 'Usage: /remote-products/del/<LOCAL_PRODUCT>'
+        });
+
+        return;
+    }
+
+    const localProduct = req.params.localProduct.trim().toUpperCase();
+    delete config.remote_products[localProduct];
+    matrix.config_is_dirty = true;
+
+    res.json({
+        method: '/remote-products/del',
+        error: null,
+        local_product: localProduct,
+        remote_products: config.remote_products
+    })
+}
+
 router.get('/', pageIndex);
 router.get('/set/:localProduct/:remoteProduct', pageSet);
+router.get('/del/:localProduct', pageDel);
