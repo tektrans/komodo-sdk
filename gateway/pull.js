@@ -84,7 +84,8 @@ function pullTask() {
             handler: config.handler_name,
             products: config.products.join(','),
             advice_url: (config && config.push_server && config.push_server.apikey && config.push_server.advice && config.push_server.advice.url && config.push_server.advice.port) ? config.push_server.advice.url : null,
-            api_url: (config && config.apiserver && config.apiserver.apikey && config.apiserver.url) ? config.apiserver.url : null
+            api_url: (config && config.apiserver && config.apiserver.apikey && config.apiserver.url) ? config.apiserver.url : null,
+            cp_url: (config && config.control_panel && config.control_panel.url) ? config.control_panel.url : null,
         }
     }
 
