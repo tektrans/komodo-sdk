@@ -60,6 +60,15 @@ function pageDel(req, res, next) {
     const product = req.params.product.trim().toUpperCase();
     config.products.map(function(x) { return x.toUpperCase(); });
     const idx = config.products.indexOf(product);
+    if (idx <= 0) {
+        res.json({
+            method: '/products/del',
+            error: true,
+            error_msg: 'Product to delete does not exist on old product list'
+        });
+        
+        return;
+    }
     config.products.slice(idx, 1)
 
     matrix.config_is_dirty = true;
