@@ -43,7 +43,7 @@ function pageAdd(req, res, next) {
             continue;
         }
 
-        config.push(product.trim().toUpperCase());
+        config.products.push(product.trim().toUpperCase());
     }
 
     config.products.map(function(x) { return x.toUpperCase(); });
