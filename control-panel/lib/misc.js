@@ -6,7 +6,8 @@ function needAuthUser(req, res, next) {
     if (!req || !req.session || !req.session.username) {
         const qs = {
             msg: 'Anda diharuskan login sebagai super terminal dari super password untuk mengakses halaman yang diminta.',
-            ref: req.get('Referer')
+            //ref: req.get('Referer')
+            ref: req.originalUrl
         };
 
         res.redirect('/login?' + querystring.stringify(qs));
