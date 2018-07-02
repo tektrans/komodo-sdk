@@ -47,21 +47,25 @@ function pageAdd(req, res, next) {
 }
 
 function pageDel(req, res, next) {
-    if (!req.params.product || !req.params.product.trim()) {
+    let products = req.params.product || req.query.product
+    if (!products) {
         res.json({
             method: '/products/del',
             error: true,
-            error_msg: 'Usage: /products/del/<PRODUCT_TO_DELETE>'
+            error_msg: 'Usage: /products/del/<PRODUCT_TO_DELETE> or /products/del?product=<PRODUCT_TO_DELETE>'
         });
 
         return;
     }
 
+    if (typeof products === 'string') {
+        products = products.trim().split(/[\s,]*/);
+    }
+
     config.products.map(function(x) { return x.toUpperCase(); });
-    const products = req.params.product.split(',');
     const productsCount = products.length;
     for (let i=0; i<productsCount; i++) {
-        const product = products[i].trim().toUpperCase();
+        const product = products[i].toUpperCase();
         const idx = config.products.indexOf(product);
         if (idx >= 0) {
             matrix.config_is_dirty = true;
