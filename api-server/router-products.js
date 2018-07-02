@@ -57,26 +57,22 @@ function pageDel(req, res, next) {
         return;
     }
 
-    const product = req.params.product.trim().toUpperCase();
     config.products.map(function(x) { return x.toUpperCase(); });
-    const idx = config.products.indexOf(product);
-    if (idx < 0) {
-        res.json({
-            method: '/products/del',
-            error: true,
-            error_msg: 'Product to delete does not exist on old product list'
-        });
-
-        return;
+    const products = req.params.product.split(',');
+    const productsCount = products.length;
+    for (let i=0; i<productsCount; i++) {
+        const product = products[i].trim().toUpperCase();
+        const idx = config.products.indexOf(product);
+        if (idx >= 0) {
+            matrix.config_is_dirty = true;
+            config.products.splice(idx, 1)
+        }
     }
-    config.products.splice(idx, 1)
-
-    matrix.config_is_dirty = true;
 
     res.json({
         method: '/products/del',
         error: null,
-        product_to_delete: product,
+        product_to_delete: products,
         products: config.products
     })
 }
