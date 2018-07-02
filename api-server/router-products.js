@@ -59,7 +59,7 @@ function pageDel(req, res, next) {
     }
 
     if (typeof products === 'string') {
-        products = products.trim().split(/[\s,]*/);
+        products = products.trim().split(/[\s,]+/);
     }
 
     config.products.map(function(x) { return x.toUpperCase(); });
