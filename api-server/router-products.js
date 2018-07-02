@@ -20,8 +20,9 @@ function pageIndex(req, res, next) {
 }
 
 function pageAdd(req, res, next) {
-    //if (!req.params.product || req.params.product !== 'string' || !req.params.product.trim()) {
-    if (!req.params.product || !req.params.product.trim()) {
+    let products = req.params.product || req.query.product
+
+    if (!products) {
         res.json({
             method: '/products/add',
             error: true,
@@ -31,8 +32,20 @@ function pageAdd(req, res, next) {
         return;
     }
 
-    const product = req.params.product.trim().toUpperCase();
-    config.products.push(product);
+    if (typeof products === 'string') {
+        products = products.trim().split(/[\s,]+/);
+    }
+
+    const productsCount = products.length;
+    for (let i=0; i<productsCount; i++) {
+        const product = products[i];
+        if (!product.trim()) {
+            continue;
+        }
+
+        config.push(product.trim().toUpperCase());
+    }
+
     config.products.map(function(x) { return x.toUpperCase(); });
     unique(config.products);
     config.products.sort(naturalSort());
@@ -41,7 +54,7 @@ function pageAdd(req, res, next) {
     res.json({
         method: '/products/add',
         error: null,
-        new_product: product,
+        new_product: products,
         products: config.products
     })
 }
@@ -81,9 +94,9 @@ function pageDel(req, res, next) {
     })
 }
 
-
 router.get('/', pageIndex);
 router.get('/add/:product', pageAdd);
+router.get('/add', pageAdd);
 
 router.get('/del/:product', pageDel);
 router.get('/delete/:product', pageDel);
