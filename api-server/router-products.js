@@ -84,8 +84,10 @@ function pageDel(req, res, next) {
 
 router.get('/', pageIndex);
 router.get('/add/:product', pageAdd);
+
 router.get('/del/:product', pageDel);
 router.get('/delete/:product', pageDel);
 router.get('/remove/:product', pageDel);
+router.get('/del', pageDel);
 router.get('/delete', pageDel);
 router.get('/remove', pageDel);
