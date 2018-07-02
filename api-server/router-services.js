@@ -47,3 +47,4 @@ function terminate(req, res, next) {
 router.get('/is-pause', isPause);
 router.get('/pause', pause);
 router.get('/resume', resume);
+router.get('/terminate', terminate);
