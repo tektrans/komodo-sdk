@@ -58,17 +58,21 @@ function pageSet(req, res, next) {
 }
 
 function pageDel(req, res, next) {
-    if (!req.params.localProduct || !req.params.localProduct.trim()) {
+    function responseWithUsageHelp() {
         res.json({
             method: '/remote-products/del',
             error: true,
             error_msg: 'Usage: /remote-products/del/<LOCAL_PRODUCT>'
         });
+    }
 
+    const localProduct = req.params.localProduct || req.query.local;
+    if (!localProduct) {
+        responseWithUsageHelp();
         return;
     }
 
-    const localProduct = req.params.localProduct.trim().toUpperCase();
+
     delete config.remote_products[localProduct];
     matrix.config_is_dirty = true;
 
@@ -84,3 +88,4 @@ router.get('/', pageIndex);
 router.get('/set/:localProduct/:remoteProduct', pageSet);
 router.get('/set', pageSet);
 router.get('/del/:localProduct', pageDel);
+router.get('/del', pageDel);
