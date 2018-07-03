@@ -66,20 +66,30 @@ function pageDel(req, res, next) {
         });
     }
 
-    const localProduct = req.params.localProduct || req.query.local;
-    if (!localProduct) {
+    let localProducts = req.params.localProduct || req.query.local;
+    if (!localProducts) {
         responseWithUsageHelp();
         return;
     }
 
+    if (typeof localProducts === 'string') {
+        localProducts = localProducts.split(/[\s,]+/);
+    }
 
-    delete config.remote_products[localProduct];
-    matrix.config_is_dirty = true;
+    const localProductsCount = localProducts.length;
+    for (let i=0; i<localProductsCount; i++) {
+        const localProduct = localProducts[i];
+
+        if (localProduct) {
+            delete config.remote_products[localProduct];
+            matrix.config_is_dirty = true;
+        }
+    }
 
     res.json({
         method: '/remote-products/del',
         error: null,
-        local_product: localProduct,
+        deleted_product: localProducts,
         remote_products: config.remote_products
     })
 }
