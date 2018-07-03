@@ -20,18 +20,27 @@ function pageIndex(req, res, next) {
 }
 
 function pageSet(req, res, next) {
-    if (!req.params.localProduct || !req.params.localProduct.trim() || !req.params.remoteProduct || !req.params.remoteProduct.trim()) {
+    function responseWithUsageHelp() {
         res.json({
             method: '/remote-products/set',
             error: true,
             error_msg: 'Usage: /remote-products/set/<LOCAL_PRODUCT>/<REMOTE_PRODUCT>'
         });
+    }
 
+    if (!req.params.localProduct || !req.query.local) {
+        responseWithUsageHelp()
         return;
     }
 
-    const localProduct = req.params.localProduct.trim().toUpperCase();
-    const remoteProduct = req.params.remoteProduct.trim();
+    if (!req.params.remoteProduct || !req.query.remote) {
+        responseWithUsageHelp();
+        return;
+    }
+
+
+    const localProduct = (req.params.localProduct || req.query.local).trim().toUpperCase();
+    const remoteProduct = (req.params.remoteProduct || req.query.remote).trim();
 
     config.remote_products[localProduct] = remoteProduct;
     config.remote_products = sortObj(config.remote_products, {
@@ -73,4 +82,5 @@ function pageDel(req, res, next) {
 
 router.get('/', pageIndex);
 router.get('/set/:localProduct/:remoteProduct', pageSet);
+router.get('/set', pageSet);
 router.get('/del/:localProduct', pageDel);
