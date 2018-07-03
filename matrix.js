@@ -1,5 +1,6 @@
 "use strict";
 
+const pkginfo = require('pkginfo')(module, 'version');
 const simpleGit = require('simple-git');
 //const macaddress = require('macaddress');
 const machineid = require('node-machine-id');
@@ -7,7 +8,10 @@ const machineid = require('node-machine-id');
 
 const matrix = {
     //host_id: {}
-    machineid: machineid.machineIdSync()
+    machineid: machineid.machineIdSync(),
+    machineid_readable: null,
+    komodosdk_type: 'nodejs',
+    komodosdk_version: module.exports.version,
 };
 
 matrix.machineid_readable = matrix.machineid.match(/.{1,4}/g).join('-');
