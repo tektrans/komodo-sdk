@@ -28,12 +28,12 @@ function pageSet(req, res, next) {
         });
     }
 
-    if (!req.params.localProduct || !req.query.local) {
+    if (!req.params.localProduct && !req.query.local) {
         responseWithUsageHelp()
         return;
     }
 
-    if (!req.params.remoteProduct || !req.query.remote) {
+    if (!req.params.remoteProduct && !req.query.remote) {
         responseWithUsageHelp();
         return;
     }
