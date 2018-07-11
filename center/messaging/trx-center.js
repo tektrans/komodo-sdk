@@ -110,7 +110,8 @@ function executePrepaidBuy(paramsFromTransport, cb) {
         origin: config.origin || config.username,
         report_port: config.listen_port || '80',
         msg: paramsFromTransport.msg,
-        reverse_url: paramsFromTransport.reverse_url
+        reverse_url: paramsFromTransport.reverse_url,
+        center_extdata: paramsFromTransport.center_extdata
     }
 
     if (!config.do_not_prefix_request_id) {
