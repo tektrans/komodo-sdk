@@ -15,6 +15,7 @@ const MAX_SLEEP_BEFORE_RESEND_MS = 500;
 const DELAY_AFTER_NO_TASK_MS = 500;
 
 let is_on_delay_after_no_task = false;
+let pullTaskLocked = false;
 
 if (config.handler_name) {
     process.title = "KOMODO-GW@" + config.handler_name;
@@ -55,6 +56,11 @@ function pullTask() {
     if (isPaused()) {
         return;
     }
+
+    if (pullTaskLocked) {
+        return;
+    }
+    pullTaskLocked = true;
 
     if (is_on_delay_after_no_task && !config.disable_delay_after_no_task) {
         return;
@@ -97,6 +103,8 @@ function pullTask() {
 
     const start_time = new Date();
     request(options, function(error, response, body) {
+        pullTaskLocked = false;
+        
         const lame_limit = 10 * 1000;
         if ((new Date() - start_time) > lame_limit) {
             logger.warn('LAME-PULL: PULL response from CORE exceeds ' + lame_limit + ' secs');
