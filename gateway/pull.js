@@ -192,7 +192,7 @@ function updateTaskOnMatrix(trx_id, rc) {
     }
 }
 
-function forwardCoreTaskToPartner(coreMessage) {
+function forwardCoreTaskToPartner(coreMessage, start_time) {
     let task;
 
     try {
@@ -200,7 +200,10 @@ function forwardCoreTaskToPartner(coreMessage) {
     }
     catch(e) {
         logger.warn('Exception on parsing CORE pull task response', {coreMessage: coreMessage, error: e});
+        return;
     }
+
+    const core_pull_request_time = start_time ? (new Date() -- start_time) / 1000 : null;
 
     incrementCounterTrx();
 
@@ -210,7 +213,7 @@ function forwardCoreTaskToPartner(coreMessage) {
 
     const created_ts = new Date(task.created);
     const queue_time = ((new Date()) - created_ts) / 1000;
-    logger.info('Got task from CORE', {trx_id: task.trx_id, destination: task.destination, product: task.product, queue_time: queue_time});
+    logger.info('Got task from CORE', {trx_id: task.trx_id, destination: task.destination, product: task.product, queue_time: queue_time, core_pull_request_time: core_pull_request_time});
 
     taskArchive.get(task, function(res) {
         if (res && partner.advice) {
