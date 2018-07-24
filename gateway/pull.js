@@ -57,11 +57,6 @@ function pullTask() {
         return;
     }
 
-    if (config.pulltask_mutex && pullTaskLocked) {
-        return;
-    }
-    pullTaskLocked = true;
-
     if (is_on_delay_after_no_task && !config.disable_delay_after_no_task) {
         return;
     }
@@ -83,6 +78,11 @@ function pullTask() {
         logger.warn('Unknown CORE task url');
         return;
     }
+
+    if (config.pulltask_mutex && pullTaskLocked) {
+        return;
+    }
+    pullTaskLocked = true;
 
     let options = {
         url: core_pull_task_url,
