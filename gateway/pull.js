@@ -79,7 +79,8 @@ function pullTask() {
         return;
     }
 
-    if (config.pulltask_mutex && pullTaskLocked) {
+    //if (config.pulltask_mutex && pullTaskLocked) {
+    if (pullTaskLocked) {
         return;
     }
     pullTaskLocked = true;
