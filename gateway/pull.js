@@ -104,7 +104,7 @@ function pullTask() {
     const start_time = new Date();
     request(options, function(error, response, body) {
         pullTaskLocked = false;
-        
+
         const lame_limit = 10 * 1000;
         if ((new Date() - start_time) > lame_limit) {
             logger.warn('LAME-PULL: PULL response from CORE exceeds ' + lame_limit + ' secs');
