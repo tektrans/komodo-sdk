@@ -203,7 +203,7 @@ function forwardCoreTaskToPartner(coreMessage, start_time) {
         return;
     }
 
-    const core_pull_request_time = start_time ? (new Date() -- start_time) / 1000 : null;
+    const core_pull_request_time = start_time ? (new Date() - start_time) / 1000 : null;
 
     incrementCounterTrx();
 
