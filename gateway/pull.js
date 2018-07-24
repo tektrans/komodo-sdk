@@ -143,7 +143,7 @@ function pullTask() {
             return;
         }
 
-        forwardCoreTaskToPartner(body);
+        forwardCoreTaskToPartner(body, start_time);
     });
 }
 
