@@ -134,8 +134,12 @@ function pullTask() {
         }
         matrix.core_is_healthy = true;
 
-        if (body === 'NONE' || body === 'LOCKED') {
+        if (body === 'NONE') {
             onNoTask();
+            return;
+        }
+
+        if (body === 'LOCKED') {
             return;
         }
 
