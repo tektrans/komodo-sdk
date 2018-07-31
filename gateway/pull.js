@@ -65,6 +65,10 @@ function pullTask() {
         return;
     }
 
+    if (partner.notReady) {
+        return;
+    }
+
     let core_pull_task_url;
 
     if (core_url) {
