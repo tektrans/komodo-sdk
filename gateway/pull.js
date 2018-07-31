@@ -65,7 +65,7 @@ function pullTask() {
         return;
     }
 
-    if (partner.notReady) {
+    if (matrix && matrix.not_ready) {
         return;
     }
 
