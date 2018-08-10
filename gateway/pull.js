@@ -104,6 +104,7 @@ function pullTask() {
     }
 
     if (config.pull_task_use_post) {
+        logger.verbose('Requesting PULL-TASK to CORE using POST');
         options.method = 'POST';
         options.form = body_or_qs;
     }
