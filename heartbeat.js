@@ -33,7 +33,7 @@ function sendHeartbeat() {
         }
     }
 
-    request.post(requestOptions, function(err, res, body) { });
+    //request.post(requestOptions, function(err, res, body) { });
 }
 
 setInterval(
