@@ -89,21 +89,31 @@ function pullTask() {
     }
     pullTaskLocked = true;
 
+    const body_or_qs = {
+        handler: config.handler_name,
+        products: config.products.join(','),
+        advice_url: (config && config.push_server && config.push_server.apikey && config.push_server.advice && config.push_server.advice.url && config.push_server.advice.port) ? config.push_server.advice.url : null,
+        api_url: (config && config.apiserver && config.apiserver.apikey && config.apiserver.url) ? config.apiserver.url : null,
+        cp_url: (config && config.control_panel && config.control_panel.url) ? config.control_panel.url : null,
+        komodosdk_type: matrix.komodosdk_type,
+        komodosdk_version: matrix.komodosdk_version
+    };
+
     let options = {
         url: core_pull_task_url,
-        qs: {
-            handler: config.handler_name,
-            products: config.products.join(','),
-            advice_url: (config && config.push_server && config.push_server.apikey && config.push_server.advice && config.push_server.advice.url && config.push_server.advice.port) ? config.push_server.advice.url : null,
-            api_url: (config && config.apiserver && config.apiserver.apikey && config.apiserver.url) ? config.apiserver.url : null,
-            cp_url: (config && config.control_panel && config.control_panel.url) ? config.control_panel.url : null,
-            komodosdk_type: matrix.komodosdk_type,
-            komodosdk_version: matrix.komodosdk_version
-        }
+    }
+
+    if (config.pull_task_use_post) {
+        options.method = 'POST';
+        options.form = body_or_qs;
+    }
+    else {
+        options.method = 'GET';
+        options.qs = body_or_qs;
     }
 
     if (config && config.debug_request_task_to_core) {
-        logger.verbose('Requesting task to CORE', {url: options.url, qs: options.qs});
+        logger.verbose('Requesting task to CORE', {url: options.url, method: options.method, body_or_qs: body_or_qs});
     }
 
     const start_time = new Date();
