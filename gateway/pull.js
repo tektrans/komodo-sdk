@@ -288,7 +288,9 @@ function report(data) {
             amount: data.amount,
             balance: data.balance,
             raw: data.raw,
-            misc: data.misc
+            misc: data.misc,
+            product: data.product || ( (data.misc && data.misc.task && typeof data.misc.task.product === 'string') ? data.misc.task.product : null ),
+            remote_product: data.remote_product || ( (data.misc && data.misc.task && typeof data.misc.task.remote_product === 'string') ? data.misc.task.remote_product : null )
         }
     }
 
