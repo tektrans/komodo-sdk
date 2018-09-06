@@ -101,6 +101,7 @@ function pullTask() {
 
     let options = {
         url: core_pull_task_url,
+        timeout: 5000
     }
 
     if (config.pull_task_use_post) {
