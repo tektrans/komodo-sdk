@@ -54,6 +54,9 @@ function setPartner(_partner) {
 
 function pullTask() {
     if (isPaused()) {
+        if (process.env.KOMODO_SDK_DEBUG_PULL) {
+            logger.verbose('PULL TASK paused')
+        }
         return;
     }
 
@@ -62,10 +65,17 @@ function pullTask() {
     }
 
     if (!partner) {
+        if (process.env.KOMODO_SDK_DEBUG_PULL) {
+            logger.verbose('PULL TASK disabled because of undefined partner')
+        }
+
         return;
     }
 
     if (matrix && matrix.not_ready) {
+        if (process.env.KOMODO_SDK_DEBUG_PULL) {
+            logger.verbose('PULL TASK paused because of gateway is not ready')
+        }
         return;
     }
 
@@ -85,6 +95,9 @@ function pullTask() {
 
     //if (config.pulltask_mutex && pullTaskLocked) {
     if (pullTaskLocked) {
+        if (process.env.KOMODO_SDK_DEBUG_PULL) {
+            logger.verbose('PULL TASK paused because LOCKED')
+        }
         return;
     }
     pullTaskLocked = true;
