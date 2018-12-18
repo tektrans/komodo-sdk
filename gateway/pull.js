@@ -119,10 +119,16 @@ function pullTask() {
 
     if (config.pull_task_use_post) {
         //logger.verbose('Requesting PULL-TASK to CORE using POST');
+        if (KOMODO_SDK_DEBUG_PULL) {
+            logger.verbose('PULL TASK using HTTP POST');
+        }
         options.method = 'POST';
         options.form = body_or_qs;
     }
     else {
+        if (KOMODO_SDK_DEBUG_PULL) {
+            logger.verbose('PULL TASK using HTTP GET');
+        }
         options.method = 'GET';
         options.qs = body_or_qs;
     }
