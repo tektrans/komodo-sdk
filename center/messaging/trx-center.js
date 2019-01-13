@@ -213,6 +213,7 @@ function requestToCore(requestOptions, cb) {
 
         let result = parseCoreMessage(body);
         if (!result || !result.message) {
+            logger.warn('Error parsing CORE response', {module_name: module_name, method_name: 'requestToCore', requestOptions: requestOptions, responseBody: body});
             let msg = "INTERNAL ERROR";
             if (requestOptions.qs.msg) {
                 msg = requestOptions.qs.msg + ": " + msg;
