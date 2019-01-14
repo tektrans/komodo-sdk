@@ -84,7 +84,7 @@ function parseCoreMessage(body) {
     let coreRes;
 
     try {
-        coreRes = JSON.parse(body)
+        coreRes = JSON.parse(body);
     }
     catch(err) {
         logger.warn('Exception on parsing CORE response as JSON', {body: body, err: err});
