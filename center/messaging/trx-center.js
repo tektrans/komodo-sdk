@@ -99,9 +99,9 @@ function generateRequestId(req) {
 }
 
 function executePrepaidBuy(paramsFromTransport, cb) {
-    let tokens = paramsFromTransport.msg.trim().split(/[\., ]+/);
+    const tokens = paramsFromTransport.msg.trim().split(/[\., ]+/);
 
-    let qs = {
+    const qs = {
         request_id: tokens[3],
         terminal_name: paramsFromTransport.partner.toLowerCase(),
         product_name: tokens[0].toUpperCase(),
