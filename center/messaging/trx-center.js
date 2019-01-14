@@ -197,7 +197,7 @@ function requestToCore(requestOptions, cb) {
     request(requestOptions, function(err, res, body) {
         if (err || res.statusCode != 200) {
             logger.warn('Error requesting to CORE', {module_name: module_name, method_name: 'requestToCore', requestOptions: requestOptions, err: err});
-            let msg = "INTERNAL ERROR";
+            let msg = "INTERNAL ERROR, silahkan cek status transaksi di WEB REPORT";
             if (requestOptions.qs.msg) {
                 msg = requestOptions.qs.msg + ": " + msg;
             }
@@ -214,7 +214,7 @@ function requestToCore(requestOptions, cb) {
         let result = parseCoreMessage(body);
         if (!result || !result.message) {
             logger.warn('Error parsing CORE response', {module_name: module_name, method_name: 'requestToCore', requestOptions: requestOptions, responseBody: body});
-            let msg = "INTERNAL ERROR";
+            let msg = "INTERNAL ERROR, silahkan cek status transaksi di WEB REPORT";
             if (requestOptions.qs.msg) {
                 msg = requestOptions.qs.msg + ": " + msg;
             }
