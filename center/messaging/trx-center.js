@@ -27,7 +27,7 @@ function onOnline(params) {
 }
 
 function onIncomingMessage(paramsFromTransport, cb) {
-    logger.verbose('Reporting message to CORE')
+    logger.verbose('Reporting message to CORE');
 
     const command = paramsFromTransport.msg.split(/[\., ]+/)[0].toUpperCase();
 
