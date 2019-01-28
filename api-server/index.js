@@ -17,6 +17,7 @@ const routerMatrix = require('./router-matrix');
 const routerServices = require('./router-services');
 const routerProducts = require('./router-products');
 const routerRemoteProducts = require('./router-remote-products');
+const routerLocations = require('./router-locations');
 
 const app = express();
 
@@ -48,3 +49,4 @@ app.use('/apikey/:apikey/matrix', routerMatrix);
 app.use('/apikey/:apikey/services', routerServices);
 app.use('/apikey/:apikey/products', routerProducts);
 app.use('/apikey/:apikey/remote-products', routerRemoteProducts);
+app.use('/apikey/:apikey/locations', routerLocations);
