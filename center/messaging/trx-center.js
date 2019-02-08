@@ -27,7 +27,11 @@ function onOnline(params) {
 }
 
 function onIncomingMessage(paramsFromTransport, cb) {
-    logger.verbose('Reporting message to CORE');
+    logger.verbose('Reporting message to CORE', {
+        origin: config.origin || config.username,
+        terminal_name: paramsFromTransport && paramsFromTransport.partner ? paramsFromTransport.partner.toLowerCase() : null,
+        msg: paramsFromTransport ? paramsFromTransport.msg : null
+    });
 
     const command = paramsFromTransport.msg.split(/[\., ]+/)[0].toUpperCase();
 
