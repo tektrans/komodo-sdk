@@ -245,6 +245,9 @@ function forwardCoreTaskToPartner(coreMessage, start_time) {
     incrementCounterTrx();
 
     task.remote_product = getRemoteProduct(task.product);
+    if (Number(config.sdk_trx_id_adder)) {
+        task.trx_id = Number(task.trx_id) + Number(config.sdk_trx_id_adder);
+    }
 
     putTaskToMatrix(task);
 
@@ -301,7 +304,7 @@ function report(data) {
     let options = {
         url: core_pull_report_url,
         form: {
-            trx_id: data.trx_id,
+            trx_id: Number(data.trx_id) - (Number(config.sdk_trx_id_adder) || 0),
             rc: replaceRc(data.rc),
             rc_from_handler: data.rc_from_handler,
             message: data.message,

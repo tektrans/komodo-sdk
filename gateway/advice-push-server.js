@@ -58,6 +58,10 @@ function adviceHandler(req, res, next) {
     logger.verbose('PUSH-ADVICE: Got advice push', {task: task});
 
     task.remote_product = pull.getRemoteProduct(task.product);
+    if (Number(config.sdk_trx_id_adder)) {
+        task.trx_id = Number(task.trx_id) + Number(config.sdk_trx_id_adder);
+    }
+
     partner.advice(task);
 }
 
