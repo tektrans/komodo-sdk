@@ -301,10 +301,16 @@ function report(data) {
         data.misc.advice_url = config.push_server.advice.url;
     }
 
+    let trx_id = Number(data.trx_id) - (Number(config.sdk_trx_id_adder) || 0);
+    if (trx_id <= 0) {
+        logger.warn('REPORT: calculated trx_id is a negative number, using uncalculated trx_id', {uncalculated: data.trx_id, calculated: trx_id, sdk_trx_id_adder: config.sdk_trx_id_adder});
+        trx_id = data.trx_id;
+    }
+
     let options = {
         url: core_pull_report_url,
         form: {
-            trx_id: Number(data.trx_id) - (Number(config.sdk_trx_id_adder) || 0),
+            trx_id: trx_id,
             rc: replaceRc(data.rc),
             rc_from_handler: data.rc_from_handler,
             message: data.message,
