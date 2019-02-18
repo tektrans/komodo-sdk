@@ -365,7 +365,7 @@ function pause() {
 }
 
 function resume() {
-    matrix.pause = false;
+    matrix.paused = false;
 }
 
 function initMatrix() {
