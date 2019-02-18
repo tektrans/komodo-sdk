@@ -13,25 +13,25 @@ function isPause(req, res, next) {
     res.json({
         method: '/services/is-pause',
         error: null,
-        result: Boolean(matrix.pause)
+        result: Boolean(matrix.paused)
     });
 }
 
 function pause(req, res, next) {
-    matrix.pause = true;
+    matrix.paused = true;
     res.json({
         method: '/services/pause',
         error: null,
-        result: Boolean(matrix.pause)
+        result: Boolean(matrix.paused)
     });
 }
 
 function resume(req, res, next) {
-    matrix.pause = false;
+    matrix.paused = false;
     res.json({
         method: '/services/resume',
         error: null,
-        result: Boolean(matrix.pause)
+        result: Boolean(matrix.paused)
     });
 }
 
