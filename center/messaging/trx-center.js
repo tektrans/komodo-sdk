@@ -104,17 +104,20 @@ function generateRequestId(req) {
 
 function executePrepaidBuy(paramsFromTransport, cb) {
     const tokens = paramsFromTransport.msg.trim().split(/[\., ]+/);
+
+    /*
     if (!tokens || tokens.length < 3) {
         cb && cb(null, {msg: 'Invalid command'});
         return;
     }
+    */
 
     const qs = {
         request_id: tokens[3],
         terminal_name: paramsFromTransport.partner.toLowerCase(),
-        product_name: tokens[0].toUpperCase(),
-        destination: tokens[1].toUpperCase(),
-        password: tokens[2],
+        product_name: typeof tokens[0] === 'string' ? tokens[0].toUpperCase() : null,
+        destination: typeof tokens[1] === 'string' ? tokens[1].toUpperCase() : null,
+        password: typeof tokens[2] === 'string' ? tokens[2] : null,
         origin: config.origin || config.username,
         report_port: config.listen_port || '80',
         msg: paramsFromTransport.msg,
