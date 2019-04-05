@@ -106,7 +106,9 @@ function executePrepaidBuy(paramsFromTransport, cb) {
     const tokens = paramsFromTransport.msg.trim().split(/[\., ]+/);
 
     if (!tokens || tokens.length < 3) {
-        if (cb) { cb(null, {msg: 'Invalid command'}); }
+        if (transport && transport.send && paramsFromTransport.partner) {
+            transport.send(paramsFromTransport.partner, 'Invalid command');
+        }
         return;
     }
 
