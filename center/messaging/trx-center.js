@@ -104,6 +104,10 @@ function generateRequestId(req) {
 
 function executePrepaidBuy(paramsFromTransport, cb) {
     const tokens = paramsFromTransport.msg.trim().split(/[\., ]+/);
+    if (!tokens || tokens.length < 3) {
+        cb(null, {msg: 'Invalid command'});
+        return;
+    }
 
     const qs = {
         request_id: tokens[3],
