@@ -33,7 +33,7 @@ function pageAdd(req, res) {
     }
 
     if (typeof locations === 'string') {
-        locations = locations.trim().split(/[\s,]+/).map((el) => { return el.toUpperCase() !== 'ALL'; });
+        locations = locations.trim().split(/[\s,]+/).map((el) => { return el && el.toUpperCase() !== 'ALL'; });
     }
 
     const locationsCount = locations.length;
