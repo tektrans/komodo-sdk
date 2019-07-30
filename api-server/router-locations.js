@@ -33,21 +33,8 @@ function pageAdd(req, res) {
     }
 
     if (typeof locations === 'string') {
-        locations = locations.trim().split(/[\s,]+/);
+        locations = locations.trim().split(/[\s,]+/).map((el) => { return el.toUpperCase() !== 'ALL'; });
     }
-
-    if (locations.map((el) => { return el.toUpperCase(); }).indexOf('ALL') >= 0) {
-        config.locations = [];
-        matrix.config_is_dirty = true;
-        res.json({
-            method: '/locations/add',
-            error: null,
-            new_location: locations,
-            locations: config.locations
-        });
-        return;
-    }
-
 
     const locationsCount = locations.length;
     for (let i=0; i<locationsCount; i++) {
