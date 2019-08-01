@@ -43,6 +43,7 @@ function pageAdd(req, res) {
             continue;
         }
 
+        if (!config.locations) config.locations = [];
         config.locations.push(location.trim().toUpperCase());
     }
 
