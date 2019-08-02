@@ -5,25 +5,25 @@ const config = require('./config');
 
 const redisClient = redis.createClient(config.redis || { host: '127.0.0.1' });
 
-function composeKeyword(name, subname) {
-    return `CHONGLEE_MODEM_COUNTER_${name}_${subname || ''}`;
+function composeKeyword(name) {
+    return `CHONGLEE_COUNTER_${name}}`;
 }
 
-exports.increment = (name, subname) => {
-    redisClient.INCR(composeKeyword(name, subname));
+exports.increment = (name) => {
+    redisClient.INCR(composeKeyword(name));
 }
 
-exports.reset = (name, subname) => {
-    redisClient.DEL(composeKeyword(name, subname));
+exports.reset = (name) => {
+    redisClient.DEL(composeKeyword(name));
 }
 
-exports.set = (name, subname, value) => {
-    redisClient.SET(composeKeyword(name, subname), Number(value));
+exports.set = (name, value) => {
+    redisClient.SET(composeKeyword(name), Number(value));
 }
 
-exports.get = (name, subname) => {
+exports.get = (name) => {
     return new Promise((resolve) => {
-        redisClient.GET(composeKeyword(name, subname), (err, reply) => {
+        redisClient.GET(composeKeyword(name), (err, reply) => {
             if (err) {
                 resolve(0);
                 return;
