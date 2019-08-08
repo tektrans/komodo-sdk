@@ -7,8 +7,6 @@ const winston = require('winston');
 require('winston-daily-rotate-file');
 require('winston-circular-buffer');
 
-const config = require('./config');
-
 const loggerTimestamp = function() {
     return strftime('%F %T', new Date());
 }
