@@ -27,7 +27,7 @@ const logger = winston.createLogger({
                 winston.format.metadata(),
                 winston.format.timestamp({ format: 'YYYY-MM-DD HH:mm:ss.SSS' }),
                 winston.format.label({ label: `${process.title}[${PID}]`, message: false }),
-                winston.format.printf((info) => `${info.timestamp} ${info.label}: ${info.level}: ${info.message} ${info.metadata && Object.keys(info.metadata).length ? JSON.stringify(info.metadata) : ''}`.trim()),
+                winston.format.printf((info) => `${process.stdout.isTTY ? info.timestamp : ''} ${info.label}: ${info.level}: ${info.message} ${info.metadata && Object.keys(info.metadata).length ? JSON.stringify(info.metadata) : ''}`.trim()),
            )
         }),
 
