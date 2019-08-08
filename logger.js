@@ -1,52 +1,62 @@
 "use strict";
 
-const fs = require('fs');
-const strftime = require('strftime');
+const PID = process.pid;
+
 const winston = require('winston');
 
 require('winston-daily-rotate-file');
 require('winston-circular-buffer');
 
-const loggerTimestamp = function() {
-    return strftime('%F %T', new Date());
-}
-
 const logDirectory = process.cwd() +  '/logs';
-const filenamePrefix = logDirectory + "/" + (process.env.KOMODO_LOG_FILENAME || "/log");
+const filenamePrefix = (process.env.KOMODO_LOG_FILENAME || "log.");
 
-fs.existsSync(logDirectory) || fs.mkdirSync(logDirectory);
+// const processTitle = process.title;
 
-const logger = new winston.Logger({
+const logger = winston.createLogger({
+    // levels: winston.config.syslog.levels,
     transports: [
+        /*
         new (winston.transports.Console)({
-            timestamp: process.stdout.isTTY ? loggerTimestamp : null,
+            timestamp: process.stdout.isTTY ? moment() : null,
             level: 'verbose',
+        }),
+        */
+
+        new (winston.transports.Console) ({
+            format: winston.format.combine(
+                winston.format.metadata(),
+                winston.format.timestamp({ format: 'YYYY-MM-DD HH:mm:ss.SSS' }),
+                winston.format.label({ label: `${process.title}[${PID}]`, message: false }),
+                winston.format.printf((info) => `${info.timestamp} ${info.label}: ${info.level}: ${info.message} ${JSON.stringify(info.metadata)}`),
+           )
         }),
 
         new (winston.transports.DailyRotateFile) ({
-            name: 'log-file-txt',
-            filename: filenamePrefix,
-            timestamp: loggerTimestamp,
-            formatter: function(options) {
-                return options.timestamp()
-                    +' ' + options.level.toUpperCase()
-                    +' ' + (undefined !== options.message ? options.message : '')
-                    + (options.meta && Object.keys(options.meta).length ? '\n\t' + JSON.stringify(options.meta) : '' );
-            },
-            level: 'debug',
-        }),
+            filename: `${filenamePrefix}%DATE%`,
+            dirname: logDirectory,
+            datePattern: 'YYYY-MM-DD',
+            
+            format: winston.format.combine(
+                winston.format.metadata(),
+                winston.format.label({ label: `${process.title}[${PID}]`, message: false }),
+                winston.format.timestamp({ format: 'YYYY-MM-DD HH:mm:ss.SSS' }),
+                winston.format.json(),
+            )
+            
+        })
 
+        /*
         new (winston.transports.CircularBuffer) ({
             name: 'logs',
             level: "verbose",
             json: true,
             size: 500
-        })
+        }),
+        */
     ]
 });
 
-logger.verbose(__filename + ': initialized');
-
+logger.info('Logger initialized');
 require('./logger-circular-buffer-web');
 
 module.exports = logger;
