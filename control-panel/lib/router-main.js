@@ -1,7 +1,5 @@
 "use strict";
 
-const module_name = 'CONTROL_PANEL_' + require('path').basename(__filename);
-
 const os = require('os');
 
 const express = require('express');
@@ -14,12 +12,12 @@ const matrix = require('komodo-sdk/matrix');
 
 const misc = require('./misc');
 
-function pageMain(req, res, next) {
+function pageMain(req, res) {
     res.redirect('/runtime');
 }
 
-function pageLog(req, res, next) {
-    logger.query({json: true, order: 'desc'}, function(err, results) {
+function pageLog(req, res) {
+    logger.query({json: true, order: 'desc'}, function(err) {
         if (err) {
             return res.end('INVALID LOGGER');
         }
@@ -27,13 +25,14 @@ function pageLog(req, res, next) {
         res.render(
             req.app.locals.cp_views_dir + '/log.html',
             {
-                log: JSON.stringify(results.logs, null, 4)
+                // log: JSON.stringify(results.logs, null, 4)
+                log: '[]'
             }
         );
 
     });
 }
-function pageRuntime(req, res, next) {
+function pageRuntime(req, res) {
 
     res.render(
         req.app.locals.cp_views_dir + '/runtime.html',

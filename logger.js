@@ -43,7 +43,7 @@ const logger = winston.createLogger({
                 winston.format.json(),
             )
             
-        })
+        }),
 
         /*
         new (winston.transports.CircularBuffer) ({

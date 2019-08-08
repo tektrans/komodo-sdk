@@ -1,3 +1,3 @@
 "use strict";
 
-const init = require('./lib/express-init');
+require('./lib/express-init');

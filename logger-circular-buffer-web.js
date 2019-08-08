@@ -3,7 +3,6 @@
 const http = require('http');
 const auth = require('basic-auth');
 
-const config = require('./config');
 const logger = require('./logger');
 
 function listen(options) {
@@ -19,6 +18,8 @@ function listen(options) {
             }
             else {
 
+                res.json([]);
+                /*
                 logger.query({json: true, order: desc}, function(err, results) {
                     if (err) {
                         res.end('INVALID LOGGER');
@@ -28,6 +29,7 @@ function listen(options) {
                         res.end(JSON.stringify(results));
                     }
                 });
+                */
             }
         }).listen(options.port);
 

@@ -1,7 +1,6 @@
 "use strict";
 
 const path = require('path');
-const module_name = path.basename(__filename);
 
 const express = require('express');
 const session = require('express-session');
