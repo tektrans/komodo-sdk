@@ -8,7 +8,7 @@ require('winston-daily-rotate-file');
 require('winston-circular-buffer');
 
 const logDirectory = process.cwd() +  '/logs';
-const filenamePrefix = (process.env.KOMODO_LOG_FILENAME || "log.");
+const filenamePrefix = (process.env.KOMODO_LOG_FILENAME || 'log') + '.';
 
 // const processTitle = process.title;
 
