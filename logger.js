@@ -8,9 +8,9 @@ require('winston-daily-rotate-file');
 require('winston-circular-buffer');
 
 const logDirectory = process.cwd() +  '/logs';
-const filenamePrefix = (process.env.KOMODO_LOG_FILENAME || 'log') + '.';
+const filenamePrefix = (global.KOMODO_LOG_FILENAME || process.env.KOMODO_LOG_FILENAME || 'log') + '.';
 
-const LOG_LABEL = process.env.KOMODO_LOG_LABEL;
+// const LOG_LABEL = process.env.KOMODO_LOG_LABEL;
 
 // const processTitle = process.title;
 
@@ -28,7 +28,7 @@ const logger = winston.createLogger({
             format: winston.format.combine(
                 winston.format.metadata(),
                 winston.format.timestamp({ format: 'YYYY-MM-DD HH:mm:ss.SSS' }),
-                winston.format.label({ label: `${LOG_LABEL || process.title}[${PID}]`, message: false }),
+                winston.format.label({ label: `${global.KOMODO_LOG_LABEL || process.title}[${PID}]`, message: false }),
                 winston.format.printf((info) => `${process.stdout.isTTY ? info.timestamp : ''} ${info.label}: ${info.level}: ${info.message} ${info.metadata && Object.keys(info.metadata).length ? JSON.stringify(info.metadata) : ''}`.trim()),
            )
         }),
@@ -40,7 +40,7 @@ const logger = winston.createLogger({
             
             format: winston.format.combine(
                 winston.format.metadata(),
-                winston.format.label({ label: `${LOG_LABEL || process.title}[${PID}]`, message: false }),
+                winston.format.label({ label: `${global.KOMODO_LOG_LABEL || process.title}[${PID}]`, message: false }),
                 winston.format.timestamp({ format: 'YYYY-MM-DD HH:mm:ss.SSS' }),
                 winston.format.json(),
             )
