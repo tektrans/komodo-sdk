@@ -1,7 +1,5 @@
 "use strict";
 
-const PID = process.pid;
-
 const winston = require('winston');
 
 require('winston-daily-rotate-file');
@@ -28,8 +26,8 @@ const logger = winston.createLogger({
             format: winston.format.combine(
                 winston.format.metadata(),
                 winston.format.timestamp({ format: 'YYYY-MM-DD HH:mm:ss.SSS' }),
-                winston.format.label({ label: `${global.KOMODO_LOG_LABEL || process.title}[${PID}]`, message: false }),
-                winston.format.printf((info) => `${process.stdout.isTTY ? info.timestamp : ''} ${info.label}: ${info.level}: ${info.message} ${info.metadata && Object.keys(info.metadata).length ? JSON.stringify(info.metadata) : ''}`.trim()),
+                winston.format.label({ label: global.KOMODO_LOG_LABEL, message: false }),
+                winston.format.printf((info) => `${process.stdout.isTTY ? info.timestamp : ''}${info.label ? ' ' + info.label + ':' : ''} ${info.level}: ${info.message} ${info.metadata && Object.keys(info.metadata).length ? JSON.stringify(info.metadata) : ''}`.trim()),
            )
         }),
 
@@ -40,11 +38,10 @@ const logger = winston.createLogger({
             
             format: winston.format.combine(
                 winston.format.metadata(),
-                winston.format.label({ label: `${global.KOMODO_LOG_LABEL || process.title}[${PID}]`, message: false }),
+                winston.format.label({ label: global.KOMODO_LOG_LABEL || 'no-label', message: false }),
                 winston.format.timestamp({ format: 'YYYY-MM-DD HH:mm:ss.SSS' }),
                 winston.format.json(),
             )
-            
         }),
 
         /*
