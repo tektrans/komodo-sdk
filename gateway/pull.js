@@ -329,7 +329,7 @@ function report(data) {
         logger.verbose('Report to CORE using HTTP POST');
     }
 
-    request.post(options, function(error, response, body) {
+    request.post(options, function(error, response) {
         if (error) {
             logger.warn('Error reporting to CORE', {error: error});
             resendReport(data);
