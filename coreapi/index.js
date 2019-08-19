@@ -23,7 +23,7 @@ function doRequest(params, cb) {
             if (err) {
                 logger.warn(`COREAPI: Error doing HTTP ${options.method} to CORE. ${err.toString()}`, { xid: params.xid });
                 
-                resolve(err);
+                resolve([err]);
                 if (typeof cb === 'function') cb(err);
                 return;
             }
@@ -32,7 +32,7 @@ function doRequest(params, cb) {
                 const errStatusCode = new Error('COREAPI: CORE responded with non HTTP STATUS CODE 200');
                 logger.warn(`COREAPI: CORE returning HTTP STATUS CODE ${res.statusCode}, not 200`, { xid: params.xid, body });
 
-                resolve(errStatusCode);
+                resolve([errStatusCode]);
                 if (typeof cb === 'function') cb(errStatusCode);
                 return;
             }
@@ -42,14 +42,14 @@ function doRequest(params, cb) {
                 bodyObject = JSON.parse(body);
             } catch (e) {
                 const errNoJson = new Error('COREAPI: CORE responded with non JSON body');
-                logger.verbose(errNoJson);
-                
-                resolve(errNoJson, body);
+                logger.verbose([errNoJson]);
+
+                resolve([errNoJson, body]);
                 if (typeof cb === 'function') cb(errNoJson, body);
                 return;
             }
 
-            resolve(null, bodyObject);
+            resolve([null, bodyObject]);
             if (typeof cb === 'function') cb(null, bodyObject);
         });
     });
