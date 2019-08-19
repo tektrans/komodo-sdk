@@ -5,7 +5,11 @@ const request = require('request');
 const logger = require('../logger');
 const coreUrl = require('../core-url');
 
-logger.verbose(`CORE URL: ${coreUrl}`);
+function isLogDisabled() {
+    return global.KOMODO_SDK_NO_LOG_ON_COREAPI;
+}
+
+isLogDisabled() || logger.verbose(`CORE URL: ${coreUrl}`);
 
 function doRequest(params, cb) {
     return new Promise((resolve) => {
@@ -15,13 +19,13 @@ function doRequest(params, cb) {
             qs: params.qs || null,
         };
 
-        logger.verbose('Requesting to CORE', {
+        isLogDisabled() || logger.verbose('Requesting to CORE', {
             xid: params.xid, method: options.method, fullpath: options.url, qs: options.qs,
         });
 
         request(options, (err, res, body) => {
             if (err) {
-                logger.warn(`COREAPI: Error doing HTTP ${options.method} to CORE. ${err.toString()}`, { xid: params.xid });
+                isLogDisabled() || logger.warn(`COREAPI: Error doing HTTP ${options.method} to CORE. ${err.toString()}`, { xid: params.xid });
                 
                 resolve([err]);
                 if (typeof cb === 'function') cb(err);
@@ -30,7 +34,7 @@ function doRequest(params, cb) {
 
             if (res.statusCode !== 200) {
                 const errStatusCode = new Error('COREAPI: CORE responded with non HTTP STATUS CODE 200');
-                logger.warn(`COREAPI: CORE returning HTTP STATUS CODE ${res.statusCode}, not 200`, { xid: params.xid, body });
+                isLogDisabled() || logger.warn(`COREAPI: CORE returning HTTP STATUS CODE ${res.statusCode}, not 200`, { xid: params.xid, body });
 
                 resolve([errStatusCode]);
                 if (typeof cb === 'function') cb(errStatusCode);
@@ -42,7 +46,7 @@ function doRequest(params, cb) {
                 bodyObject = JSON.parse(body);
             } catch (e) {
                 const errNoJson = new Error('COREAPI: CORE responded with non JSON body');
-                logger.verbose([errNoJson]);
+                isLogDisabled() || logger.verbose([errNoJson]);
 
                 resolve([errNoJson, body]);
                 if (typeof cb === 'function') cb(errNoJson, body);
