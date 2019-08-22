@@ -46,7 +46,7 @@ function doRequest(params, cb) {
                 bodyObject = JSON.parse(body);
             } catch (e) {
                 const errNoJson = new Error('COREAPI: CORE responded with non JSON body');
-                isLogDisabled() || logger.verbose([errNoJson]);
+                isLogDisabled() || logger.verbose(errNoJson, {body});
 
                 resolve([errNoJson, body]);
                 if (typeof cb === 'function') cb(errNoJson, body);
