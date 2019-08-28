@@ -12,7 +12,7 @@ if (!fs.existsSync(configFile)) {
     }
 }
 
-global.KOMODO_CONFIG_FILENAME = configFile;
+global.KOMODO_SDK_CONFIG_FILENAME = configFile;
 
 const config = require(configFile);
 configFiller.go();
