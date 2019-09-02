@@ -5,7 +5,7 @@ const request = require('request');
 const config = require('../config');
 const logger = require('../logger');
 const matrix = require('../matrix');
-const controlPanel = require('../control-panel');
+require('../control-panel');
 const heartbeat = require('../heartbeat');
 const core_url = require('../core-url');
 
@@ -369,10 +369,6 @@ function resume() {
 }
 
 function initMatrix() {
-    if (!matrix) {
-        matrix = {};
-    }
-
     matrix.counter = {
         trx: 0
     }
