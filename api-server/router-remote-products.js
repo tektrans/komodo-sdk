@@ -5,13 +5,12 @@ const sortObj = require('sort-object');
 const naturalCompare = require('string-natural-compare');
 
 const config = require('../config');
-const logger = require('../logger');
 const matrix = require('../matrix');
 
 const router = express.Router();
 module.exports = router;
 
-function pageIndex(req, res, next) {
+function pageIndex(req, res) {
     res.json({
         method: '/products',
         error: null,
@@ -19,7 +18,7 @@ function pageIndex(req, res, next) {
     });
 }
 
-function pageSet(req, res, next) {
+function pageSet(req, res) {
     function responseWithUsageHelp() {
         res.json({
             method: '/remote-products/set',
@@ -57,7 +56,7 @@ function pageSet(req, res, next) {
     })
 }
 
-function pageDel(req, res, next) {
+function pageDel(req, res) {
     function responseWithUsageHelp() {
         res.json({
             method: '/remote-products/del',
