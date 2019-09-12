@@ -1,7 +1,7 @@
 "use strict";
 
 const express = require('express');
-const sortObj = require('sort-object');
+// const sortObj = require('sort-object');
 const naturalCompare = require('string-natural-compare');
 
 const config = require('../config');
@@ -42,9 +42,20 @@ function pageSet(req, res) {
     const remoteProduct = (req.params.remoteProduct || req.query.remote).trim();
 
     config.remote_products[localProduct] = remoteProduct;
+
+    /*
     config.remote_products = sortObj(config.remote_products, {
         sort: naturalCompare.caseInsensitive
     });
+    */
+
+    const sortedRemoteProducts = {};
+    const remoteProductsKeys = Object.keys(config.remote_products).sort(naturalCompare.caseInsensitive);
+    remoteProductsKeys.forEach((item) => {
+        sortedRemoteProducts[item] = config.remote_products[item];
+    });
+    config.remote_products = sortedRemoteProducts;
+
     matrix.config_is_dirty = true;
 
     res.json({
