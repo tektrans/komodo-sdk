@@ -104,7 +104,7 @@ function pullTask() {
 
     const body_or_qs = {
         handler: config.handler_name,
-        products: config.products.join(','),
+        products: config.sdk_pull_only_postpaid ? '' : config.products.join(','),
         locations: config.locations && config.locations.length ? config.locations.join(',') : 'ALL',
         advice_url: (config && config.push_server && config.push_server.apikey && config.push_server.advice && config.push_server.advice.url && config.push_server.advice.port) ? config.push_server.advice.url : null,
         api_url: (config && config.apiserver && config.apiserver.apikey && config.apiserver.url) ? config.apiserver.url : null,
@@ -385,10 +385,8 @@ function getRemoteProduct(product) {
 
 initMatrix();
 
-if (!config.sdk_pull_only_postpaid) {
-    setInterval(pullTask, config.pull_interval_ms || 1000);
-    logger.verbose('Pull task every ' + (config.pull_interval_ms || 1000) + ' ms')
-}
+setInterval(pullTask, config.pull_interval_ms || 1000);
+logger.verbose('Pull task every ' + (config.pull_interval_ms || 1000) + ' ms');
 
 exports.setPartner = setPartner;
 exports.isPaused = isPaused;
