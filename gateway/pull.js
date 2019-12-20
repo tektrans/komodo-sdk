@@ -104,7 +104,7 @@ function pullTask() {
 
     const body_or_qs = {
         handler: config.handler_name,
-        products: config.sdk_pull_only_postpaid ? '' : config.products.join(','),
+        products: config.products.join(','),
         locations: config.locations && config.locations.length ? config.locations.join(',') : 'ALL',
         advice_url: (config && config.push_server && config.push_server.apikey && config.push_server.advice && config.push_server.advice.url && config.push_server.advice.port) ? config.push_server.advice.url : null,
         api_url: (config && config.apiserver && config.apiserver.apikey && config.apiserver.url) ? config.apiserver.url : null,
@@ -239,6 +239,12 @@ function forwardCoreTaskToPartner(coreMessage, start_time) {
         logger.warn('Exception on parsing CORE pull task response', {coreMessage: coreMessage, error: e});
         return;
     }
+
+    if (config.sdk_pull_only_postpaid) {
+        logger.warn('Got task on sdk_pull_only_postpaid. It should not be happens', { task });
+        return;
+    }
+
 
     const core_pull_request_time = start_time ? (new Date() - start_time) / 1000 : null;
 
