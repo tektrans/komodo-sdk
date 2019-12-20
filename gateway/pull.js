@@ -384,8 +384,11 @@ function getRemoteProduct(product) {
 }
 
 initMatrix();
-setInterval(pullTask, config.pull_interval_ms || 1000);
-logger.verbose('Pull task every ' + (config.pull_interval_ms || 1000) + ' ms')
+
+if (!config.sdk_pull_only_postpaid) {
+    setInterval(pullTask, config.pull_interval_ms || 1000);
+    logger.verbose('Pull task every ' + (config.pull_interval_ms || 1000) + ' ms')
+}
 
 exports.setPartner = setPartner;
 exports.isPaused = isPaused;
