@@ -242,6 +242,11 @@ function forwardCoreTaskToPartner(coreMessage, start_time) {
 
     if (config.sdk_pull_only_postpaid) {
         logger.warn('Got task on sdk_pull_only_postpaid. It should not be happens', { task });
+        report({
+            trx_id: task.trx_id,
+            rc: '40',
+            message: 'GATEWAY ini diset hanya untuk transaksi postpaid (config.sdk_pull_only_postpaid)',
+        });
         return;
     }
 
