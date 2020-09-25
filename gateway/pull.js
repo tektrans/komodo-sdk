@@ -3,7 +3,11 @@ const request = require('request');
 const config = require('../config');
 const logger = require('../logger');
 const matrix = require('../matrix');
-require('../control-panel');
+
+if (config.control_panel && (config.control_panel.listen_port || config.control_panel.port)) {
+    require('../control-panel');
+}
+
 const heartbeat = require('../heartbeat');
 const core_url = require('../core-url');
 
