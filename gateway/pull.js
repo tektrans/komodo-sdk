@@ -334,7 +334,8 @@ function report(data) {
             raw: data.raw,
             misc: data.misc,
             product: data.product || ( (data.misc && data.misc.task && typeof data.misc.task.product === 'string') ? data.misc.task.product : null ),
-            remote_product: data.remote_product || ( (data.misc && data.misc.task && typeof data.misc.task.remote_product === 'string') ? data.misc.task.remote_product : null )
+            remote_product: data.remote_product || ( (data.misc && data.misc.task && typeof data.misc.task.remote_product === 'string') ? data.misc.task.remote_product : null ),
+            detail: data.detail || null,
         }
     }
 
