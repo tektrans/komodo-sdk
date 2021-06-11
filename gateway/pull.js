@@ -1,3 +1,5 @@
+const IS_DEBUG = process.env.KOMODO_SDK_DEBUG_PULL;
+
 const request = require('request');
 
 const config = require('../config');
@@ -56,7 +58,7 @@ function setPartner(_partner) {
 
 function pullTask() {
     if (isPaused()) {
-        if (process.env.KOMODO_SDK_DEBUG_PULL) {
+        if (IS_DEBUG) {
             logger.verbose('PULL TASK paused')
         }
         return;
@@ -67,7 +69,7 @@ function pullTask() {
     }
 
     if (!partner) {
-        if (process.env.KOMODO_SDK_DEBUG_PULL) {
+        if (IS_DEBUG) {
             logger.verbose('PULL TASK disabled because of undefined partner')
         }
 
@@ -75,7 +77,7 @@ function pullTask() {
     }
 
     if (matrix && matrix.not_ready) {
-        if (process.env.KOMODO_SDK_DEBUG_PULL) {
+        if (IS_DEBUG) {
             logger.verbose('PULL TASK paused because of gateway is not ready')
         }
         return;
@@ -97,7 +99,7 @@ function pullTask() {
 
     //if (config.pulltask_mutex && pullTaskLocked) {
     if (pullTaskLocked) {
-        if (process.env.KOMODO_SDK_DEBUG_PULL) {
+        if (IS_DEBUG) {
             logger.verbose('PULL TASK paused because LOCKED')
         }
         return;
@@ -122,14 +124,14 @@ function pullTask() {
 
     if (config.pull_task_use_post) {
         //logger.verbose('Requesting PULL-TASK to CORE using POST');
-        if (process.env.KOMODO_SDK_DEBUG_PULL) {
+        if (IS_DEBUG) {
             logger.verbose('PULL TASK using HTTP POST');
         }
         options.method = 'POST';
         options.form = body_or_qs;
     }
     else {
-        if (process.env.KOMODO_SDK_DEBUG_PULL) {
+        if (IS_DEBUG) {
             logger.verbose('PULL TASK using HTTP GET');
         }
         options.method = 'GET';
