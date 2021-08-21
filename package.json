@@ -5,7 +5,8 @@
   "main": "index.js",
   "scripts": {
     "test": "mocha",
-    "postversion": "git push && git push --tags"
+    "postversion": "git push && git push --tags",
+    "version": "auto-changelog -p && git add CHANGELOG.md"
   },
   "repository": {
     "type": "git",
@@ -20,6 +21,7 @@
   "license": "ISC",
   "dependencies": {
     "array-unique": "^0.3.2",
+    "auto-changelog": "^2.3.0",
     "basic-auth": "^2.0.0",
     "body-parser": "^1.18.2",
     "dot-object": "^1.7.0",
