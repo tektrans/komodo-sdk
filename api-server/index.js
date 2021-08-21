@@ -1,5 +1,3 @@
-"use strict";
-
 /**
  * API Server
  *
@@ -7,9 +5,12 @@
  */
 
 const express = require('express');
+const uniqid = require('uniqid');
 
 const config = require('../config');
 const logger = require('../logger');
+
+const requestLogger = require('./middlewares/request-logger');
 
 const routerConfig = require('./router-config');
 const routerMatrix = require('./router-matrix');
@@ -41,6 +42,13 @@ isConfigured() && app.listen(config.apiserver.port, function () {
     logger.info('API-SERVER listening', {port: config.apiserver.port});
 });
 
+// initialize xid
+app.use((req, res, next) => {
+    res.locals.xid = uniqid();
+    next();
+});
+
+app.use(requestLogger);
 
 app.use('/apikey/:apikey', needValidApikey);
 app.use('/apikey/:apikey/config', routerConfig);
