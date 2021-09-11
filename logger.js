@@ -13,7 +13,11 @@ const logger = require('tektrans-logger');
 const getStackTrace = require('stack-trace').get;
 
 logger.warn('KOMODO-SDK.LOGGER 7784B11E: This module is deprecated, please use TEKTRANS-LOGGER directly.', {
-    trace: getStackTrace(),
+    trace: getStackTrace()
+        .map((item) => [
+            item.getFileName(),
+            item.getLineNumber
+        ].join(':')),
 });
 
 // require('./logger-circular-buffer-web');
