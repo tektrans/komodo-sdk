@@ -16,7 +16,7 @@ logger.warn('KOMODO-SDK.LOGGER 7784B11E: This module is deprecated, please use T
     trace: getStackTrace()
         .map((item) => [
             item.getFileName(),
-            item.getLineNumber
+            item.getLineNumber(),
         ].join(':')),
 });
 
