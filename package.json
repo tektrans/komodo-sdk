@@ -43,6 +43,7 @@
     "simple-git": "^1.80.1",
     "strftime": "^0.10.0",
     "string-natural-compare": "^2.0.2",
+    "tektrans-logger": "^1.0.5",
     "uniqid": "^4.1.1",
     "uuid": "^3.1.0",
     "winston": "^3.3.3",
