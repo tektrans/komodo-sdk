@@ -1,4 +1,6 @@
-"use strict";
+require('winston-circular-buffer');
+
+// THIS MODULE IS OBSOLETED
 
 const http = require('http');
 const auth = require('basic-auth');

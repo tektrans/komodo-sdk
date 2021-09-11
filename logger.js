@@ -1,9 +1,7 @@
-// const winston = require('winston');
-
-// require('winston-circular-buffer');
-
 const logger = require('tektrans-logger');
 
-require('./logger-circular-buffer-web');
+logger.verbose('KOMODO-SDK.LOGGER 7784B11E: This module is deprecated, please use TEKTRANS-LOGGER directly.');
+
+// require('./logger-circular-buffer-web');
 
 module.exports = logger;
