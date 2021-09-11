@@ -41,6 +41,7 @@
     "request": "^2.88.0",
     "sha1": "^1.1.1",
     "simple-git": "^1.80.1",
+    "stack-trace": "^1.0.0-pre1",
     "strftime": "^0.10.0",
     "string-natural-compare": "^2.0.2",
     "tektrans-logger": "^1.1.3",
