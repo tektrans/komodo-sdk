@@ -1,12 +1,9 @@
-"use strict";
-
 const express = require('express');
 const bodyParser = require('body-parser');
+const logger = require('tektrans-logger');
 
 const pull = require('./pull');
 const config = require('../config');
-const logger = require('../logger');
-const matrix = require('../matrix');
 
 const app = express();
 
@@ -33,7 +30,7 @@ function isValidApikey(req, res, next) {
     }
 }
 
-function adviceHandler(req, res, next) {
+function adviceHandler(req, res) {
 
     if (!partner) {
         logger.warn('PUSH-ADVICE: Undefined partner, skipped');

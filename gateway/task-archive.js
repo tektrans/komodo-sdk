@@ -1,12 +1,6 @@
-"use strict";
-
-const module_name = require('path').basename(__filename);
-
 const redis = require("redis");
 
 const config = require('../config');
-const logger = require('../logger');
-const matrix = require('../matrix');
 
 let redis_client;
 

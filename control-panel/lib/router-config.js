@@ -1,8 +1,3 @@
-"use strict";
-
-const module_name = 'CONTROL_PANEL_' + require('path').basename(__filename);
-
-const os = require('os');
 const fs = require('fs');
 
 const moment = require('moment');
@@ -11,14 +6,14 @@ const bodyParser = require('body-parser');
 const uuidv1 = require('uuid/v1');
 
 const config = require('komodo-sdk/config');
-const logger = require('komodo-sdk/logger');
+const logger = require('tektrans-logger');
 const configReload = require('komodo-sdk/config-reload');
 
 const misc = require('./misc');
 
 const router = express.Router();
 
-function pageJsonEditor(req, res, next) {
+function pageJsonEditor(req, res) {
     res.render(
         req.app.locals.cp_views_dir + '/config.jsoneditor.html',
         {
@@ -28,11 +23,11 @@ function pageJsonEditor(req, res, next) {
     )
 }
 
-function pageData(req, res, next) {
+function pageData(req, res) {
     res.json(config);
 }
 
-function pageDataSubmit(req, res, next) {
+function pageDataSubmit(req, res) {
     const backupDir = 'config-backup/';
     const backupFile = backupDir + 'config.backup_' + moment().format('YYYYMMDD_HHmmss') + '_' + uuidv1() + '.json';
 
@@ -46,12 +41,12 @@ function pageDataSubmit(req, res, next) {
         return res.end('Failed, data is empty');
     }
 
-    fs.mkdir(backupDir, function(errMkdir) {
-        fs.writeFile(backupFile, JSON.stringify(config, null, 4), function(errBackup) {
+    fs.mkdir(backupDir, function() {
+        fs.writeFile(backupFile, JSON.stringify(config, null, 4), function() {
             fs.writeFile("config.json", JSON.stringify(req.body, null, 4), function(errWriteNewConfig) {
 
                 if (errWriteNewConfig) {
-                    return res.end('Update failed: ' + err);
+                    return res.end('Update failed: ' + errWriteNewConfig);
                 }
 
                 configReload.replace(req.body);

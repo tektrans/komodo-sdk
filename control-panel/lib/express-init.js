@@ -1,5 +1,3 @@
-"use strict";
-
 const path = require('path');
 
 const express = require('express');
@@ -9,7 +7,7 @@ const uniqid = require('uniqid');
 const numeral = require('numeral');
 
 const config = require('komodo-sdk/config');
-const logger = require('komodo-sdk/logger');
+const logger = require('tektrans-logger');
 
 const routers = require('./routers');
 

@@ -1,9 +1,6 @@
-"use strict";
-
 const request = require('request');
 
-const config = require('komodo-sdk/config');
-const logger = require('komodo-sdk/logger');
+const logger = require('tektrans-logger');
 const core_url = require('../../core-url');
 
 

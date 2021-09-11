@@ -1,17 +1,14 @@
-"use strict";
-
 /**
  * Trx Handler untuk center messaging
  */
 
 const module_name = require('path').basename(__filename);
 
+const logger = require('tektrans-logger');
 const request = require('request');
 const strftime = require('strftime');
 const config = require('../../config');
-const logger = require('../../logger');
 const httpResponseServer = require('../http-response-server');
-const controlPanel = require('../../control-panel');
 const heartbeat = require('../../heartbeat');
 
 let transport;
@@ -22,7 +19,7 @@ if (config.origin) {
 
 heartbeat.setModuleType('center')
 
-function onOnline(params) {
+function onOnline() {
     logger.info('CENTER is ONLINE, ready to communicate');
 }
 
@@ -33,7 +30,7 @@ function onIncomingMessage(paramsFromTransport, cb) {
         msg: paramsFromTransport ? paramsFromTransport.msg : null
     });
 
-    const command = paramsFromTransport.msg.split(/[\., ]+/)[0].toUpperCase();
+    const command = paramsFromTransport.msg.split(/[., ]+/)[0].toUpperCase();
 
     if (config.commands && config.commands.balance && config.commands.balance.indexOf(command) >= 0) {
         executeBalanceCheck(paramsFromTransport, cb);
@@ -55,7 +52,7 @@ function onIncomingMessage(paramsFromTransport, cb) {
 
 function executeBalanceCheck(paramsFromTransport) {
     const terminal_name = paramsFromTransport.partner.toLowerCase();
-    const password = paramsFromTransport.msg.trim().split(/[\., ]+/)[1];
+    const password = paramsFromTransport.msg.trim().split(/[., ]+/)[1];
 
     const requestOptions = {
         url: config.core_url + '/services/balance',
@@ -74,8 +71,8 @@ function executePriceCheck(paramsFromTransport) {
         url: config.core_url + '/services/pricelist',
         qs: {
             terminal_name: paramsFromTransport.partner.toLowerCase(),
-            keyword: paramsFromTransport.msg.trim().split(/[\., ]+/)[1],
-            password: paramsFromTransport.msg.trim().split(/[\., ]+/)[2],
+            keyword: paramsFromTransport.msg.trim().split(/[., ]+/)[1],
+            password: paramsFromTransport.msg.trim().split(/[., ]+/)[2],
             postpaid: 0,
             msg: paramsFromTransport.msg
         }
@@ -103,7 +100,7 @@ function generateRequestId(req) {
 }
 
 function executePrepaidBuy(paramsFromTransport, cb) {
-    const tokens = paramsFromTransport.msg.trim().split(/[\., ]+/);
+    const tokens = paramsFromTransport.msg.trim().split(/[., ]+/);
 
     if (!tokens || tokens.length < 3) {
         if (transport && transport.send && paramsFromTransport.partner) {
@@ -143,7 +140,7 @@ function executePrepaidBuy(paramsFromTransport, cb) {
 function executePostpaidInquiry(paramsFromTransport, cb) {
     // PAY.PLN.1234567890.PIN
 
-    let tokens = paramsFromTransport.msg.trim().split(/[\., ]+/);
+    let tokens = paramsFromTransport.msg.trim().split(/[., ]+/);
 
     let qs = {
         request_id: tokens[4],
@@ -173,7 +170,7 @@ function executePostpaidInquiry(paramsFromTransport, cb) {
 }
 
 function executePostpaidPay(paramsFromTransport, cb) {
-    let tokens = paramsFromTransport.msg.trim().split(/[\., ]+/);
+    let tokens = paramsFromTransport.msg.trim().split(/[., ]+/);
 
     let qs = {
         request_id: tokens[4],

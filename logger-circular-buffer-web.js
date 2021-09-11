@@ -5,7 +5,7 @@ require('winston-circular-buffer');
 const http = require('http');
 const auth = require('basic-auth');
 
-const logger = require('./logger');
+const logger = require('tektrans-logger');
 
 function listen(options) {
     if (options && options.port && options.username && options.password) {

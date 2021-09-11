@@ -1,8 +1,5 @@
-'use strict';
-
 const request = require('request');
-
-const logger = require('../logger');
+const logger = require('tektrans-logger');
 const coreUrl = require('../core-url');
 
 function isLogDisabled() {

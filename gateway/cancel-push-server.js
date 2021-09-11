@@ -1,12 +1,7 @@
-"use strict";
-
 const express = require('express');
-const bodyParser = require('body-parser');
+const logger = require('tektrans-logger');
 
-const pull = require('./pull');
 const config = require('../config');
-const logger = require('../logger');
-const matrix = require('../matrix');
 
 const resendDelay = require('./resend-delay');
 
@@ -32,14 +27,7 @@ function isValidApikey(req, res, next) {
     }
 }
 
-function cancelHandler(req, res, next) {
-
-    if (!partner) {
-        logger.warn('PUSH-CANCEL: Undefined partner, skipped');
-        res.end('UNDEFINED_PARTNER');
-        return;
-    }
-
+function cancelHandler(req, res) {
     let task = req.body;
 
     if (!task || !task.trx_id) {
@@ -53,6 +41,6 @@ function cancelHandler(req, res, next) {
     resendDelay.cancel(task.trx_id);
 }
 
-app.use(bodyParser.json());
+app.use(express.json());
 app.use('/apikey/:apikey', isValidApikey);
 app.use('/apikey/:apikey/cancel', cancelHandler);

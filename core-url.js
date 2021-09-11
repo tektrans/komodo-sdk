@@ -1,5 +1,5 @@
+const logger = require('tektrans-logger');
 const config = require('./config.js');
-const logger = require('./logger');
 const configFromMain = require('./config-from-main');
 
 let core_url;

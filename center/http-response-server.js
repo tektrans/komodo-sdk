@@ -1,5 +1,3 @@
-"use strict";
-
 /**
  * HTTP Response Server
  *
@@ -13,7 +11,7 @@ const http = require('http');
 const url = require('url');
 
 const config = require('../config');
-const logger = require('../logger');
+const logger = require('tektrans-logger');
 
 let transport;
 
@@ -47,7 +45,7 @@ function create() {
 
     http.createServer(onRequest).listen(listenPort, function() {
         logger.info('HTTP Reverse/Report server listen on port ' + listenPort + ' to process CORE message');
-    });;
+    });
 }
 
 create();

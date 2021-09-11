@@ -1,10 +1,8 @@
-"use strict";
-
 const LRU = require('lru-cache');
 const moment = require('moment');
+const logger = require('tektrans-logger');
 
 const config = require('../config');
-const logger = require('../logger');
 
 const resendHandlers = LRU({
     max: (( config && config.auto_resend && config.auto_resend.max_handler ) ? Number(config.auto_resend.max_handler) : 0) || 5000,

@@ -1,5 +1,3 @@
-"use strict";
-
 const module_name = 'CONTROL_PANEL_' + require('path').basename(__filename);
 
 const querystring = require('querystring');
@@ -8,11 +6,11 @@ const bodyParser = require('body-parser');
 const router = express.Router();
 
 const config = require('komodo-sdk/config');
-const logger = require('komodo-sdk/logger');
+const logger = require('tektrans-logger');
 
 const requestToCore = require('./request-to-core');
 
-function pageLogin(req, res, next) {
+function pageLogin(req, res) {
     if (req.session && req.session.username && req.session.terminal) {
         res.redirect('/');
         return;
@@ -27,7 +25,7 @@ function pageLogin(req, res, next) {
     )
 }
 
-function pageLoginSubmitted(req, res, next) {
+function pageLoginSubmitted(req, res) {
     const method_name = 'pageLoginSubmitted';
 
     if (!req || !req.body || !req.body.terminal_name || !req.body.password) {
@@ -87,7 +85,7 @@ function pageLoginSubmitted(req, res, next) {
     });
 }
 
-function pageLogout(req, res, next) {
+function pageLogout(req, res) {
     req.session.username = null;
     req.session.terminal = null;
 

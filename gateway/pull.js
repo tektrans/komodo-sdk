@@ -1,9 +1,9 @@
 const IS_DEBUG = process.env.KOMODO_SDK_DEBUG_PULL;
 
 const request = require('request');
+const logger = require('tektrans-logger');
 
 const config = require('../config');
-const logger = require('../logger');
 const matrix = require('../matrix');
 
 if (config.control_panel && (config.control_panel.listen_port || config.control_panel.port)) {

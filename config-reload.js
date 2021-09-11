@@ -1,7 +1,5 @@
-"use strict";
-
+const logger = require('tektrans-logger');
 const config = require('./config');
-const logger = require('./logger');
 const configFiller = require('./config-filler');
 
 function replace(new_config) {
