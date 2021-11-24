@@ -9,7 +9,6 @@ const copyFile = require('fs-copy-file');
 const moment = require('moment');
 
 const config = require('../config');
-const logger = require('../logger');
 const matrix = require('../matrix');
 
 const router = express.Router();
@@ -17,16 +16,16 @@ module.exports = router;
 
 fs.existsSync('config-backup') || fs.mkdirSync('config-backup');
 
-function getJsonConfig(req, res, next) {
+function getJsonConfig(req, res) {
     res.json(config);
 }
 
-function getConfigElement(req, res, next) {
+function getConfigElement(req, res) {
     const key = ((req && req.params && req.params.key) ? req.params.key : '').replace(/^config\.*/, '').trim();
     res.json(jsonQuery(key, {data: config}).value);
 }
 
-function setConfigElement(req, res, next) {
+function setConfigElement(req, res) {
     if (!req.body || !req.body.key || !req.body.value) {
         res.end('INVALID BODY');
         return;
@@ -43,7 +42,7 @@ function setConfigElement(req, res, next) {
     });
 }
 
-function delConfigElement(req, res, next) {
+function delConfigElement(req, res) {
     const key = ((req && req.params && req.params.key) ? req.params.key : '').replace(/^config\.*/, '').trim();
 
     if (!key) {
@@ -60,7 +59,7 @@ function delConfigElement(req, res, next) {
     });
 }
 
-function saveConfig(req, res, next) {
+function saveConfig(req, res) {
     copyFile('config.json', 'config-backup/config_' + moment().format('YYYYMMDD_HHmmss.SS') + '.json', function(err) {
         if (err) {
             res.json({
@@ -89,7 +88,7 @@ function saveConfig(req, res, next) {
     })
 }
 
-function isDirty(req, res, next) {
+function isDirty(req, res) {
     res.json({
         method: '/config/is-dirty',
         error: null,

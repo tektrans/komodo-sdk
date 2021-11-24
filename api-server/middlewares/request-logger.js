@@ -1,6 +1,6 @@
 const MODULE_NAME = 'KOMODO-SDK.API-SERVER.REQUEST-LOGGER';
 
-const logger = require('../../logger');
+const logger = require('tektrans-logger');
 
 module.exports = (req, res, next) => {
     const { xid } = res.locals;

@@ -1,15 +1,14 @@
-"use strict";
+const MODULE_NAME = 'API-SERVER.ROUTER-SERVICES';
 
 const express = require('express');
+const logger = require('tektrans-logger');
 
-const config = require('../config');
-const logger = require('../logger');
 const matrix = require('../matrix');
 
 const router = express.Router();
 module.exports = router;
 
-function isPause(req, res, next) {
+function isPause(req, res) {
     res.json({
         method: '/services/is-pause',
         error: null,
@@ -17,7 +16,7 @@ function isPause(req, res, next) {
     });
 }
 
-function pause(req, res, next) {
+function pause(req, res) {
     matrix.paused = true;
     res.json({
         method: '/services/pause',
@@ -26,7 +25,7 @@ function pause(req, res, next) {
     });
 }
 
-function resume(req, res, next) {
+function resume(req, res) {
     matrix.paused = false;
     res.json({
         method: '/services/resume',
@@ -35,12 +34,21 @@ function resume(req, res, next) {
     });
 }
 
-function terminate(req, res, next) {
+function terminate(req, res) {
+    const { xid } = res.locals;
+    const delay = 5000;
+
     res.json({
         method: '/services/terminate',
         error: null,
-        message: 'Going to restart in ' + delay + 'ms'
-    })
+        message: `Going to restart in ${delay} ms`
+    });
+
+    logger.info(`${MODULE_NAME} 9E1EC746: Got a terminate request. Going to restart`, { xid, delay })
+
+    setTimeout(() => {
+        process.exit(0);
+    }, delay);
 }
 
 

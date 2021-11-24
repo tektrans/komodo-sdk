@@ -5,13 +5,12 @@ const naturalSort = require('node-natural-sort');
 const unique = require('array-unique');
 
 const config = require('../config');
-const logger = require('../logger');
 const matrix = require('../matrix');
 
 const router = express.Router();
 module.exports = router;
 
-function pageIndex(req, res, next) {
+function pageIndex(req, res) {
     res.json({
         method: '/products',
         error: null,
@@ -19,7 +18,7 @@ function pageIndex(req, res, next) {
     });
 }
 
-function pageAdd(req, res, next) {
+function pageAdd(req, res) {
     let products = req.params.product || req.query.product
 
     if (!products) {
@@ -59,7 +58,7 @@ function pageAdd(req, res, next) {
     })
 }
 
-function pageDel(req, res, next) {
+function pageDel(req, res) {
     let products = req.params.product || req.query.product
     if (!products) {
         res.json({

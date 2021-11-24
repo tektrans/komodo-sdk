@@ -6,9 +6,9 @@
 
 const express = require('express');
 const uniqid = require('uniqid');
+const logger = require('tektrans-logger');
 
 const config = require('../config');
-const logger = require('../logger');
 
 const requestLogger = require('./middlewares/request-logger');
 

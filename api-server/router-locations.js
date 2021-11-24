@@ -5,7 +5,6 @@ const naturalSort = require('node-natural-sort');
 const unique = require('array-unique');
 
 const config = require('../config');
-// const logger = require('../logger');
 const matrix = require('../matrix');
 
 const router = express.Router();
