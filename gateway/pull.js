@@ -1,6 +1,7 @@
 const IS_DEBUG = process.env.KOMODO_SDK_DEBUG_PULL;
 
 const request = require('request');
+const stringify = require('json-stringify-pretty-compact');
 const logger = require('tektrans-logger');
 
 const config = require('../config');
@@ -288,7 +289,7 @@ function replaceRc(original_rc) {
     return config.replace_rc[original_rc] || original_rc;
 }
 
-function report(data) {
+function report(data, xid) {
 
     let core_pull_report_url;
 
@@ -328,7 +329,7 @@ function report(data) {
             trx_id: trx_id,
             rc: replaceRc(data.rc),
             rc_from_handler: data.rc_from_handler,
-            message: data.message,
+            message: typeof data.message === 'string' ? data.message : stringify(data.message),
             handler: config.handler_name,
             sn: data.sn,
             amount: data.amount,
@@ -342,20 +343,22 @@ function report(data) {
     }
 
     if (!config.do_not_verbose_log_report) {
-        logger.verbose('Report to CORE using HTTP POST');
+        logger.verbose('Report to CORE using HTTP POST', { xid });
     }
 
     request.post(options, function(error, response) {
         if (error) {
-            logger.warn('Error reporting to CORE', {error: error});
+            logger.warn('Error reporting to CORE', { xid, error });
             resendReport(data);
         }
         else if (response.statusCode != 200) {
-            logger.warn('Error reporting to CORE, http response status is not 200', {requestOptions: options, http_response_status: response.statusCode});
+            logger.warn('Error reporting to CORE, http response status is not 200', {
+                xid, requestOptions: options, http_response_status: response.statusCode,
+            });
             resendReport(data);
         }
         else if (!config.do_not_verbose_log_report) {
-            logger.verbose('Report has been sent to CORE', {requestOptions: options});
+            logger.verbose('Report has been sent to CORE', { xid, requestOptions: options });
         }
     });
 }
