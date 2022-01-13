@@ -8,6 +8,7 @@ const request = require('request');
 const stringify = require('json-stringify-pretty-compact');
 const logger = require('tektrans-logger');
 const urljoin = require('url-join');
+const uniqid = require('uniqid');
 
 const config = require('../config');
 const matrix = require('../matrix');
@@ -226,22 +227,27 @@ function resendReport(data) {
     );
 }
 
-function forwardCoreTaskToPartner(coreMessage, startTime) {
+function forwardCoreTaskToPartner(coreMessage, startTime, xid) {
     let task;
 
     try {
         task = JSON.parse(coreMessage);
     } catch (e) {
-        logger.warn(`${MODULE_NAME} E757F11A: Exception on parsing CORE pull task response`, { coreMessage, eCode: e.code, eMessage: e.message });
+        logger.warn(`${MODULE_NAME} E757F11A: Exception on parsing CORE pull task response`, {
+            xid, coreMessage, eCode: e.code, eMessage: e.message,
+        });
         return;
     }
 
     if (config.sdk_pull_only_postpaid) {
-        logger.warn(`${MODULE_NAME} E6662C4F: Got task on sdk_pull_only_postpaid. It should not be happens`, { task });
+        logger.warn(`${MODULE_NAME} E6662C4F: Got task on sdk_pull_only_postpaid. It should not be happens`, { xid, task });
         report({
             trx_id: task.trx_id,
             rc: '40',
-            message: 'GATEWAY ini diset hanya untuk transaksi postpaid (config.sdk_pull_only_postpaid)',
+            message: {
+                xid,
+                msg: 'GATEWAY ini diset hanya untuk transaksi postpaid (config.sdk_pull_only_postpaid)',
+            },
         });
         return;
     }
@@ -260,6 +266,7 @@ function forwardCoreTaskToPartner(coreMessage, startTime) {
     const createdTs = new Date(task.created);
     const queueTime = ((new Date()) - createdTs) / 1000;
     logger.info(`${MODULE_NAME} 7F131334: Got task from CORE`, {
+        xid,
         trx_id: task.trx_id,
         destination: task.destination,
         product: task.product,
@@ -269,9 +276,9 @@ function forwardCoreTaskToPartner(coreMessage, startTime) {
 
     taskArchive.get(task, (res) => {
         if (res && partner.advice) {
-            partner.advice(task);
+            partner.advice(task, xid);
         } else {
-            partner.buy(task);
+            partner.buy(task, xid);
         }
     });
 }
@@ -324,6 +331,8 @@ function pullTask() {
     }
     pullTaskLocked = true;
 
+    const xid = uniqid();
+
     const bodyOrQs = {
         handler: config.handler_name,
         products: (config.products || []).join(','),
@@ -352,13 +361,13 @@ function pullTask() {
 
     if (config.pull_task_use_post) {
         if (IS_DEBUG) {
-            logger.verbose(`${MODULE_NAME} CB855B30: PULL TASK using HTTP POST`);
+            logger.verbose(`${MODULE_NAME} CB855B30: PULL TASK using HTTP POST`, { xid });
         }
         options.method = 'POST';
         options.form = bodyOrQs;
     } else {
         if (IS_DEBUG) {
-            logger.verbose(`${MODULE_NAME} BA2EF935: PULL TASK using HTTP GET`);
+            logger.verbose(`${MODULE_NAME} BA2EF935: PULL TASK using HTTP GET`, { xid });
         }
         options.method = 'GET';
         options.qs = bodyOrQs;
@@ -366,7 +375,7 @@ function pullTask() {
 
     if (config && config.debug_request_task_to_core) {
         logger.verbose(`${MODULE_NAME} 0642E25C: Requesting task to CORE`, {
-            url: options.url, method: options.method, body_or_qs: bodyOrQs,
+            xid, url: options.url, method: options.method, body_or_qs: bodyOrQs,
         });
     }
 
@@ -377,12 +386,12 @@ function pullTask() {
         const lameLimit = 10 * 1000;
         const deltaTime = new Date() - startTime;
         if (deltaTime > lameLimit) {
-            logger.warn(`${MODULE_NAME} B892DC43: LAME-PULL: PULL response from CORE exceeds ${lameLimit} secs`, { deltaTime });
+            logger.warn(`${MODULE_NAME} B892DC43: LAME-PULL: PULL response from CORE exceeds ${lameLimit} secs`, { xid, deltaTime });
         }
 
         if (error) {
             if (matrix.core_is_healthy) {
-                logger.warn(`${MODULE_NAME} FB762F4A: Error pulling task from CORE`, { error });
+                logger.warn(`${MODULE_NAME} FB762F4A: Error pulling task from CORE`, { xid, error });
             }
             matrix.core_is_healthy = false;
             onNoTask();
@@ -392,6 +401,7 @@ function pullTask() {
         if (response.statusCode !== 200) {
             if (matrix.core_is_healthy) {
                 logger.warn(`${MODULE_NAME} 8943EECB: CORE http response status code for pull task is not 200`, {
+                    xid,
                     http_response_status: response.statusCode,
                 });
             }
@@ -401,7 +411,7 @@ function pullTask() {
         }
 
         if (!matrix.core_is_healthy) {
-            logger.verbose(`${MODULE_NAME} 099F5B3C: CORE is healthy`);
+            logger.verbose(`${MODULE_NAME} 099F5B3C: CORE is healthy`, { xid });
         }
         matrix.core_is_healthy = true;
 
@@ -414,7 +424,7 @@ function pullTask() {
             return;
         }
 
-        forwardCoreTaskToPartner(body, startTime);
+        forwardCoreTaskToPartner(body, startTime, xid);
     });
 }
 
