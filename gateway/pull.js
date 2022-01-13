@@ -1,5 +1,6 @@
 const MODULE_NAME = 'KOMODO-SDK.PULL';
 
+const DEFAULT_REQUEST_TIMEOUT_MS = 20 * 1000;
 const IS_DEBUG = process.env.KOMODO_SDK_DEBUG_PULL;
 
 const request = require('request');
@@ -122,7 +123,7 @@ function pullTask() {
 
     let options = {
         url: core_pull_task_url,
-        timeout: config.request_timeout || 10000
+        timeout: config.request_timeout || DEFAULT_REQUEST_TIMEOUT_MS,
     }
 
     if (config.pull_task_use_post) {
