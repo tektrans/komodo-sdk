@@ -1,3 +1,5 @@
+const MODULE_NAME = 'KOMODO-SDK.PULL';
+
 const IS_DEBUG = process.env.KOMODO_SDK_DEBUG_PULL;
 
 const request = require('request');
@@ -60,7 +62,7 @@ function setPartner(_partner) {
 function pullTask() {
     if (isPaused()) {
         if (IS_DEBUG) {
-            logger.verbose('PULL TASK paused')
+            logger.verbose(`${MODULE_NAME} 76370FE5: PULL TASK paused`);
         }
         return;
     }
@@ -71,7 +73,7 @@ function pullTask() {
 
     if (!partner) {
         if (IS_DEBUG) {
-            logger.verbose('PULL TASK disabled because of undefined partner')
+            logger.verbose(`${MODULE_NAME} FFB54A2A: PULL TASK disabled because of undefined partner`);
         }
 
         return;
@@ -79,7 +81,7 @@ function pullTask() {
 
     if (matrix && matrix.not_ready) {
         if (IS_DEBUG) {
-            logger.verbose('PULL TASK paused because of gateway is not ready')
+            logger.verbose(`${MODULE_NAME} 68BDA23B: PULL TASK paused because of gateway is not ready`)
         }
         return;
     }
@@ -94,14 +96,14 @@ function pullTask() {
     }
 
     if (!core_pull_task_url) {
-        logger.warn('Unknown CORE task url');
+        logger.warn(`${MODULE_NAME} 5F0681B7: Unknown CORE task url`);
         return;
     }
 
     //if (config.pulltask_mutex && pullTaskLocked) {
     if (pullTaskLocked) {
         if (IS_DEBUG) {
-            logger.verbose('PULL TASK paused because LOCKED')
+            logger.verbose(`${MODULE_NAME} B81F0CCD: PULL TASK paused because LOCKED`);
         }
         return;
     }
@@ -126,21 +128,21 @@ function pullTask() {
     if (config.pull_task_use_post) {
         //logger.verbose('Requesting PULL-TASK to CORE using POST');
         if (IS_DEBUG) {
-            logger.verbose('PULL TASK using HTTP POST');
+            logger.verbose(`${MODULE_NAME} CB855B30: PULL TASK using HTTP POST`);
         }
         options.method = 'POST';
         options.form = body_or_qs;
     }
     else {
         if (IS_DEBUG) {
-            logger.verbose('PULL TASK using HTTP GET');
+            logger.verbose(`${MODULE_NAME} BA2EF935: PULL TASK using HTTP GET`);
         }
         options.method = 'GET';
         options.qs = body_or_qs;
     }
 
     if (config && config.debug_request_task_to_core) {
-        logger.verbose('Requesting task to CORE', {url: options.url, method: options.method, body_or_qs: body_or_qs});
+        logger.verbose(`${MODULE_NAME} 0642E25C: Requesting task to CORE`, {url: options.url, method: options.method, body_or_qs: body_or_qs});
     }
 
     const start_time = new Date();
@@ -150,12 +152,12 @@ function pullTask() {
         const lame_limit = 10 * 1000;
         const delta_time = new Date() - start_time;
         if (delta_time > lame_limit) {
-            logger.warn('LAME-PULL: PULL response from CORE exceeds ' + lame_limit + ' secs', {delta_time: delta_time});
+            logger.warn(`${MODULE_NAME} B892DC43: LAME-PULL: PULL response from CORE exceeds ` + lame_limit + ' secs', {delta_time: delta_time});
         }
 
         if (error) {
             if (matrix.core_is_healthy) {
-                logger.warn('Error pulling task from CORE', {error: error});
+                logger.warn(`${MODULE_NAME} FB762F4A: Error pulling task from CORE`, {error: error});
             }
             matrix.core_is_healthy = false;
             onNoTask();
@@ -164,7 +166,7 @@ function pullTask() {
 
         if (response.statusCode != 200) {
             if (matrix.core_is_healthy) {
-                logger.warn('CORE http response status code for pull task is not 200', {http_response_status: response.statusCode});
+                logger.warn(`${MODULE_NAME} 8943EECB: CORE http response status code for pull task is not 200`, {http_response_status: response.statusCode});
             }
             matrix.core_is_healthy = false;
             onNoTask();
@@ -172,7 +174,7 @@ function pullTask() {
         }
 
         if (!matrix.core_is_healthy) {
-            logger.verbose('CORE is healthy');
+            logger.verbose(`${MODULE_NAME} 099F5B3C: CORE is healthy`);
         }
         matrix.core_is_healthy = true;
 
@@ -241,12 +243,12 @@ function forwardCoreTaskToPartner(coreMessage, start_time) {
         task = JSON.parse(coreMessage);
     }
     catch(e) {
-        logger.warn('Exception on parsing CORE pull task response', {coreMessage: coreMessage, error: e});
+        logger.warn(`${MODULE_NAME} E757F11A: Exception on parsing CORE pull task response`, { coreMessage, eCode: e.code, eMessage: e.message });
         return;
     }
 
     if (config.sdk_pull_only_postpaid) {
-        logger.warn('Got task on sdk_pull_only_postpaid. It should not be happens', { task });
+        logger.warn(`${MODULE_NAME} E6662C4F: Got task on sdk_pull_only_postpaid. It should not be happens`, { task });
         report({
             trx_id: task.trx_id,
             rc: '40',
@@ -269,7 +271,7 @@ function forwardCoreTaskToPartner(coreMessage, start_time) {
 
     const created_ts = new Date(task.created);
     const queue_time = ((new Date()) - created_ts) / 1000;
-    logger.info('Got task from CORE', {trx_id: task.trx_id, destination: task.destination, product: task.product, queue_time: queue_time, core_pull_request_time: core_pull_request_time});
+    logger.info(`${MODULE_NAME} 7F131334: Got task from CORE`, { trx_id: task.trx_id, destination: task.destination, product: task.product, queue_time: queue_time, core_pull_request_time: core_pull_request_time });
 
     taskArchive.get(task, function(res) {
         if (res && partner.advice) {
@@ -304,7 +306,7 @@ function report(data, xid) {
     }
 
     if (!core_pull_report_url) {
-        logger.warn('Unknown CORE report url');
+        logger.warn(`${MODULE_NAME} C23CC601: Unknown CORE report url`);
         return;
     }
 
@@ -319,7 +321,7 @@ function report(data, xid) {
 
     let trx_id = Number(data.trx_id) - (Number(config.sdk_trx_id_adder) || 0);
     if (trx_id <= 0) {
-        logger.warn('REPORT: calculated trx_id is a negative number, using uncalculated trx_id', {uncalculated: data.trx_id, calculated: trx_id, sdk_trx_id_adder: config.sdk_trx_id_adder});
+        logger.warn(`${MODULE_NAME} 6A8C7303: REPORT: calculated trx_id is a negative number, using uncalculated trx_id`, {uncalculated: data.trx_id, calculated: trx_id, sdk_trx_id_adder: config.sdk_trx_id_adder});
         trx_id = data.trx_id;
     }
 
@@ -343,29 +345,29 @@ function report(data, xid) {
     }
 
     if (!config.do_not_verbose_log_report) {
-        logger.verbose('Report to CORE using HTTP POST', { xid });
+        logger.verbose(`${MODULE_NAME} 2110168C: Report to CORE using HTTP POST`, { xid });
     }
 
     request.post(options, function(error, response) {
         if (error) {
-            logger.warn('Error reporting to CORE', { xid, error });
+            logger.warn(`${MODULE_NAME} B1CA595F: Error reporting to CORE`, { xid, error });
             resendReport(data);
         }
         else if (response.statusCode != 200) {
-            logger.warn('Error reporting to CORE, http response status is not 200', {
+            logger.warn(`${MODULE_NAME} 4B73BD23: Error reporting to CORE, http response status is not 200`, {
                 xid, requestOptions: options, http_response_status: response.statusCode,
             });
             resendReport(data);
         }
         else if (!config.do_not_verbose_log_report) {
-            logger.verbose('Report has been sent to CORE', { xid, requestOptions: options });
+            logger.verbose(`${MODULE_NAME} 379A25AA: Report has been sent to CORE`, { xid, requestOptions: options });
         }
     });
 }
 
 function resendReport(data) {
     const sleepBeforeResend = Math.round(Math.random() * MAX_SLEEP_BEFORE_RESEND_MS)
-    logger.verbose('Resend report to CORE in ' + sleepBeforeResend + 'ms')
+    logger.verbose(`${MODULE_NAME} DEE44715: Resend report to CORE in ${sleepBeforeResend} ms`);
 
     setTimeout(
         function() {
@@ -404,8 +406,12 @@ function getRemoteProduct(product) {
 
 initMatrix();
 
-setInterval(pullTask, config.pull_interval_ms || 1000);
-logger.verbose('Pull task every ' + (config.pull_interval_ms || 1000) + ' ms');
+if (!global.KOMODO_SDK_DISABLE_PULL) {
+    setInterval(pullTask, config.pull_interval_ms || 1000);
+    logger.verbose(`${MODULE_NAME} B6AEB920: Pull task every ${config.pull_interval_ms || 1000} ms`);
+} else {
+    logger.info(`${MODULE_NAME} DEC80C55: Pull task disabled because of global.KOMODO_SDK_DISABLE_PULL flag`);
+}
 
 exports.setPartner = setPartner;
 exports.isPaused = isPaused;
