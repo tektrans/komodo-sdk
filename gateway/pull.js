@@ -131,7 +131,9 @@ function replaceRc(originalRc) {
     return config.replace_rc[originalRc] || originalRc;
 }
 
-function report(data, xid) {
+function report(data, xidFromCaller) {
+    const xid = xidFromCaller || uniqid();
+
     let corePullReportUrl;
 
     if (data && data.trx_id && data.rc) {
@@ -161,12 +163,24 @@ function report(data, xid) {
         data.misc.advice_url = config.push_server.advice.url;
     }
 
-    let trxId = Number(data.trx_id) - (Number(config.sdk_trx_id_adder) || 0);
+    const sdkTrxIdAdder = Number(config.sdk_trx_id_adder) || 0;
+    let trxId = Number(data.trx_id) - sdkTrxIdAdder;
+
+    if (sdkTrxIdAdder) {
+        logger.verbose(`${MODULE_NAME} 3E0016E8: REPORT: Adjusting trx id`, {
+            xid,
+            sdkTrxIdAdder,
+            trxId: data.trx_id,
+            adjustedTrxId: trxId,
+        });
+    }
+
     if (trxId <= 0) {
         logger.warn(`${MODULE_NAME} 6A8C7303: REPORT: calculated trx_id is a negative number, using uncalculated trx_id`, {
+            xid,
             uncalculated: data.trx_id,
             calculated: trxId,
-            sdk_trx_id_adder: config.sdk_trx_id_adder,
+            sdkTrxIdAdder,
         });
         trxId = data.trx_id;
     }
@@ -257,8 +271,17 @@ function forwardCoreTaskToPartner(coreMessage, startTime, xid) {
     incrementCounterTrx();
 
     task.remote_product = getRemoteProduct(task.product);
-    if (Number(config.sdk_trx_id_adder)) {
-        task.trx_id = Number(task.trx_id) + Number(config.sdk_trx_id_adder);
+    const sdkTrxIdAdder = Number(config.sdk_trx_id_adder);
+    if (sdkTrxIdAdder) {
+        const newTrxId = Number(task.trx_id) + sdkTrxIdAdder;
+        logger.verbose(`${MODULE_NAME} 873BA19B: Adjusting trx id`, {
+            xid,
+            sdkTrxIdAdder,
+            originalTrxId: task.trx_id,
+            newTrxId,
+        });
+
+        task.trx_id = newTrxId;
     }
 
     putTaskToMatrix(task);
