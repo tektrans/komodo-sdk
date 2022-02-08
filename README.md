@@ -5,7 +5,7 @@ SDK node.js untuk integrasi dengan sistem PPOB Komodo.
 ## Instalasi
 
 ```
-npm -i komodo-sdk
+npm i komodo-sdk
 ```
 
 ## TODO
