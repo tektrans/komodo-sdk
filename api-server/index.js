@@ -1,7 +1,5 @@
 /**
  * API Server
- *
- * @todo make it work
  */
 
 const express = require('express');
@@ -32,15 +30,16 @@ function isValidApikey(apikey) {
 function needValidApikey(req, res, next) {
     if (isValidApikey(req.params.apikey)) {
         next();
-    }
-    else {
+    } else {
         res.end('INVALID_APIKEY');
     }
 }
 
-isConfigured() && app.listen(config.apiserver.port, function () {
-    logger.info('API-SERVER listening', {port: config.apiserver.port});
-});
+if (isConfigured()) {
+    app.listen(config.apiserver.port, () => {
+        logger.info('API-SERVER listening', { port: config.apiserver.port });
+    });
+}
 
 // initialize xid
 app.use((req, res, next) => {

@@ -1,4 +1,4 @@
-"use strict";
+/* eslint-disable no-continue */
 
 const express = require('express');
 const naturalSort = require('node-natural-sort');
@@ -10,34 +10,37 @@ const matrix = require('../matrix');
 const router = express.Router();
 module.exports = router;
 
+const splitProductSeparator = / *[;,]+ */;
+
 function pageIndex(req, res) {
     res.json({
         method: '/products',
         error: null,
-        result: config.products
+        result: config.products,
     });
 }
 
 function pageAdd(req, res) {
-    let products = req.params.product || req.query.product
+    let products = req.params.product || req.query.product;
 
     if (!products) {
         res.json({
             method: '/products/add',
             error: true,
-            error_msg: 'Usage: /products/add/<NEW_PRODUCT>'
+            error_msg: 'Usage: /products/add/<NEW_PRODUCT>',
         });
 
         return;
     }
 
     if (typeof products === 'string') {
-        products = products.trim().split(/[\s,]+/);
+        products = products.trim().split(splitProductSeparator);
     }
 
     const productsCount = products.length;
-    for (let i=0; i<productsCount; i++) {
+    for (let i = 0; i < productsCount; i += 1) {
         const product = products[i];
+
         if (!product.trim()) {
             continue;
         }
@@ -45,7 +48,7 @@ function pageAdd(req, res) {
         config.products.push(product.trim().toUpperCase());
     }
 
-    config.products.map(function(x) { return x.toUpperCase(); });
+    config.products.map((product) => product.toUpperCase());
     unique(config.products);
     config.products.sort(naturalSort());
     matrix.config_is_dirty = true;
@@ -54,34 +57,34 @@ function pageAdd(req, res) {
         method: '/products/add',
         error: null,
         new_product: products,
-        products: config.products
-    })
+        products: config.products,
+    });
 }
 
 function pageDel(req, res) {
-    let products = req.params.product || req.query.product
+    let products = req.params.product || req.query.product;
     if (!products) {
         res.json({
             method: '/products/del',
             error: true,
-            error_msg: 'Usage: /products/del/<PRODUCT_TO_DELETE> or /products/del?product=<PRODUCT_TO_DELETE>'
+            error_msg: 'Usage: /products/del/<PRODUCT_TO_DELETE> or /products/del?product=<PRODUCT_TO_DELETE>',
         });
 
         return;
     }
 
     if (typeof products === 'string') {
-        products = products.trim().split(/[\s,]+/);
+        products = products.trim().split(splitProductSeparator);
     }
 
-    config.products.map(function(x) { return x.toUpperCase(); });
+    config.products.map((product) => product.toUpperCase());
     const productsCount = products.length;
-    for (let i=0; i<productsCount; i++) {
+    for (let i = 0; i < productsCount; i += 1) {
         const product = products[i].toUpperCase();
         const idx = config.products.indexOf(product);
         if (idx >= 0) {
             matrix.config_is_dirty = true;
-            config.products.splice(idx, 1)
+            config.products.splice(idx, 1);
         }
     }
 
@@ -89,8 +92,8 @@ function pageDel(req, res) {
         method: '/products/del',
         error: null,
         product_to_delete: products,
-        products: config.products
-    })
+        products: config.products,
+    });
 }
 
 router.get('/', pageIndex);
