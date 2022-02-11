@@ -1,5 +1,3 @@
-"use strict";
-
 const express = require('express');
 // const sortObj = require('sort-object');
 const naturalCompare = require('string-natural-compare');
@@ -10,11 +8,13 @@ const matrix = require('../matrix');
 const router = express.Router();
 module.exports = router;
 
+const splitProductSeparator = / *[;,]+ */;
+
 function pageIndex(req, res) {
     res.json({
         method: '/products',
         error: null,
-        result: config.remote_products
+        result: config.remote_products,
     });
 }
 
@@ -23,12 +23,12 @@ function pageSet(req, res) {
         res.json({
             method: '/remote-products/set',
             error: true,
-            error_msg: 'Usage: /remote-products/set/<LOCAL_PRODUCT>/<REMOTE_PRODUCT>'
+            error_msg: 'Usage: /remote-products/set/<LOCAL_PRODUCT>/<REMOTE_PRODUCT>',
         });
     }
 
     if (!req.params.localProduct && !req.query.local) {
-        responseWithUsageHelp()
+        responseWithUsageHelp();
         return;
     }
 
@@ -36,7 +36,6 @@ function pageSet(req, res) {
         responseWithUsageHelp();
         return;
     }
-
 
     const localProduct = (req.params.localProduct || req.query.local).trim().toUpperCase();
     const remoteProduct = (req.params.remoteProduct || req.query.remote).trim();
@@ -50,7 +49,10 @@ function pageSet(req, res) {
     */
 
     const sortedRemoteProducts = {};
-    const remoteProductsKeys = Object.keys(config.remote_products).sort(naturalCompare.caseInsensitive);
+    const remoteProductsKeys = Object.keys(
+        config.remote_products,
+    ).sort(naturalCompare.caseInsensitive);
+
     remoteProductsKeys.forEach((item) => {
         sortedRemoteProducts[item] = config.remote_products[item];
     });
@@ -63,8 +65,8 @@ function pageSet(req, res) {
         error: null,
         local_product: localProduct,
         remote_product: remoteProduct,
-        remote_products: config.remote_products
-    })
+        remote_products: config.remote_products,
+    });
 }
 
 function pageDel(req, res) {
@@ -72,7 +74,7 @@ function pageDel(req, res) {
         res.json({
             method: '/remote-products/del',
             error: true,
-            error_msg: 'Usage: /remote-products/del/<LOCAL_PRODUCT>'
+            error_msg: 'Usage: /remote-products/del/<LOCAL_PRODUCT>',
         });
     }
 
@@ -83,11 +85,11 @@ function pageDel(req, res) {
     }
 
     if (typeof localProducts === 'string') {
-        localProducts = localProducts.split(/[\s,]+/);
+        localProducts = localProducts.split(splitProductSeparator);
     }
 
     const localProductsCount = localProducts.length;
-    for (let i=0; i<localProductsCount; i++) {
+    for (let i = 0; i < localProductsCount; i += 1) {
         const localProduct = localProducts[i];
 
         if (localProduct) {
@@ -100,8 +102,8 @@ function pageDel(req, res) {
         method: '/remote-products/del',
         error: null,
         deleted_product: localProducts,
-        remote_products: config.remote_products
-    })
+        remote_products: config.remote_products,
+    });
 }
 
 router.get('/', pageIndex);
