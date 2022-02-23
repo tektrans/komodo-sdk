@@ -1,5 +1,3 @@
-"use strict";
-
 const fs = require('fs');
 const express = require('express');
 const bodyParser = require('body-parser');
@@ -14,7 +12,7 @@ const matrix = require('../matrix');
 const router = express.Router();
 module.exports = router;
 
-fs.existsSync('config-backup') || fs.mkdirSync('config-backup');
+if (!fs.existsSync('config-backup')) fs.mkdirSync('config-backup');
 
 function getJsonConfig(req, res) {
     res.json(config);
@@ -22,7 +20,7 @@ function getJsonConfig(req, res) {
 
 function getConfigElement(req, res) {
     const key = ((req && req.params && req.params.key) ? req.params.key : '').replace(/^config\.*/, '').trim();
-    res.json(jsonQuery(key, {data: config}).value);
+    res.json(jsonQuery(key, { data: config }).value);
 }
 
 function setConfigElement(req, res) {
@@ -38,7 +36,7 @@ function setConfigElement(req, res) {
         method: '/config/set',
         key: req.body.key,
         value: req.body.value,
-        new_config: config
+        new_config: config,
     });
 }
 
@@ -46,7 +44,7 @@ function delConfigElement(req, res) {
     const key = ((req && req.params && req.params.key) ? req.params.key : '').replace(/^config\.*/, '').trim();
 
     if (!key) {
-        res.end('INVALID OBJECT KEY')
+        res.end('INVALID OBJECT KEY');
     }
 
     dot.str(key, config);
@@ -55,45 +53,46 @@ function delConfigElement(req, res) {
     res.json({
         method: '/config/del',
         key: req.body.key,
-        new_config: config
+        new_config: config,
     });
 }
 
 function saveConfig(req, res) {
-    copyFile('config.json', 'config-backup/config_' + moment().format('YYYYMMDD_HHmmss.SS') + '.json', function(err) {
+    copyFile('config.json', `config-backup/config_${moment().format('YYYYMMDD_HHmmss.SS')}.json`, (err) => {
         if (err) {
             res.json({
                 method: '/config/save',
-                error: err.toString()
-            })
+                error: err.toString(),
+            });
             return;
         }
 
-        fs.writeFile('config.json', JSON.stringify(config, null, 2), function(err) {
-            if (err) {
+        fs.writeFile('config.json', JSON.stringify(config, null, 2), (errWriteFile) => {
+            if (errWriteFile) {
                 res.json({
                     method: '/config/save',
-                    error: err.toString()
-                })
+                    error: errWriteFile.toString(),
+                });
+
                 return;
             }
-        })
 
-        matrix.config_is_dirty = false;
+            matrix.config_is_dirty = false;
 
-        res.json({
-            method: '/config/save',
-            error: null
-        })
-    })
+            res.json({
+                method: '/config/save',
+                error: null,
+            });
+        });
+    });
 }
 
 function isDirty(req, res) {
     res.json({
         method: '/config/is-dirty',
         error: null,
-        dirty: matrix.config_is_dirty || false
-    })
+        dirty: matrix.config_is_dirty || false,
+    });
 }
 
 router.get('/', getJsonConfig);
