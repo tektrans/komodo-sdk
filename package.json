@@ -21,7 +21,6 @@
   "license": "ISC",
   "dependencies": {
     "array-unique": "^0.3.2",
-    "auto-changelog": "^2.3.0",
     "basic-auth": "^2.0.0",
     "body-parser": "^1.18.2",
     "dot-object": "^1.7.0",
@@ -39,7 +38,7 @@
     "nunjucks": "^3.2.3",
     "pkginfo": "^0.4.1",
     "redis": "^3.1.2",
-    "request": "^2.88.0",
+    "request": "^2.88.2",
     "sha1": "^1.1.1",
     "simple-git": "^1.80.1",
     "stack-trace": "0.0.10",
@@ -51,6 +50,7 @@
     "uuid": "^3.4.0"
   },
   "devDependencies": {
+    "auto-changelog": "^2.4.0",
     "eslint": "^8.6.0",
     "eslint-config-airbnb-base": "^15.0.0",
     "eslint-plugin-import": "^2.25.4"
