@@ -1,3 +1,4 @@
+require('pkginfo')(module, 'version');
 const simpleGit = require('simple-git');
 const machineid = require('node-machine-id');
 
