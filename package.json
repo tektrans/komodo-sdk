@@ -54,5 +54,8 @@
     "eslint": "^8.6.0",
     "eslint-config-airbnb-base": "^15.0.0",
     "eslint-plugin-import": "^2.25.4"
+  },
+  "optionalDependencies": {
+    "sd-notify": "^2.8.0"
   }
 }
