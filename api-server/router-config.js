@@ -1,13 +1,15 @@
+const MODULE_NAME = 'KOMODO-SDK.API-SERVER.ROUTER-CONFIG';
+
 const fs = require('fs');
 const express = require('express');
 const bodyParser = require('body-parser');
 const jsonQuery = require('json-query');
 const dot = require('dot-object');
-const copyFile = require('fs-copy-file');
-const moment = require('moment');
+const logger = require('tektrans-logger');
 
 const config = require('../config');
 const matrix = require('../matrix');
+const configSave = require('./config-save');
 
 const router = express.Router();
 module.exports = router;
@@ -57,34 +59,30 @@ function delConfigElement(req, res) {
     });
 }
 
-function saveConfig(req, res) {
-    copyFile('config.json', `config-backup/config_${moment().format('YYYYMMDD_HHmmss.SS')}.json`, (err) => {
-        if (err) {
-            res.json({
-                method: '/config/save',
-                error: err.toString(),
-            });
-            return;
-        }
+async function saveConfig(req, res) {
+    const { xid } = res.locals;
+    try {
+        await configSave(xid);
 
-        fs.writeFile('config.json', JSON.stringify(config, null, 2), (errWriteFile) => {
-            if (errWriteFile) {
-                res.json({
-                    method: '/config/save',
-                    error: errWriteFile.toString(),
-                });
-
-                return;
-            }
-
-            matrix.config_is_dirty = false;
-
-            res.json({
-                method: '/config/save',
-                error: null,
-            });
+        res.json({
+            method: '/config/save',
+            error: null,
         });
-    });
+    } catch (e) {
+        logger.warn(`${MODULE_NAME} 22E7FCA2: Exception on saving`, {
+            xid,
+            eCode: e.code,
+            eMessage: e.message || e,
+        });
+
+        res.json({
+            method: '/config/save',
+            error: [
+                e.code || 'UNKNOWN',
+                e.message || 'ERROR',
+            ].join(' - '),
+        });
+    }
 }
 
 function isDirty(req, res) {
