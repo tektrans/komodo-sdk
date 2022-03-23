@@ -29,6 +29,7 @@
     "fs-copy-file": "^2.1.2",
     "json-query": "^2.2.2",
     "json-stringify-pretty-compact": "^3.0.0",
+    "locks": "^0.2.2",
     "lru-cache": "^4.1.1",
     "macaddress": "^0.2.9",
     "moment": "^2.24.0",

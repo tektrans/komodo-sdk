@@ -1,12 +1,15 @@
 const MODULE_NAME = 'KOMODO-SDK.API-SERVER.CONFIG-SAVE';
 
 const fs = require('fs');
-const logger = require('tektrans-logger');
+const locks = require('locks');
 const moment = require('moment');
+const logger = require('tektrans-logger');
 const config = require('../config');
 const matrix = require('../matrix');
 
 if (!fs.existsSync('config-backup')) fs.mkdirSync('config-backup');
+
+const mutex = locks.createMutex();
 
 const backup = async (xid) => {
     try {
@@ -33,12 +36,18 @@ const backup = async (xid) => {
 };
 
 module.exports = async (xid) => {
-    try {
-        if (!matrix.config_is_dirty) {
-            logger.verbose(`${MODULE_NAME} 4B263CB4: No need to save because config is not dirty`, { xid });
-            return;
-        }
+    if (!matrix.config_is_dirty) {
+        logger.verbose(`${MODULE_NAME} 4B263CB4: No need to save because config is not dirty`, { xid });
+        return;
+    }
 
+    await new Promise((resolve) => {
+        mutex.lock(() => {
+            resolve();
+        });
+    });
+
+    try {
         const backupFilename = await backup(xid);
 
         await fs.promises.writeFile(
@@ -61,5 +70,7 @@ module.exports = async (xid) => {
         });
 
         throw newE;
+    } finally {
+        mutex.unlock();
     }
 };
