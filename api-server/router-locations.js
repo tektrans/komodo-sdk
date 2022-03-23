@@ -1,5 +1,3 @@
-"use strict";
-
 const express = require('express');
 const naturalSort = require('node-natural-sort');
 const unique = require('array-unique');
@@ -14,39 +12,42 @@ function pageIndex(req, res) {
     res.json({
         method: '/locations',
         error: null,
-        result: config.locations
+        result: config.locations,
     });
 }
 
 function pageAdd(req, res) {
-    let locations = req.params.locations || req.query.locations
+    let locations = req.params.locations || req.query.locations;
 
     if (!locations) {
         res.json({
             method: '/locations/add',
             error: true,
-            error_msg: 'Usage: /locations/add/<NEW_LOCATION>'
+            error_msg: 'Usage: /locations/add/<NEW_LOCATION>',
         });
 
         return;
     }
 
     if (typeof locations === 'string') {
-        locations = locations.trim().split(/[\s,]+/).filter((el) => { return el.toUpperCase() !== 'ALL'; });
+        locations = locations
+            .trim()
+            .split(/[\s,]+/)
+            .filter((loc) => typeof loc === 'string')
+            .map((loc) => loc.trim().toUpperCase())
+            .filter((loc) => loc && (loc !== 'ALL'));
     }
 
     const locationsCount = locations.length;
-    for (let i=0; i<locationsCount; i++) {
+    for (let i = 0; i < locationsCount; i += 1) {
         const location = locations[i];
-        if (!location.trim()) {
-            continue;
-        }
 
         if (!config.locations) config.locations = [];
-        config.locations.push(location.trim().toUpperCase());
+        config.locations.push(location);
     }
 
-    config.locations.map(function(x) { return x.toUpperCase(); });
+    // config.locations.map((x) => x.toUpperCase());
+
     unique(config.locations);
     config.locations.sort(naturalSort());
     matrix.config_is_dirty = true;
@@ -55,17 +56,17 @@ function pageAdd(req, res) {
         method: '/locations/add',
         error: null,
         new_location: locations,
-        locations: config.locations
-    })
+        locations: config.locations,
+    });
 }
 
 function pageDel(req, res) {
-    let locations = req.params.locations || req.query.locations
+    let locations = req.params.locations || req.query.locations;
     if (!locations) {
         res.json({
             method: '/locations/del',
             error: true,
-            error_msg: 'Usage: /locations/del/<LOCATION_TO_DELETE> or /locations/del?locations=<LOCATION_TO_DELETE>'
+            error_msg: 'Usage: /locations/del/<LOCATION_TO_DELETE> or /locations/del?locations=<LOCATION_TO_DELETE>',
         });
 
         return;
@@ -75,14 +76,15 @@ function pageDel(req, res) {
         locations = locations.trim().split(/[\s,]+/);
     }
 
-    config.locations.map(function(x) { return x.toUpperCase(); });
+    // config.locations.map((x) => x.toUpperCase());
     const locationsCount = locations.length;
-    for (let i=0; i<locationsCount; i++) {
+
+    for (let i = 0; i < locationsCount; i += 1) {
         const location = locations[i].toUpperCase();
         const idx = config.locations.indexOf(location);
         if (idx >= 0) {
             matrix.config_is_dirty = true;
-            config.locations.splice(idx, 1)
+            config.locations.splice(idx, 1);
         }
     }
 
@@ -90,8 +92,8 @@ function pageDel(req, res) {
         method: '/locations/del',
         error: null,
         locations_to_delete: locations,
-        locations: config.locations
-    })
+        locations: config.locations,
+    });
 }
 
 router.get('/', pageIndex);
