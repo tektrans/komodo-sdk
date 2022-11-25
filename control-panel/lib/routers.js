@@ -1,5 +1,3 @@
-"use strict";
-
 const routerMain = require('./router-main');
 const routerLogin = require('./router-login');
 const routerConfig = require('./router-config');

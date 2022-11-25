@@ -1,39 +1,39 @@
 const os = require('os');
 
 const express = require('express');
-const router = express.Router();
-
 const numeral = require('numeral');
 
 const logger = require('tektrans-logger');
-const matrix = require('komodo-sdk/matrix');
+const matrix = require('../../matrix');
 
 const misc = require('./misc');
+
+const router = express.Router();
 
 function pageMain(req, res) {
     res.redirect('/runtime');
 }
 
 function pageLog(req, res) {
-    logger.query({json: true, order: 'desc'}, function(err) {
+    logger.query({ json: true, order: 'desc' }, (err) => {
         if (err) {
-            return res.end('INVALID LOGGER');
+            res.end('INVALID LOGGER');
+            return;
         }
 
         res.render(
-            req.app.locals.cp_views_dir + '/log.html',
+            `${req.app.locals.cp_views_dir}/log.html`,
             {
                 // log: JSON.stringify(results.logs, null, 4)
-                log: '[]'
-            }
+                log: '[]',
+            },
         );
-
     });
 }
-function pageRuntime(req, res) {
 
+function pageRuntime(req, res) {
     res.render(
-        req.app.locals.cp_views_dir + '/runtime.html',
+        `${req.app.locals.cp_views_dir}/runtime.html`,
         {
             uptime: numeral(process.uptime()).format(),
             matrix: JSON.stringify(matrix, null, 4),
@@ -48,17 +48,15 @@ function pageRuntime(req, res) {
                 release: os.release(),
                 totalmem: os.totalmem(),
             }, null, 4),
-        }
-    )
+        },
+    );
 }
 
 function pageTerminate(req, res) {
-    res.end('Terminating....', function() {
+    res.end('Terminating....', () => {
         process.exit(0);
     });
 }
-
-//router.use(misc.needAuthUser);
 
 router.get('/', pageMain);
 router.get('/runtime', misc.needAuthUser, pageRuntime);

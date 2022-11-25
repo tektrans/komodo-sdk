@@ -6,7 +6,7 @@ const nunjucks = require('nunjucks');
 const uniqid = require('uniqid');
 const numeral = require('numeral');
 
-const config = require('komodo-sdk/config');
+const config = require('../../config');
 const logger = require('tektrans-logger');
 
 const routers = require('./routers');
