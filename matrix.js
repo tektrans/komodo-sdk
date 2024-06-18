@@ -7,6 +7,8 @@ const matrix = {
     machineid_readable: null,
     komodosdk_type: 'nodejs',
     komodosdk_version: module.exports.version,
+    pid: process.pid,
+    ppid: process.ppid,
 };
 
 matrix.machineid_readable = matrix.machineid.match(/.{1,4}/g).join('-');
