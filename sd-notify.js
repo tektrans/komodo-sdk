@@ -20,7 +20,7 @@ const notifyUseSystemdNotify = async (statusMsg) => {
         await notify({
             ready: true,
             status,
-            pid: process.pid,
+            // pid: process.pid,
         });
 
         logger.info(`${MODULE_NAME} B905A857: Systemd ready notification has been sent using systemd-notify package`);
