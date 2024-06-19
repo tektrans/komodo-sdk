@@ -48,13 +48,15 @@
     "tektrans-logger": "^1.2.5",
     "uniqid": "^4.1.1",
     "url-join": "^4.0.1",
-    "uuid": "^9.0.0"
+    "uuid": "^9.0.0",
+    "which": "^4.0.0"
   },
   "devDependencies": {
     "auto-changelog": "^2.4.0",
     "eslint": "^8.6.0",
     "eslint-config-airbnb-base": "^15.0.0",
-    "eslint-plugin-import": "^2.25.4"
+    "eslint-plugin-import": "^2.25.4",
+    "systemd-notify": "^1.0.0"
   },
   "optionalDependencies": {
     "sd-notify": "^2.8.0"
