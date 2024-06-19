@@ -42,6 +42,7 @@ module.exports = async (statusMsg) => {
         await notify({
             ready: true,
             status,
+            pid: process.pid,
         });
     } catch (e) {
         logger.verbose(`${MODULE_NAME} 488B3245: Trying to notify sd-notify package`, {
