@@ -3,6 +3,8 @@
 
 const MODULE_NAME = 'KOMODO-SDK.SD-NOTIFY';
 
+const USE_SYSTEMD_NOTIFY_PACKAGE = false;
+
 const util = require('util');
 const logger = require('tektrans-logger');
 const matrix = require('./matrix');
@@ -83,9 +85,11 @@ module.exports = async (statusMsg) => {
         return;
     }
 
-    const successOnUsingSystemdNotify = await notifyUseSystemdNotify(statusMsg);
-    if (successOnUsingSystemdNotify) {
-        return;
+    if (USE_SYSTEMD_NOTIFY_PACKAGE) {
+        const successOnUsingSystemdNotify = await notifyUseSystemdNotify(statusMsg);
+        if (successOnUsingSystemdNotify) {
+            return;
+        }
     }
 
     const successOnUsingBin = await notifyUseBin();
