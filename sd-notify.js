@@ -4,6 +4,7 @@
 const MODULE_NAME = 'KOMODO-SDK.SD-NOTIFY';
 
 const USE_SYSTEMD_NOTIFY_PACKAGE = false;
+const USE_SYSTEMD_NOTIFY_BIN = false;
 
 const util = require('util');
 const logger = require('tektrans-logger');
@@ -92,9 +93,11 @@ module.exports = async (statusMsg) => {
         }
     }
 
-    const successOnUsingBin = await notifyUseBin();
-    if (successOnUsingBin) {
-        return;
+    if (USE_SYSTEMD_NOTIFY_BIN) {
+        const successOnUsingBin = await notifyUseBin();
+        if (successOnUsingBin) {
+            return;
+        }
     }
 
     notifyUseSdNotify();
