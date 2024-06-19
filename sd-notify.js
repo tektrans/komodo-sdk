@@ -44,7 +44,9 @@ module.exports = async (statusMsg) => {
             status,
         });
     } catch (e) {
-        logger.verbose(`${MODULE_NAME} 488B3245: Trying to notify sd-notify package`);
+        logger.verbose(`${MODULE_NAME} 488B3245: Trying to notify sd-notify package`, {
+            why: e.message || e.toString(),
+        });
         notifyUseSdNotify();
     }
 };
