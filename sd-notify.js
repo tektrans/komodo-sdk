@@ -7,7 +7,7 @@ const util = require('util');
 const logger = require('tektrans-logger');
 const matrix = require('./matrix');
 
-const exec = util.promisify(require('node:child_process').exec);
+const exec = util.promisify(require('child_process').exec);
 
 const notifyUseSystemdNotify = async (statusMsg) => {
     try {
