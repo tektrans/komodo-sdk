@@ -3,15 +3,11 @@
 
 const MODULE_NAME = 'KOMODO-SDK.SD-NOTIFY';
 
-const childProcess = require('child_process');
-const which = require('which');
+const util = require('util');
 const logger = require('tektrans-logger');
 const matrix = require('./matrix');
 
-const hasSystemdNotifyBin = async () => {
-    const result = await which('systemd-notify', { nothrow: true });
-    return result;
-};
+const exec = util.promisify(require('node:child_process').exec);
 
 const notifyUseSystemdNotify = async (statusMsg) => {
     try {
@@ -26,6 +22,8 @@ const notifyUseSystemdNotify = async (statusMsg) => {
             status,
             pid: process.pid,
         });
+
+        logger.info(`${MODULE_NAME} B905A857: Systemd ready notification has been sent using systemd-notify package`);
 
         return true;
     } catch (e) {
@@ -47,8 +45,28 @@ const notifyUseSdNotify = () => {
         matrix.systemd_notified = new Date();
 
         logger.info(`${MODULE_NAME} 701F8400: Systemd ready notification has been sent using sd-notify package`);
+
+        return true;
     } catch (e) {
         logger.warn(`${MODULE_NAME} A6C99938: Optional dependency not found: sd-notify`);
+        return false;
+    }
+};
+
+const notifyUseBin = async () => {
+    try {
+        logger.verbose(`${MODULE_NAME} FFBCF4E3: Trying to notify systemd using systemd-notify bin`);
+        await exec('systemd-notify --ready');
+        logger.info(`${MODULE_NAME} B58921FF: Systemd ready notification has been sent using systemd-notify bin`);
+
+        return true;
+    } catch (e) {
+        logger.verbose(`${MODULE_NAME} 75237B65: Failed to notify using systemd-notify bin`, {
+            eCode: e.code,
+            eMessage: e.message || e.toString(),
+        });
+
+        return false;
     }
 };
 
@@ -65,19 +83,15 @@ module.exports = async (statusMsg) => {
         return;
     }
 
-    const successOnUseSystemdNotify = await notifyUseSystemdNotify(statusMsg);
-    if (successOnUseSystemdNotify) {
+    const successOnUsingSystemdNotify = await notifyUseSystemdNotify(statusMsg);
+    if (successOnUsingSystemdNotify) {
         return;
     }
 
-    const useExec = await hasSystemdNotifyBin();
-    if (useExec) {
-        logger.verbose(`${MODULE_NAME} FFBCF4E3: Trying to notify systemd using systemd-notify bin`);
-        childProcess.exec('systemd-notify --ready');
+    const successOnUsingBin = await notifyUseBin();
+    if (successOnUsingBin) {
         return;
     }
-
-    logger.verbose(`${MODULE_NAME} 9ADD3807: systemd-notify binary not found, fallback to sd-notify package`);
 
     notifyUseSdNotify();
 };
