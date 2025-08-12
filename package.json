@@ -25,7 +25,7 @@
     "body-parser": "^1.18.2",
     "dot-object": "^2.1.4",
     "express": "^4.21.2",
-    "express-session": "^1.15.6",
+    "express-session": "^1.18.2",
     "fs-copy-file": "^2.1.2",
     "json-query": "^2.2.2",
     "json-stringify-pretty-compact": "^3.0.0",
