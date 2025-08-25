@@ -202,7 +202,7 @@ const report = async (data, xidFromCaller) => {
         remote_product: data.remote_product
             || (data.misc && data.misc.task && typeof data.misc.task.remote_product === 'string' && data.misc.task.remote_product)
             || null,
-        detail: data.detail || null,
+        detail: data.detail || '',
     });
 
     logger.verbose(`${MODULE_NAME} 2110168C: Sending report to CORE`, {
