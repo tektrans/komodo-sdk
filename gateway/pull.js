@@ -4,7 +4,7 @@ const MODULE_NAME = 'KOMODO-SDK.PULL';
 const DEFAULT_REQUEST_TIMEOUT_MS = 20 * 1000;
 const IS_DEBUG = process.env.KOMODO_SDK_DEBUG_PULL;
 
-const request = require('request');
+const { default: axios } = require('axios');
 const stringify = require('json-stringify-pretty-compact');
 const logger = require('tektrans-logger');
 const urljoin = require('url-join');
@@ -131,7 +131,7 @@ function replaceRc(originalRc) {
     return config.replace_rc[originalRc] || originalRc;
 }
 
-function report(data, xidFromCaller) {
+const report = async (data, xidFromCaller) => {
     const xid = xidFromCaller || uniqid();
 
     let corePullReportUrl;
@@ -185,61 +185,48 @@ function report(data, xidFromCaller) {
         trxId = data.trx_id;
     }
 
-    const options = {
-        url: corePullReportUrl,
-        form: {
-            trx_id: trxId,
-            rc: replaceRc(data.rc),
-            rc_from_handler: data.rc_from_handler,
-            message: typeof data.message === 'string' ? data.message : stringify(data.message),
-            handler: config.handler_name,
-            sn: data.sn,
-            amount: data.amount,
-            balance: data.balance,
-            raw: data.raw,
-            misc: data.misc,
-            product: data.product
-                || (data.misc && data.misc.task && typeof data.misc.task.product === 'string' && data.misc.task.product)
-                || null,
-            remote_product: data.remote_product
-                || (data.misc && data.misc.task && typeof data.misc.task.remote_product === 'string' && data.misc.task.remote_product)
-                || null,
-            detail: data.detail || null,
-        },
-    };
-
-    if (!config.do_not_verbose_log_report) {
-        logger.verbose(`${MODULE_NAME} 2110168C: Report to CORE using HTTP POST`, { xid });
-    }
-
-    request.post(options, (error, response) => {
-        if (error) {
-            logger.warn(`${MODULE_NAME} B1CA595F: Error reporting to CORE`, { xid, error });
-            // eslint-disable-next-line no-use-before-define
-            resendReport(data);
-        } else if (response.statusCode !== 200) {
-            logger.warn(`${MODULE_NAME} 4B73BD23: Error reporting to CORE, http response status is not 200`, {
-                xid, requestOptions: options, http_response_status: response.statusCode,
-            });
-            // eslint-disable-next-line no-use-before-define
-            resendReport(data);
-        } else if (!config.do_not_verbose_log_report) {
-            logger.verbose(`${MODULE_NAME} 379A25AA: Report has been sent to CORE`, { xid, requestOptions: options });
-        }
+    const params = new URLSearchParams({
+        trx_id: trxId,
+        rc: replaceRc(data.rc),
+        rc_from_handler: data.rc_from_handler,
+        message: typeof data.message === 'string' ? data.message : stringify(data.message),
+        handler: config.handler_name,
+        sn: data.sn,
+        amount: data.amount,
+        balance: data.balance,
+        raw: data.raw,
+        misc: data.misc,
+        product: data.product
+            || (data.misc && data.misc.task && typeof data.misc.task.product === 'string' && data.misc.task.product)
+            || null,
+        remote_product: data.remote_product
+            || (data.misc && data.misc.task && typeof data.misc.task.remote_product === 'string' && data.misc.task.remote_product)
+            || null,
+        detail: data.detail || null,
     });
-}
 
-function resendReport(data) {
-    const sleepBeforeResend = Math.round(Math.random() * MAX_SLEEP_BEFORE_RESEND_MS);
-    logger.verbose(`${MODULE_NAME} DEE44715: Resend report to CORE in ${sleepBeforeResend} ms`);
+    logger.verbose(`${MODULE_NAME} 2110168C: Sending report to CORE`, {
+        xid,
+        corePullReportUrl,
+    });
 
-    setTimeout(
-        () => {
-            report(data);
-        },
-        sleepBeforeResend,
-    );
-}
+    try {
+        await axios.post(corePullReportUrl, params);
+    } catch (e) {
+        logger.warn(`${MODULE_NAME} D2877DF6: Exception on sending report to CORE`, {
+            xid,
+            eCode: e.code,
+            eMessage: e.message || e.toString(),
+            httpStatus: e.response && e.response.status,
+            responseBody: e.response && e.response.data,
+        });
+
+        const sleepBeforeResend = Math.round(Math.random() * MAX_SLEEP_BEFORE_RESEND_MS);
+        setTimeout(() => {
+            report(data, xidFromCaller);
+        }, sleepBeforeResend);
+    }
+};
 
 function forwardCoreTaskToPartner(coreMessage, startTime, xid) {
     let task;
@@ -306,7 +293,7 @@ function forwardCoreTaskToPartner(coreMessage, startTime, xid) {
     });
 }
 
-function pullTask() {
+const pullTask = async () => {
     if (isPaused()) {
         if (IS_DEBUG) {
             logger.verbose(`${MODULE_NAME} 76370FE5: PULL TASK paused`);
@@ -356,7 +343,7 @@ function pullTask() {
 
     const xid = uniqid();
 
-    const bodyOrQs = {
+    const params = new URLSearchParams({
         handler: config.handler_name,
         products: (config.products || []).join(','),
         locations: config.locations && config.locations.length ? config.locations.join(',') : 'ALL',
@@ -375,68 +362,25 @@ function pullTask() {
         ) || null,
         komodosdk_type: matrix.komodosdk_type,
         komodosdk_version: matrix.komodosdk_version,
-    };
-
-    const options = {
-        url: corePullTaskUrl,
-        timeout: config.request_timeout || DEFAULT_REQUEST_TIMEOUT_MS,
-    };
-
-    if (config.pull_task_use_post) {
-        if (IS_DEBUG) {
-            logger.verbose(`${MODULE_NAME} CB855B30: PULL TASK using HTTP POST`, { xid });
-        }
-        options.method = 'POST';
-        options.form = bodyOrQs;
-    } else {
-        if (IS_DEBUG) {
-            logger.verbose(`${MODULE_NAME} BA2EF935: PULL TASK using HTTP GET`, { xid });
-        }
-        options.method = 'GET';
-        options.qs = bodyOrQs;
-    }
-
-    if (config && config.debug_request_task_to_core) {
-        logger.verbose(`${MODULE_NAME} 0642E25C: Requesting task to CORE`, {
-            xid, url: options.url, method: options.method, body_or_qs: bodyOrQs,
-        });
-    }
+    });
 
     const startTime = new Date();
-    request(options, (error, response, body) => {
-        pullTaskLocked = false;
-
-        const lameLimit = 10 * 1000;
-        const deltaTime = new Date() - startTime;
-        if (deltaTime > lameLimit) {
-            logger.warn(`${MODULE_NAME} B892DC43: LAME-PULL: PULL response from CORE exceeds ${lameLimit} secs`, { xid, deltaTime });
-        }
-
-        if (error) {
-            if (matrix.core_is_healthy) {
-                logger.warn(`${MODULE_NAME} FB762F4A: Error pulling task from CORE`, { xid, error });
-            }
-            matrix.core_is_healthy = false;
-            onNoTask();
-            return;
-        }
-
-        if (response.statusCode !== 200) {
-            if (matrix.core_is_healthy) {
-                logger.warn(`${MODULE_NAME} 8943EECB: CORE http response status code for pull task is not 200`, {
-                    xid,
-                    http_response_status: response.statusCode,
-                });
-            }
-            matrix.core_is_healthy = false;
-            onNoTask();
-            return;
-        }
+    try {
+        const response = await axios.post(corePullTaskUrl, params, {
+            timeout: DEFAULT_REQUEST_TIMEOUT_MS,
+        });
 
         if (!matrix.core_is_healthy) {
             logger.verbose(`${MODULE_NAME} 099F5B3C: CORE is healthy`, { xid });
+            matrix.core_is_healthy = true;
         }
-        matrix.core_is_healthy = true;
+
+        const body = response && response.data;
+
+        if (!body) {
+            onNoTask();
+            return;
+        }
 
         if (body === 'NONE') {
             onNoTask();
@@ -448,8 +392,23 @@ function pullTask() {
         }
 
         forwardCoreTaskToPartner(body, startTime, xid);
-    });
-}
+    } catch (e) {
+        if (matrix.core_is_healthy) {
+            logger.warn(`${MODULE_NAME} FB762F4A: Error pulling task from CORE`, {
+                xid,
+                eCode: e.code,
+                eMessage: e.message || e.toString(),
+                httpStatus: e.response && e.response.status,
+                responseBody: e.response && e.response.data,
+            });
+        }
+
+        matrix.core_is_healthy = false;
+        onNoTask();
+    } finally {
+        pullTaskLocked = false;
+    }
+};
 
 function pause() {
     matrix.paused = true;
