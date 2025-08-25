@@ -393,7 +393,7 @@ const pullTask = async () => {
 
         forwardCoreTaskToPartner(body, startTime, xid);
     } catch (e) {
-        if (matrix.core_is_healthy) {
+        if (matrix.core_is_healthy || matrix.core_is_healthy !== false) {
             logger.warn(`${MODULE_NAME} FB762F4A: Error pulling task from CORE`, {
                 xid,
                 eCode: e.code,
