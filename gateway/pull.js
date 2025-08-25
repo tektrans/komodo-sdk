@@ -232,7 +232,7 @@ function forwardCoreTaskToPartner(coreMessage, startTime, xid) {
     let task;
 
     try {
-        task = JSON.parse(coreMessage);
+        task = JSON.parse(JSON.stringify(coreMessage));
     } catch (e) {
         logger.warn(`${MODULE_NAME} E757F11A: Exception on parsing CORE pull task response`, {
             xid, coreMessage, eCode: e.code, eMessage: e.message,
