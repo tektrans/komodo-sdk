@@ -1,3 +1,5 @@
+const MODULE_NAME = 'KOMODO-SDK.COREAPI';
+
 const request = require('request');
 const logger = require('tektrans-logger');
 const coreUrl = require('../core-url');
@@ -6,7 +8,11 @@ function isLogDisabled() {
     return global.KOMODO_SDK_NO_LOG_ON_COREAPI;
 }
 
-isLogDisabled() || logger.verbose(`CORE URL: ${coreUrl}`);
+if (!isLogDisabled()) {
+    logger.verbose(`${MODULE_NAME} 229BAC11: Initialized`, {
+        coreUrl,
+    });
+}
 
 function doRequest(params, cb) {
     return new Promise((resolve) => {
@@ -16,22 +22,36 @@ function doRequest(params, cb) {
             qs: params.qs || null,
         };
 
-        isLogDisabled() || logger.verbose('Requesting to CORE', {
-            xid: params.xid, method: options.method, fullpath: options.url, qs: options.qs,
-        });
+        if (!isLogDisabled()) {
+            logger.verbose(`${MODULE_NAME} 73C28396: Requesting to CORE`, {
+                xid: params.xid, method: options.method, fullpath: options.url, qs: options.qs,
+            });
+        }
 
         request(options, (err, res, body) => {
             if (err) {
-                isLogDisabled() || logger.warn(`COREAPI: Error doing HTTP ${options.method} to CORE. ${err.toString()}`, { xid: params.xid });
-                
+                if (!isLogDisabled()) {
+                    logger.warn(`${MODULE_NAME} 01738CB9: Error doing HTTP ${options.method} to CORE`, {
+                        xid: params.xid,
+                        eCode: err.code,
+                        eMessage: err.message || err.toString(),
+                    });
+                }
+
                 resolve([err]);
                 if (typeof cb === 'function') cb(err);
                 return;
             }
 
             if (res.statusCode !== 200) {
-                const errStatusCode = new Error('COREAPI: CORE responded with non HTTP STATUS CODE 200');
-                isLogDisabled() || logger.warn(`COREAPI: CORE returning HTTP STATUS CODE ${res.statusCode}, not 200`, { xid: params.xid, body });
+                const errStatusCode = new Error(`${MODULE_NAME} 39685CF2: CORE responded with non HTTP STATUS CODE 200`);
+                if (!isLogDisabled()) {
+                    logger.warn(errStatusCode, {
+                        xid: params.xid,
+                        httpStatus: res.statusCode,
+                        body,
+                    });
+                }
 
                 resolve([errStatusCode]);
                 if (typeof cb === 'function') cb(errStatusCode);
@@ -43,7 +63,7 @@ function doRequest(params, cb) {
                 bodyObject = JSON.parse(body);
             } catch (e) {
                 const errNoJson = new Error('COREAPI: CORE responded with non JSON body');
-                isLogDisabled() || logger.verbose(errNoJson, {body});
+                if (!isLogDisabled()) logger.verbose(errNoJson, { body });
 
                 resolve([errNoJson, body]);
                 if (typeof cb === 'function') cb(errNoJson, body);
