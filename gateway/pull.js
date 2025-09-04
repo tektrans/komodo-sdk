@@ -293,6 +293,8 @@ function forwardCoreTaskToPartner(coreMessage, startTime, xid) {
     });
 }
 
+let lastPullPayload;
+
 const pullTask = async () => {
     if (isPaused()) {
         if (IS_DEBUG) {
@@ -343,7 +345,7 @@ const pullTask = async () => {
 
     const xid = uniqid();
 
-    const params = new URLSearchParams({
+    const paramsObj = {
         handler: config.handler_name,
         products: (config.products || []).join(','),
         locations: config.locations && config.locations.length ? config.locations.join(',') : 'ALL',
@@ -362,7 +364,17 @@ const pullTask = async () => {
         ) || null,
         komodosdk_type: matrix.komodosdk_type,
         komodosdk_version: matrix.komodosdk_version,
-    });
+    };
+
+    const params = new URLSearchParams(paramsObj);
+    const paramsInString = params.toString();
+    if (paramsInString !== lastPullPayload) {
+        lastPullPayload = paramsInString;
+        logger.info(`${MODULE_NAME} 3D954E60: Will pull task from core with this params`, {
+            xid,
+            paramsObj,
+        });
+    }
 
     const startTime = new Date();
     try {
