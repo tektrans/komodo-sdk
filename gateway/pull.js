@@ -195,7 +195,7 @@ const report = async (data, xidFromCaller) => {
         amount: data.amount,
         balance: data.balance,
         raw: data.raw,
-        misc: data.misc,
+        misc: typeof data.misc === 'string' ? data.misc : JSON.stringify(data.misc),
         product: data.product
             || (data.misc && data.misc.task && typeof data.misc.task.product === 'string' && data.misc.task.product)
             || null,
