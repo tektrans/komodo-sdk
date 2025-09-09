@@ -361,10 +361,10 @@ const pullTask = async () => {
         api_url: (
             config && config.apiserver
             && config.apiserver.apikey && config.apiserver.url && config.apiserver.url
-        ) || null,
+        ) || '',
         cp_url: (
             config && config.control_panel && config.control_panel.url && config.control_panel.url
-        ) || null,
+        ) || '',
         komodosdk_type: matrix.komodosdk_type,
         komodosdk_version: matrix.komodosdk_version,
     };
