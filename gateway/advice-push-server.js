@@ -10,6 +10,11 @@ const app = express();
 let partner = null;
 
 function setPartner(_partner) {
+    if (!config.push_server.advice.port) {
+        logger.info(`${MODULE_NAME} EE186FAC: config.push_server.advice.port not set, skip listening`);
+        return;
+    }
+
     partner = _partner;
 
     if (
