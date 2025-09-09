@@ -185,7 +185,7 @@ const report = async (data, xidFromCaller) => {
         trxId = data.trx_id;
     }
 
-    const params = new URLSearchParams({
+    const paramsObj = {
         trx_id: trxId,
         rc: replaceRc(data.rc),
         rc_from_handler: data.rc_from_handler,
@@ -203,11 +203,14 @@ const report = async (data, xidFromCaller) => {
             || (data.misc && data.misc.task && typeof data.misc.task.remote_product === 'string' && data.misc.task.remote_product)
             || null,
         detail: data.detail || '',
-    });
+    };
+
+    const params = new URLSearchParams(paramsObj);
 
     logger.verbose(`${MODULE_NAME} 2110168C: Sending report to CORE`, {
         xid,
         corePullReportUrl,
+        reportParams: paramsObj,
     });
 
     try {
