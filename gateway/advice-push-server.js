@@ -32,6 +32,8 @@ function setPartner(_partner) {
 }
 
 function isValidApikey(req, res, next) {
+    const { xid } = res.locals;
+
     if (
         config.push_server
         && config.push_server.apikey
@@ -39,19 +41,22 @@ function isValidApikey(req, res, next) {
     ) {
         next();
     } else {
+        logger.verbose(`${MODULE_NAME} 22222BF5: Invalid APIKEY`, { xid });
         res.end('INVALID_APIKEY');
     }
 }
 
 function adviceHandler(req, res) {
+    const { xid } = res.locals;
+
     if (!partner) {
-        logger.warn(`${MODULE_NAME} 58FACCD9: Undefined partner, skipped`);
+        logger.warn(`${MODULE_NAME} 58FACCD9: Undefined partner, skipped`, { xid });
         res.end('UNDEFINED_PARTNER');
         return;
     }
 
     if (!partner.advice) {
-        logger.warn(`${MODULE_NAME} 73E745A0: Partner does not have ADVICE capabilities`);
+        logger.warn(`${MODULE_NAME} 73E745A0: Partner does not have ADVICE capabilities`, { xid });
         res.end('UNSUPPORTED');
         return;
     }
@@ -59,12 +64,14 @@ function adviceHandler(req, res) {
     const task = req.body;
 
     if (!task || !task.trx_id || !task.destination || !task.product) {
-        logger.warn(`${MODULE_NAME} DABD50A5: Invalid task`);
+        logger.warn(`${MODULE_NAME} DABD50A5: Invalid task`, { xid, task });
         res.end('INVALID_TASK');
         return;
     }
 
-    logger.verbose(`${MODULE_NAME} DB27D06B: Got advice push`, { task });
+    res.end('OK');
+
+    logger.verbose(`${MODULE_NAME} DB27D06B: Got advice push`, { xid, task });
 
     task.remote_product = pull.getRemoteProduct(task.product);
     if (Number(config.sdk_trx_id_adder)) {
