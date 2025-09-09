@@ -1,7 +1,6 @@
 const MODULE_NAME = 'KOMODO-SDK.GATEWAY.ADVICE-PUSH-SERVER';
 
 const express = require('express');
-const bodyParser = require('body-parser');
 const logger = require('tektrans-logger');
 
 const config = require('../config');
@@ -80,8 +79,6 @@ function adviceHandler(req, res) {
     partner.advice(task);
 }
 
-app.use(bodyParser.json());
-app.use('/apikey/:apikey', isValidApikey);
-app.use('/apikey/:apikey/advice', adviceHandler);
+app.post('/apikey/:apikey/advice', isValidApikey, express.json(), adviceHandler);
 
 exports.setPartner = setPartner;
