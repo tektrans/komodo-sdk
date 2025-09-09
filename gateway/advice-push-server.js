@@ -4,7 +4,6 @@ const express = require('express');
 const bodyParser = require('body-parser');
 const logger = require('tektrans-logger');
 
-const pull = require('./pull');
 const config = require('../config');
 
 const app = express();
@@ -73,7 +72,7 @@ function adviceHandler(req, res) {
 
     logger.verbose(`${MODULE_NAME} DB27D06B: Got advice push`, { xid, task });
 
-    task.remote_product = pull.getRemoteProduct(task.product);
+    task.remote_product = config.remote_products[task.product] || task.product;
     if (Number(config.sdk_trx_id_adder)) {
         task.trx_id = Number(task.trx_id) + Number(config.sdk_trx_id_adder);
     }
