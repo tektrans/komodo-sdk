@@ -413,6 +413,11 @@ const pullTask = async () => {
                 xid,
                 eCode: e.code,
                 eMessage: e.message || e.toString(),
+                eErrors: (e.errors || [])
+                    .map((err) => ({
+                        eCode: err.code,
+                        eMessage: err.message || err.toString(),
+                    })),
                 httpStatus: e.response && e.response.status,
                 responseBody: e.response && e.response.data,
             });
