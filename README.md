@@ -8,6 +8,10 @@ SDK node.js untuk integrasi dengan sistem PPOB Komodo.
 npm i komodo-sdk
 ```
 
+## Repositories:
+- [KOMODO-SDK official](https://github.com/tektrans/komodo-sdk)
+- [KOMODO-SDK mirror](https://forgejo.kodesumber.com/tektrans/komodo-sdk)
+
 ## TODO
 * Contoh pemakaian
 * Dokumentasi API
