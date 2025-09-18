@@ -16,4 +16,4 @@ npm i komodo-sdk
 
 Silahkan lihat di file [CHANGELOG.md](./CHANGELOG.md).
 
-(c) [PT TEKNOLOGI TRANSAKSI DIGITAL (TEKTRANS)](https://tektrans.id)
+(c) [PT TEKNOLOGI TRANSAKSI DIGITAL (TEKTRANS)](https://www.tektrans.id)
