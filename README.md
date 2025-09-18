@@ -11,6 +11,7 @@ npm i komodo-sdk
 ## Repositories:
 - [KOMODO-SDK official](https://github.com/tektrans/komodo-sdk)
 - [KOMODO-SDK mirror](https://forgejo.kodesumber.com/tektrans/komodo-sdk)
+- [KOMODO-SDK mirror (DEPRECATED)](https://gitlab.kodesumber.com/komodo/komodo-sdk)
 
 ## TODO
 * Contoh pemakaian
