@@ -5,7 +5,7 @@
   "main": "index.js",
   "scripts": {
     "test": "mocha",
-    "postversion": "git push && git push --tags && git push github && git push github --tags",
+    "postversion": "git push github && git push github --tags && git push && git push --tags",
     "version": "auto-changelog -p && git add CHANGELOG.md"
   },
   "repository": {
