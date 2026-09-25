@@ -24,8 +24,8 @@ function setPartner(_partner) {
         return;
     }
 
-    if (!partner.advice || typeof partner !== 'function') {
-        logger.info(`${MODULE_NAME} 1E342CCE: No advice funtion detected, skip listening`);
+    if (!partner.advice || typeof partner.advice !== 'function') {
+        logger.info(`${MODULE_NAME} 1E342CCE: No advice funcction detected, skip listening`);
         return;
     }
 
