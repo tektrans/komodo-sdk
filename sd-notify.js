@@ -40,6 +40,7 @@ const notifyUseSystemdNotify = async (statusMsg) => {
 
 const notifyUseSdNotify = () => {
     try {
+        // eslint-disable-next-line import/no-unresolved
         const sdNotify = require('sd-notify');
 
         logger.verbose(`${MODULE_NAME} A200BF49: Trying to notify systemd using sd-notify package`);
@@ -81,7 +82,7 @@ const notifyUseBin = async () => {
 module.exports = async (statusMsg) => {
     const { ppid } = process;
 
-    if (ppid !== 1) {
+    if (!(process.env.NOTIFY_SOCKET) && (ppid !== 1)) {
         logger.verbose(`${MODULE_NAME} 74A5B2AF: No need to notify systemd`, { ppid });
         return;
     }
